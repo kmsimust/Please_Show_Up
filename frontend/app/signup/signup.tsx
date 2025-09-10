@@ -1,4 +1,4 @@
-export function Login() {
+export function Signup() {
   return (
     <div
       style={{
@@ -30,12 +30,28 @@ export function Login() {
             fontWeight: "bold",
           }}
         >
-          Login
+          Sign up
         </h2>
         <form>
           <input
             type="text"
-            placeholder="Enter your username or Email"
+            placeholder="Enter your username"
+            required
+            style={{
+              width: "100%",
+              padding: "14px",
+              margin: "10px 0",
+              border: "none",
+              background: "#fff",
+              fontSize: "16px",
+              fontWeight: "bold",
+              borderRadius: "4px",
+              boxSizing: "border-box",
+            }}
+          />
+          <input
+            type="email"
+            placeholder="Enter your email"
             required
             style={{
               width: "100%",
@@ -65,18 +81,6 @@ export function Login() {
               boxSizing: "border-box",
             }}
           />
-          <div
-            style={{
-              textAlign: "left",
-              fontSize: "14px",
-              fontWeight: "bold",
-              margin: "5px 0 15px 5px",
-            }}
-          >
-            <a href="#" style={{ color: "#000", textDecoration: "none" }}>
-              Forgot your password?
-            </a>
-          </div>
           <button
             type="submit"
             style={{
@@ -88,12 +92,12 @@ export function Login() {
               fontWeight: "bold",
               border: "none",
               cursor: "pointer",
-              marginTop: "10px",
+              marginTop: "12px",
               borderRadius: "4px",
               boxSizing: "border-box",
             }}
           >
-            Login
+            Sign up
           </button>
         </form>
         <div
@@ -103,9 +107,9 @@ export function Login() {
             fontWeight: "bold",
           }}
         >
-          Don’t have an account?{" "}
-          <a href="/signup" style={{ color: "#00a843", textDecoration: "none" }}>
-            sign up
+          Already have an account?{" "}
+          <a href="/login" style={{ color: "#00a843", textDecoration: "none" }}>
+            login
           </a>
         </div>
       </div>
