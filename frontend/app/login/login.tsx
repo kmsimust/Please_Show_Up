@@ -1,3 +1,5 @@
+import bgImg from './login-background.png'
+
 export function Login() {
   return (
     <div
@@ -8,7 +10,10 @@ export function Login() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#b6f76f",
+        backgroundImage: "url('"+bgImg+"')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
         fontFamily: "Arial, sans-serif",
       }}
     >
@@ -103,7 +108,7 @@ export function Login() {
             fontWeight: "bold",
           }}
         >
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <a href="/signup" style={{ color: "#00a843", textDecoration: "none" }}>
             sign up
           </a>
