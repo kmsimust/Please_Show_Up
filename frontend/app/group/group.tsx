@@ -22,13 +22,16 @@ export function Group() {
 					</button>
 					<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 						<div className="navbar-nav ms-auto">
-							<span className="fw-semibold fontGeorgia fs-6 d-flex align-items-center me-3">Profile name </span>
-								<img
-									src="/image/genki_dama.jpg"
-									alt="Login"
-									className="rounded-circle"
-									style = {{width: "40px"}}
-								/>
+							<button type="button"
+  									className="btn d-flex align-items-center p-0 border-0 bg-transparent">
+								<span className="fw-semibold fontGeorgia fs-6 d-flex align-items-center me-3">Profile name </span>
+									<img
+										src="/image/genki_dama.jpg"
+										alt="Login"
+										className="rounded-circle"
+										style = {{width: "40px"}}
+									/>
+							</button>
 						</div>
 					</div>
 				</div>
