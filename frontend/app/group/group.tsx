@@ -22,12 +22,13 @@ export function Group() {
 					</button>
 					<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 						<div className="navbar-nav ms-auto">
-							<a className="nav-link active" aria-current="page" href="#">
-								Login
-							</a>
-							<a className="nav-link" href="#">
-								Sign up
-							</a>
+							<span className="fw-semibold fontGeorgia fs-6 d-flex align-items-center me-3">Profile name </span>
+								<img
+									src="/image/genki_dama.jpg"
+									alt="Login"
+									className="rounded-circle"
+									style = {{width: "40px"}}
+								/>
 						</div>
 					</div>
 				</div>
@@ -61,7 +62,6 @@ export function Group() {
 					</div>
 					
 				</div>
-				{/*(201, 239, 218) */}
 			</div>
 		</>
 		
