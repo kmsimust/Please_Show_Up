@@ -27,7 +27,6 @@ export function Group() {
 								<span className="fw-semibold fontGeorgia fs-6 d-flex align-items-center me-3">Profile name </span>
 									<img
 										src="/image/genki_dama.jpg"
-										alt="Login"
 										className="rounded-circle"
 										style = {{width: "40px"}}
 									/>
