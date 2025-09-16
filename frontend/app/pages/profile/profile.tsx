@@ -1,5 +1,6 @@
 import "./profile.css";
-import logo from "../image/logo.png";
+import logo from "../../images/logo.png";
+
 
 export function Profile() {
   return (
