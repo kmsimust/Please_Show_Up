@@ -7,7 +7,7 @@ export function Group() {
 			<nav className="navbar navbar-expand-lg bg-green-main mb-5">
 				<div className="container">
 					<a className="navbar-brand" href="#">
-						<img src="/image/logo.png" style={{width: 125}} alt="" />
+						<img src="../../images/logo.png" style={{width: 125}} alt="" />
 					</a>
 					<button
 						className="navbar-toggler"

@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { Group } from '../group/group';
+import { Group } from '../pages/group/group';
 
 export function meta({}: Route.MetaArgs) {
   return [

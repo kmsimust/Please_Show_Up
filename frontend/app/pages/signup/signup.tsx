@@ -1,5 +1,5 @@
-import '../App.css'
-import bgImg from './login-background.png'
+import '~/App.css'
+import bgImg from '~/images/login-background.png'
 import { Box } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form';
@@ -9,8 +9,12 @@ import MyButton from '~/components/forms/Button';
 import MyPassField from '~/components/forms/PassField';
 import MyTextField from '~/components/forms/TextField';
 import axios from 'axios';
+
+
 type FormProps = {
-  username: string
+  email: string,
+  username: string,
+  password: string
 }
 export function Signup() {
 
@@ -18,31 +22,22 @@ export function Signup() {
 
   const {handleSubmit, control} = useForm({
     defaultValues: {
-      username: ''
+      username: '',
+      email: '',
+      password: ''
     }
   })
-
-  // const submission = (data: any) => {
-  //     AxiosInstance.post(`register/`,{
-  //         email: data.email, 
-  //         password: data.password,
-  //     })
-
-  //     .then(() => {
-  //         navigate(`/`)
-  //     }
-  //     )
-  // }
 
   const handleSubmitForm = (data: FormProps) => {
     console.log(data)
 
-    axios.post('/register', data).then((res) => {
+    AxiosInstance.post('/register/', data).then((res) => {
       console.log(res.data)
     })
   }
 
   return (
+    // background
     <div
       style={{
         margin: 0,
@@ -57,6 +52,7 @@ export function Signup() {
         backgroundRepeat: "no-repeat",
         fontFamily: "Arial, sans-serif",
       }}>
+      {/**/}
       <div
         style={{
           margin: 0,
@@ -68,6 +64,7 @@ export function Signup() {
           fontFamily: "Arial, sans-serif",
         }}
       >
+        {/* sign-up case box */}
         <div
           style={{
             width: "400px",
@@ -110,44 +107,60 @@ export function Signup() {
                     boxSizing: "border-box",
                   }}
                 />
-            )
-                 
-            }
-         
+              )                
+            } //render username endpoint         
             />
 
-            <input
-              type="email"
-              placeholder="Enter your email"
-              required
-              style={{
-                width: "100%",
-                padding: "14px",
-                margin: "10px 0",
-                border: "none",
-                background: "#fff",
-                fontSize: "16px",
-                fontWeight: "bold",
-                borderRadius: "4px",
-                boxSizing: "border-box",
-              }}
+            <Controller
+            name='email'
+            control={control}
+            render={({field}) => (
+                <input
+                {...field}
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "14px",
+                    margin: "10px 0",
+                    border: "none",
+                    background: "#fff",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                />
+              )
+            }
             />
-            <input
-              type="password"
-              placeholder="Enter your Password"
-              required
-              style={{
-                width: "100%",
-                padding: "14px",
-                margin: "10px 0",
-                border: "none",
-                background: "#fff",
-                fontSize: "16px",
-                fontWeight: "bold",
-                borderRadius: "4px",
-                boxSizing: "border-box",
-              }}
+
+            <Controller
+            name='password'
+            control={control}
+            render={({field}) => (
+                <input
+                {...field}
+                  type="password"
+                  placeholder="Enter your Password"
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "14px",
+                    margin: "10px 0",
+                    border: "none",
+                    background: "#fff",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                />
+               )
+              }
             />
+
             <button
               type="submit"
               style={{
@@ -166,7 +179,9 @@ export function Signup() {
             >
               Sign up
             </button>
-          </form>
+
+          </form> {/*handle submit form endpoint*/}
+
           <div
             style={{
               marginTop: "18px",
