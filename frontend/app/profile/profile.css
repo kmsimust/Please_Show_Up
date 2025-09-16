@@ -1,0 +1,107 @@
+.bg-green-main {
+  background-color: rgb(0, 191, 99);
+}
+
+.btn-green {
+  background-color: rgb(0, 191, 99);
+  border-radius: 6px;
+}
+.btn-green:hover {
+  background-color: rgb(2, 168, 88);
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #e6e6e6;
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sideBtn {
+  width: 140px;
+  padding: 10px;
+  font-weight: bold;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  background-color: rgb(0, 191, 99);
+  border: none;
+  border-radius: 25px;
+  color: black;
+  font-size: 18px;
+}
+.sideBtn:hover {
+  background-color: rgb(2, 168, 88);
+  color: white;
+}
+
+.profile-header {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+
+.profile-cover {
+  width: 100%;
+  height: 140px;
+  background: url("/image/cover-sample.jpg") center/cover no-repeat;
+  background-color: rgb(0, 191, 99);
+}
+
+
+.profile-bar {
+  background-color: #e6e6e6;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 120px;
+  padding-right: 20px;
+  position: relative;
+}
+
+.profile-avatar {
+  position: absolute;
+  left: 20px;
+  top: 50px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 5px solid #e6e6e6;
+  object-fit: cover;
+  background: #333;
+  z-index: 5;
+}
+
+
+.profile-username {
+  font-weight: bold;
+  font-size: 26px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: #000;
+}
+
+
+.edit-btn {
+  background-color: rgb(0, 191, 99);
+  border: none;
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-weight: bold;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: black;
+}
+.edit-btn:hover {
+  background-color: rgb(2, 168, 88);
+  color: white;
+}
+
+
+.info-box {
+  background-color: rgb(0, 191, 99);
+  border-radius: 20px;
+  padding: 20px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: black;
+}
