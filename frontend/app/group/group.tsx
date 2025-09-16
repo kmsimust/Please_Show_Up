@@ -1,72 +1,110 @@
 import "./group.css";
-export function Group() {
-	const handleCreateGroup = () => { };
+import logo from "../image/logo.png";
 
-	return (
-		<>
-			<nav className="navbar navbar-expand-lg bg-green-main mb-5">
-				<div className="container">
-					<a className="navbar-brand" href="#">
-						<img src="/image/logo.png" style={{width: 125}} alt="" />
-					</a>
-					<button
-						className="navbar-toggler"
-						type="button"
-						data-bs-toggle="collapse"
-						data-bs-target="#navbarNavAltMarkup"
-						aria-controls="navbarNavAltMarkup"
-						aria-expanded="false"
-						aria-label="Toggle navigation"
-					>
-						<span className="navbar-toggler-icon" />
-					</button>
-					<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-						<div className="navbar-nav ms-auto">
-							<button type="button"
-  									className="btn d-flex align-items-center p-0 border-0 bg-transparent">
-								<span className="fw-semibold fontGeorgia fs-6 d-flex align-items-center me-3">Profile name </span>
-									<img
-										src="/image/genki_dama.jpg"
-										alt="Login"
-										className="rounded-circle"
-										style = {{width: "40px"}}
-									/>
-							</button>
-						</div>
-					</div>
-				</div>
-			</nav>
-			<div className="container">
-				{/* Create group row */}
-				<div className="row mb-3">
-					<div className="offset-4 col-4 text-center">
-						<button type="button" className="btn btn-lg btn-green text-white rounded-pill w-50 p-3 fw-bold fs-4">Create group</button>
-					</div>
-				</div>
-				<div className="row groupBackground rounded-4">
-					<div className="col-12 p-4">
-						<div className="row">
-							<div className="col-6"><p className="text-start fw-semibold fontGeorgia fs-4">Group 1 name</p></div>
-							<div className="col-6"><p className="text-sm-end fw-semibold fontGeorgia fs-4">Members: 5</p></div>
-						</div>
-						<div className="row">
-							<div className="col-6 d-flex">
-								<div className="groupImg bg-primary me-2"></div>
-								<div className="groupImg bg-warning me-2"></div>
-								<div className="groupImg bg-danger me-2"></div>
-								<div className="groupImg bg-info me-2"></div>
-								<div className="groupImg bg-success me-2"></div>
-							</div>
-							<div className="col-6 d-flex justify-content-end">
-								<span className="fw-semibold fontGeorgia fs-6 d-flex align-items-center me-3">Group creator : </span>
-								<div className="groupImg bg-primary me-2"></div>
-							</div>
-						</div>
-					</div>
-					
-				</div>
-			</div>
-		</>
-		
-	);
+export function Group() {
+  const handleCreateGroup = () => {};
+
+  return (
+    <>
+      {/* Navbar */}
+      <nav className="navbar navbar-expand-lg bg-green-main">
+        <div className="container-fluid d-flex justify-content-between align-items-center px-4">
+          {/* Logo */}
+          <a className="navbar-brand d-flex align-items-center" href="#">
+            <img src={logo} style={{ width: 140 }} alt="logo" />
+          </a>
+
+          {/* Profile */}
+          <div className="d-flex align-items-center">
+            <span className="fw-semibold fontGeorgia fs-6 me-2">Gotzibara</span>
+            <a href="/profile">
+              <img
+                src="/image/genki_dama.jpg"
+                alt="profile"
+                className="rounded-circle"
+                style={{ width: "50px", height: "50px" }}
+              />
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main content with sidebar */}
+      <div className="d-flex">
+        {/* Sidebar */}
+        <div className="sidebar p-3">
+          <a href="/group">
+            <button className="sideBtn mb-3">Home</button>
+          </a>
+          <a href="/profile">
+            <button className="sideBtn mb-3">Profile</button>
+          </a>
+          <a href="/friend">
+            <button className="sideBtn mb-3">Friends</button>
+          </a>
+          <a href="/message">
+            <button className="sideBtn mb-3">Messages</button>
+          </a>
+        </div>
+
+        {/* Group content */}
+        <div className="flex-grow-1 p-4">
+          {/* Create group button */}
+          <div className="mb-4">
+            <button
+              onClick={handleCreateGroup}
+              type="button"
+              className="btn btn-green text-white fw-bold fs-5 px-4 py-2"
+            >
+              Create group
+            </button>
+          </div>
+
+          {/* Group cards */}
+          <div className="groupCard rounded-4 p-3 mb-4">
+            <div className="d-flex justify-content-between align-items-center">
+              <p className="fw-bold fontGeorgia fs-4 m-0">isp group work</p>
+              <p className="fw-bold fontGeorgia fs-5 m-0">members: 5</p>
+            </div>
+            <div className="d-flex justify-content-between align-items-center mt-3">
+              <div className="d-flex">
+                <div className="groupImg bg-dark me-2"></div>
+                <div className="groupImg bg-success me-2"></div>
+                <div className="groupImg bg-light me-2"></div>
+                <div className="groupImg bg-info me-2"></div>
+                <div className="groupImg bg-danger me-2"></div>
+              </div>
+              <div className="d-flex align-items-center">
+                <span className="fw-semibold fontGeorgia fs-6 me-2">
+                  group creater:
+                </span>
+                <div className="groupImg bg-dark"></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="groupCard rounded-4 p-3">
+            <div className="d-flex justify-content-between align-items-center">
+              <p className="fw-bold fontGeorgia fs-4 m-0">our friend gang</p>
+              <p className="fw-bold fontGeorgia fs-5 m-0">members: 4</p>
+            </div>
+            <div className="d-flex justify-content-between align-items-center mt-3">
+              <div className="d-flex">
+                <div className="groupImg bg-success me-2"></div>
+                <div className="groupImg bg-light me-2"></div>
+                <div className="groupImg bg-dark me-2"></div>
+                <div className="groupImg bg-info me-2"></div>
+              </div>
+              <div className="d-flex align-items-center">
+                <span className="fw-semibold fontGeorgia fs-6 me-2">
+                  group creater:
+                </span>
+                <div className="groupImg bg-success"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
