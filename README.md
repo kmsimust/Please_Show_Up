@@ -45,4 +45,5 @@ Moreover, it will be more convenient in a project for bosses to keep track of th
 
 ## 📹 Video for presentation
 
-- [Youtube](https://youtu.be/SEtLJMosBLw) — Sprint1
+- [Youtube](https://youtu.be/SEtLJMosBLw) — Sprint 1
+- [Youtube](https://youtu.be/lO1jIbKyTTU) — Sprint 2
