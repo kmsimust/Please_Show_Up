@@ -1,6 +1,33 @@
 import bgImg from '~/images/login-background.png'
+import { Controller, useForm } from 'react-hook-form';
+import AxiosInstance from '~/components/AxoisInstance';
+
+// ^ Don't forget imports
+
+
+type FormProps = {
+  usernameEmail: string,
+  password: string
+}
 
 export function Login() {
+
+
+  const {handleSubmit, control} = useForm({
+    defaultValues: {
+      usernameEmail: '',
+      password: ''
+    }
+  })
+
+  const handleSubmitForm = (data: FormProps) => {
+    console.log(data)
+
+    AxiosInstance.post('/login/', data).then((res) => {
+      console.log(res.data)
+    })
+  }
+
   return (
     <div
       style={{
@@ -37,39 +64,58 @@ export function Login() {
         >
           Login
         </h2>
-        <form>
-          <input
-            type="text"
-            placeholder="Enter your username or Email"
-            required
-            style={{
-              width: "100%",
-              padding: "14px",
-              margin: "10px 0",
-              border: "none",
-              background: "#fff",
-              fontSize: "16px",
-              fontWeight: "bold",
-              borderRadius: "4px",
-              boxSizing: "border-box",
-            }}
+
+        <form onSubmit={handleSubmit(handleSubmitForm)}>
+          <Controller
+            name='usernameEmail'
+            control={control}
+            render={ ({field}) => (
+                <input
+                {...field}
+                  type="text"
+                  placeholder="Enter your username or Email"
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "14px",
+                    margin: "10px 0",
+                    border: "none",
+                    background: "#fff",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                />
+              )
+            }
           />
-          <input
-            type="password"
-            placeholder="Enter your Password"
-            required
-            style={{
-              width: "100%",
-              padding: "14px",
-              margin: "10px 0",
-              border: "none",
-              background: "#fff",
-              fontSize: "16px",
-              fontWeight: "bold",
-              borderRadius: "4px",
-              boxSizing: "border-box",
-            }}
+
+          <Controller
+            name='password'
+            control={control}
+            render={({field}) => (
+                <input
+                {...field}
+                  type="password"
+                  placeholder="Enter your Password"
+                  required
+                  style={{
+                    width: "100%",
+                    padding: "14px",
+                    margin: "10px 0",
+                    border: "none",
+                    background: "#fff",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                />
+              )
+            }
           />
+
           <div
             style={{
               textAlign: "left",
@@ -82,6 +128,7 @@ export function Login() {
               Forgot your password?
             </a>
           </div>
+
           <button
             type="submit"
             style={{
@@ -100,7 +147,9 @@ export function Login() {
           >
             Login
           </button>
+
         </form>
+
         <div
           style={{
             marginTop: "18px",
