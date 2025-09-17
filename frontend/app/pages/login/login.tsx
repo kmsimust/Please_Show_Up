@@ -1,4 +1,4 @@
-import bgImg from './login-background.png'
+import bgImg from '~/images/login-background.png'
 
 export function Login() {
   return (
