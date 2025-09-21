@@ -1,6 +1,9 @@
 # Byte-compiled / optimized / DLL files
-./api/__pycache__/
+**/__pycache__/
 *.py[cod]
+
+#env
+.env
 
 # C extensions
 *.so
