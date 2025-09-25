@@ -1,21 +1,22 @@
 import bgImg from '~/images/login-background.png'
 import { Controller, useForm } from 'react-hook-form';
 import AxiosInstance from '~/components/AxoisInstance';
+import { useNavigate } from 'react-router';
 
 // ^ Don't forget imports
 
 
 type FormProps = {
-  usernameEmail: string,
+  email: string,
   password: string
 }
 
 export function Login() {
 
-
+  const navigate = useNavigate()
   const {handleSubmit, control} = useForm({
     defaultValues: {
-      usernameEmail: '',
+      email: '',
       password: ''
     }
   })
@@ -23,8 +24,16 @@ export function Login() {
   const handleSubmitForm = (data: FormProps) => {
     console.log(data)
 
-    AxiosInstance.post('/login/', data).then((res) => {
-      console.log(res.data)
+    AxiosInstance.post('/login/', data)
+    
+    .then((response) => {
+      console.log(response.data)
+      localStorage.setItem('Token', response.data.Token)
+      navigate('/profile')
+    })
+
+    .catch((error) => {
+      console.error("Error during login", error)
     })
   }
 
@@ -67,7 +76,7 @@ export function Login() {
 
         <form onSubmit={handleSubmit(handleSubmitForm)}>
           <Controller
-            name='usernameEmail'
+            name='email'
             control={control}
             render={ ({field}) => (
                 <input

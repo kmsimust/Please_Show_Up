@@ -31,8 +31,10 @@ export function Signup() {
   const handleSubmitForm = (data: FormProps) => {
     console.log(data)
 
-    AxiosInstance.post('/register/', data).then((res) => {
-      console.log(res.data)
+    AxiosInstance.post('/register/', data)
+
+    .then((response) => {
+      console.log(response.data)
     })
   }
 
