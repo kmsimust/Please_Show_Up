@@ -1,7 +1,10 @@
+import { Form } from "react-router";
+import { useNavigate } from "react-router";
 import logo from "../../images/logo.png";
 
-export function Welcome() {
-  return (
+export function Pages_Home() {
+
+    return (
     <div style={{ background: "#f5f6ee", color: "#1f2b25", fontFamily: 'Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif' }}>
       {/* Header / Hero */}
       <header style={{ background: "#17563f", color: "white", padding: "36px 20px", textAlign: "center", position: "relative" }}>
