@@ -1,10 +1,14 @@
-import { type RouteConfig, index , route } from "@react-router/dev/routes";
+import {
+         type RouteConfig,
+         index,
+         route 
+} from "@react-router/dev/routes";
 
-export default [index("routes/home.tsx"),
-        route("/login", "routes/login.tsx"),
-        route("/home_screen", "routes/home_screen.tsx"),
-        route("/signup", "routes/signup.tsx"),
-        route("/group", "routes/group.tsx"),
-        route("/profile", "routes/profile.tsx"),
-        route("/friend", "routes/friend.tsx")
+export default [
+        index("routes/101_home.tsx"),
+        route("/about", "routes/102_about.tsx"),
+        route("/signup", "routes/103_signup.tsx"),
+        route("/login", "routes/104_login.tsx"),
+
+        route("/channel/:channelId", "routes/201_channel.tsx"),
 ] satisfies RouteConfig;
