@@ -40,6 +40,9 @@ $${
     \color{lightgreen}.env \space 
     \color{white}file \space
     \color{white}example.
+    migrate it also
+    cd backend
+    python manage.py migrate  
 }$$ 
 ```bash
 DATABASE=mysql
