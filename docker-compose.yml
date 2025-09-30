@@ -3,24 +3,13 @@ version: '3.8'
 services:
 
   db:
-    image: postgres
-    container_name: postgres_db
-    ports:
-      - 5431:5432
-    volumes:
-      - ./data/db:/var/lib/postgressql/data
+    image: mysql
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "pg-isready -p 5432 -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-    
-    
+      MYSQL_DATABASE: test
+      MYSQL_ROOT_PASSWORD: test
+    ports:
+      - 3305:3306
+  
   backend:
     build: ./backend
     container_name: django
