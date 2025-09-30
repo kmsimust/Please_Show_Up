@@ -43,6 +43,7 @@ $${
 }$$ 
 ```bash
 DATABASE=mysql
+MYSQL_NAME="your MySQL Workbench working schema name"
 MYSQL_USER="your MySQL Workbench username"
 MYSQL_PASSWORD="your MySQL Workbench password"
 DB_HOST="your MySQL Workbench hostname" # The host is normally 127.0.0.1 or localhost
