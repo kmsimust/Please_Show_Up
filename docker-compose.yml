@@ -2,13 +2,16 @@
 version: '3.8'
 services:
 
-  db:
+  sql_db:
+    container_name: sql_db
     image: mysql
     environment:
       MYSQL_DATABASE: test
       MYSQL_ROOT_PASSWORD: test
     ports:
       - 3305:3306
+    volumes:
+      - ./sql_volume:/var/lib/mysql
   
   backend:
     build: ./backend
@@ -17,15 +20,10 @@ services:
       - 8000:8000
     volumes:
       - ./backend:/app
-    image: django:latest
-    command: python manage.py runserver 0.0.0.0:8000
+    image: my_django:latest
     depends_on:
-       - db
+       - sql_db
 
     env_file:
-      - .env
-
-volumes:
-  postgres_db:
-    
-#
+      - ./backend/.env
+  
