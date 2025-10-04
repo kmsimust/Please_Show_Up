@@ -2,8 +2,7 @@
 version: '3.8'
 services:
 
-  sql_db:
-    container_name: sql_db
+  db:
     image: mysql
     container_name: db
     environment:
@@ -13,8 +12,6 @@ services:
       - ./data:/var/lib/mysql
     ports:
       - 3305:3306
-    volumes:
-      - ./sql_volume:/var/lib/mysql
   
   my_django:
     build: ./backend
