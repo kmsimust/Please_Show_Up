@@ -5,25 +5,28 @@ services:
   sql_db:
     container_name: sql_db
     image: mysql
+    container_name: db
     environment:
       MYSQL_DATABASE: test
       MYSQL_ROOT_PASSWORD: test
+    volumes:
+      - ./data:/var/lib/mysql
     ports:
       - 3305:3306
     volumes:
       - ./sql_volume:/var/lib/mysql
   
-  backend:
+  my_django:
     build: ./backend
-    container_name: django
+    image: my_django:latest
+    container_name: my_django
+    restart: always
     ports:
       - 8000:8000
     volumes:
       - ./backend:/app
-    image: my_django:latest
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     depends_on:
-       - sql_db
-
+       - db
     env_file:
       - ./backend/.env
-  
