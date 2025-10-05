@@ -12,23 +12,11 @@ export default function NavbarUnauth() {
           </NavLink>
           <nav className="flex flex-wrap items-center ml-0 md:ml-8 md:border-l md:pl-8">
             <NavLink
-              to="/about"
+              to="/"
               end
               className="mr-5 font-medium text-gray-600 hover:text-gray-900"
             >
               About Us
-            </NavLink>
-            <NavLink
-              to="/about"
-              className="mr-5 font-medium text-gray-600 hover:text-gray-900"
-            >
-              Countries
-            </NavLink>
-            <NavLink
-              to="/about"
-              className="mr-5 font-medium text-gray-600 hover:text-gray-900"
-            >
-              About
             </NavLink>
           </nav>
         </div>
