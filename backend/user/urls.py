@@ -6,5 +6,5 @@ from .views import *
 router = DefaultRouter()
 router.register('register', RegisterViewset, basename='register')
 router.register('login', LoginViewset, basename='login')
-router.register('serach_friend', SearchFriendViewset, basename='serach_friend')
+router.register('search_friend', SearchFriendViewset, basename='search_friend')
 urlpatterns = router.urls

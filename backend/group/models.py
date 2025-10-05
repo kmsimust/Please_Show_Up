@@ -6,4 +6,8 @@ class Group(models.Model):
     group_name = models.CharField(max_length=50)
     group_image = models.CharField(max_length=100)
     owner_id = models.IntegerField()
-    create_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ["-created_at"]
+        db_table = "group"
