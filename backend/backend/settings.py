@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'knox',
     'corsheaders',
     'user',
+    'group',
+    'group_event',
+    'user_profile'
 ]
 
 MIDDLEWARE = [
@@ -105,6 +108,7 @@ DATABASES = {
         'PASSWORD': os.environ['MYSQL_PASSWORD'],
         'HOST': os.environ['DB_HOST'],
         'PORT': os.environ['DB_PORT'],
+        'CONN_MAX_AGE': 120
     }
 }
 

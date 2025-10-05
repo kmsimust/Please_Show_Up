@@ -1,9 +1,43 @@
 import logo from "../../images/logo.png";
 import "./friend.css";
+import { useState } from "react";
+import axios from 'axios';
 
 export function Friend() {
+  const [username, setUsername] = useState("");
+  const [friend, setFriend] = useState<any>(null);
+  const [error, setError] = useState("");
+
+  // 👉 handle "Enter" key
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // stop form submit or reload
+
+      if (!username.trim()) return;
+
+      try {
+        const res = await axios.get(
+          `http://localhost:8000/api/users/?username=${encodeURIComponent(username)}`
+        );
+        console.log("Friend data:", res.data);
+
+        if (res.data.length === 0) {
+          setError("User not found");
+          setFriend(null);
+        } else {
+          setFriend(res.data[0]);
+          setError("");
+        }
+      } catch (err) {
+        console.error("Error fetching user:", err);
+        setError("Failed to fetch user");
+      }
+    }
+  };
+
 
   return (
+
     <>
       <nav className="navbar navbar-expand-lg bg-green-main">
         <div className="container-fluid d-flex justify-content-between align-items-center px-4">
@@ -51,6 +85,10 @@ export function Friend() {
                 type="text"
                 className="form-control form-control-lg rounded-pill"
                 placeholder="Search for people"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyDown={handleKeyDown}
+                //somehow when press enter handle enter by fetch username from backend(url.py in user)
               />
             </div>
 
@@ -69,7 +107,6 @@ export function Friend() {
             </div>
           </div>
         </div>
-
       </div>
     </>
   );

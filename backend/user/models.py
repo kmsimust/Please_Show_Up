@@ -19,6 +19,9 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, username, password, **extra_fields)
+    
+    def by_username(self, username):
+        return self.get_queryset().filter(username__iexact=username)
 
 
 class CustomUser(AbstractUser):
