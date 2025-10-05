@@ -1,6 +1,9 @@
 import { Form } from "react-router";
 import { useNavigate } from "react-router";
 import logo from "../../images/logo.png";
+import calendar from "../../images/calendar.png";
+import event from "../../images/event.png";
+import group from "../../images/group.png";
 
 export function Pages_Home() {
 
@@ -71,27 +74,26 @@ export function Pages_Home() {
             <p style={{ color: "#54645a", marginBottom: "18px", fontSize: "15px" }}>
               It helps with planning events and group projects — no more lost messages or missed attendences.
             </p>
-            <div style={{ marginTop: "22px", width: "260px", height: "200px", transform: "rotate(-12deg)" }}>
+            <div style={{ marginTop: "22px", width: "260px", height: "200px" }}>
               <div
                 style={{
                   width: "100%",
                   height: "100%",
                   overflow: "hidden",
-                  clipPath: "polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0% 50%)",
                   borderRadius: "12px",
                 }}
               >
-                <img src={logo} alt="student writing" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={calendar} alt="student writing" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
             </div>
           </div>
 
           <aside style={{ display: "flex", flexDirection: "column", gap: "18px", alignItems: "flex-end" }}>
             <div style={{ width: "320px", height: "200px", overflow: "hidden", borderRadius: "14px" }}>
-              <img src={logo} alt="event" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src={group} alt="event" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
             <div style={{ width: "320px", height: "200px", overflow: "hidden", borderRadius: "14px" }}>
-              <img src={logo} alt="event" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <img src={event} alt="event" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
           </aside>
         </div>
