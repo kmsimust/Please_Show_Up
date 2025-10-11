@@ -2,7 +2,7 @@ import "./profile.css";
 import logo from "../../images/logo.png";
 
 
-export function Profile() {
+export function Pages_Profile() {
   return (
     <>
       {/* Navbar */}

@@ -1,9 +1,13 @@
-import { Friend } from "../pages/friend/friend";
+import ProtectedRoute from "~/components/ProtectedRoutes";
+import { Pages_Friend } from "../pages/friend/friend";
 
-export default function Login() {
+export default function Friend() {
   return (
       <>
-        <Friend />
+        <ProtectedRoute>
+
+          <Pages_Friend />
+        </ProtectedRoute>
       </>
     );
 }

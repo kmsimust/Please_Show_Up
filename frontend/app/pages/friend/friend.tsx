@@ -3,7 +3,7 @@ import "./friend.css";
 import { useState } from "react";
 import axios from 'axios';
 
-export function Friend() {
+export function Pages_Friend() {
   const [username, setUsername] = useState("");
   const [friend, setFriend] = useState<any>(null);
   const [error, setError] = useState("");

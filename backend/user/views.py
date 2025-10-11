@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from .serializers import *
 from .models import *
 from rest_framework.response import Response
@@ -9,6 +9,14 @@ from .models import CustomUser
 from .serializers import UserSerializer
 from django.http import Http404
 from .serializers import RegisterSerializer
+
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 
 from rest_framework.exceptions import MethodNotAllowed
@@ -96,3 +104,28 @@ class SearchFriendViewset(viewsets.ViewSet):
 
     def destroy(self, request, pk=None):
         raise MethodNotAllowed("DELETE")
+    
+        
+@api_view(['GET'])
+def get_user_from_token(request):
+    print("request: ", request);
+    user = request.user
+    
+    accessToken = request.headers["authorization"]
+    token = accessToken.split(" ")[1]
+    return Response({
+        'accessToken': request.headers["authorization"],
+        'token': token,
+        'user': str(user)
+        # 'id': 1,
+        # 'username': "test",
+        # 'email': "test",
+        # 'first_name': "test",
+        # 'last_name': "test"
+    })
+    
+class UserList(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    
+    

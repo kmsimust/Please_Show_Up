@@ -3,9 +3,10 @@ import bgImg from '~/images/login-background.png'
 import axios from 'axios';
 
 // Unused imports
-import { Form, redirect, useFetcher } from "react-router";
+import { Form, redirect, useFetcher, useNavigate } from "react-router";
 import type { Route } from "../../../.react-router/types/app/routes/+types/104_login"
 import AxiosInstance from '~/components/AxoisInstance';
+import { useCookies } from "react-cookie";
 
 // Templated Function + Unuseable
 
@@ -36,10 +37,14 @@ import AxiosInstance from '~/components/AxoisInstance';
 //     }
 
 export function Pages_Login() {
+    const navigate = useNavigate();
+    const [cookies, setCookie] = useCookies(['accessToken']);
+
 
     // Data Forms.
     const [formData, setFormData] = useState(
-        {email: '',
+        {
+            email: '',
         password: ''
     });
 
@@ -57,8 +62,16 @@ export function Pages_Login() {
         res.preventDefault();
         try {
             const response = await axios.post('http://localhost:8000/login/', formData);
-            console.log('Data sent successfully:', response.data);
-            // Handle success, e.g., clear form, show message
+            
+            console.log('Data sent successfully:', response);
+            if (response.status == 200) {
+                const { token } = response.data
+                // Handle success, e.g., clear form, show message
+                setCookie('accessToken', token, { path: '/' });
+                navigate('/')
+
+            }
+            
         } catch (error) {
             console.error('Error sending data:', error);
             // Handle error, e.g., display error message

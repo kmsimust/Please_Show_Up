@@ -11,5 +11,5 @@ export default [
         route("/login", "routes/104_login.tsx"),
         route("/friend", "routes/105_friend.tsx"),
         
-        route("/channel/:channelId", "routes/201_channel.tsx"),
+        // route("/channel/:channelId", "routes/201_channel.tsx"),
 ] satisfies RouteConfig;
