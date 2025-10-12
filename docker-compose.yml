@@ -7,7 +7,7 @@ services:
     container_name: db
     environment:
       MYSQL_DATABASE: test
-      MYSQL_USER: root
+      MYSQL_USER: test
       MYSQL_PASSWORD: test
       MYSQL_ROOT_PASSWORD: test
     volumes:

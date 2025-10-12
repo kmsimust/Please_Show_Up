@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'user',
     'group',
     'group_event',
-    'user_profile'
 ]
 
 MIDDLEWARE = [
@@ -68,11 +67,9 @@ CORS_ALLOW_ORIGINS = [
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
 
-AUTH_USER_MODEL = 'user.CustomUser'
+#AUTH_USER_MODEL = 'user.CustomUser'
 
-AUTHENTICATION_BACKENDS = [
-    'user.auth_backend.EmailAuthBackend',
-]
+#AUTHENTICATION_BACKENDS = ['user.auth_backend.EmailAuthBackend']
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -130,6 +127,10 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
