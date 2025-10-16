@@ -1,0 +1,77 @@
+.bg-green-main {
+  background-color: rgb(0, 191, 99);
+}
+
+.btn-green {
+  background-color: rgb(0, 191, 99);
+  border-radius: 6px;
+}
+.btn-green:hover {
+  background-color: rgb(2, 168, 88);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 200px;
+  background-color: #e6e6e6;
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sideBtn {
+  width: 140px;
+  padding: 10px;
+  font-weight: bold;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  background-color: rgb(0, 191, 99);
+  border: none;
+  border-radius: 25px;
+  color: black;
+  font-size: 18px;
+}
+.sideBtn:hover {
+  background-color: rgb(2, 168, 88);
+  color: white;
+}
+
+.groupImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.fontGeorgia {
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+
+.mainContent {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+}
+
+.searchInput {
+  max-width: 400px;
+  height: 48px;
+  padding: 10px 16px;
+  font-size: 16px;
+  border: 2px solid #00bf63;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.searchInput:focus {
+  border-color: #02a858;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 0 0.2rem rgba(0, 191, 99, 0.25);
+}
+
+.searchInput::placeholder {
+  color: #9aa0a6;
+  font-style: italic;
+}

@@ -14,6 +14,7 @@ export function SignUpPage() {
         username: '',
         email: '',
         password: ''
+
     });
 
     // Use in textbox to hadle changes.
@@ -29,7 +30,10 @@ export function SignUpPage() {
     const handleSubmit = async (res: any) => {
         res.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/register/', formData);
+            const response = await axios.post(
+              "http://localhost:8000/api/user/create/",
+              formData
+            );
             console.log('Data sent successfully:', response.data);
             navigate('/login/')
             // Handle success, e.g., clear form, show message

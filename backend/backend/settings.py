@@ -70,7 +70,7 @@ CORS_ALLOW_ORIGINS = [
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
 
-#AUTH_USER_MODEL = 'user.CustomUser'
+AUTH_USER_MODEL = 'user.User'
 
 #AUTHENTICATION_BACKENDS = ['user.auth_backend.EmailAuthBackend']
 
@@ -98,7 +98,11 @@ REST_FRAMEWORK = {
         'knox.auth.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+        'user.authentication.JWTAuthentication',
     ],
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }
 
 # Database
