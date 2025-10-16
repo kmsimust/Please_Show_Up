@@ -49,7 +49,11 @@ INSTALLED_APPS = [
     'group',
     'group_event',
     'friend',
-    'friend_request'
+    'friend_request',
+    'member_role',
+    'group_member',
+    'event',
+    'inactive_date'
 ]
 
 MIDDLEWARE = [

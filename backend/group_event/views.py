@@ -1,3 +1,4 @@
+# Create your views here.
 from django.shortcuts import render
 from .serializers import GroupEventSerializer
 from .models import GroupEvent
