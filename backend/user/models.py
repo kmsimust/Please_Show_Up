@@ -14,7 +14,7 @@ class User(AbstractUser):
     display_name = models.CharField(max_length=20, null=True, blank=True)
     first_name = models.CharField(max_length=20, null=True, blank=True)
     last_name = models.CharField(max_length=20, null=True, blank=True)
-    created_at = models.DateTimeField(null=True, auto_now_add=True)  
+    created_at = models.DateTimeField(null=True, auto_now_add=True)
 
     def __str__(self):
         return f"Username: {self.username} | Email: {self.email} | Firstname: {self.first_name}"
