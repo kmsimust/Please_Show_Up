@@ -17,11 +17,12 @@ urlpatterns = [
     path('api/auth/', include('knox.urls')),
     path('api/group_event/', group_event_views.GroupEventList.as_view()),
 
-    
+
     path('api/friend_request/', get_friend_requests),
     path('api/create_friend_request/', create_friend_request),
-    path('api/update_friend_request/', delete_friend_request),
-    path('api/delete_friend_request/', update_friend_request),
+    path('api/update_friend_request/<int:pk>', update_friend_request),
+    path('api/delete_friend_request/<int:pk>', delete_friend_request),
+
 
 
     path('api/friend/', get_friends),
