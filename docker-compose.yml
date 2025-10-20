@@ -29,3 +29,11 @@ services:
        - db
     env_file:
       - ./backend/.env
+
+
+  frontend:
+    build: ./frontend
+    image: frontend
+    container_name: frontend
+    ports:
+      - "80:3000"
