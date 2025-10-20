@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 #from user_profile import views as user_views
 from group_event import views as group_event_views
-from friend_request import views as friend_request_view
+from friend_request.views import get_friend_requests, create_friend_request, delete_friend_request, update_friend_request
 from user.views import get_user, get_me_user, create_user, update_user, delete_user, login_user
 from friend.views import get_friends, create_friend, delete_friend, update_friend
 from member_role import views as member_role_view
@@ -16,7 +16,14 @@ urlpatterns = [
     #path('', include('user.urls')),
     path('api/auth/', include('knox.urls')),
     path('api/group_event/', group_event_views.GroupEventList.as_view()),
-    path('api/friend_request/', friend_request_view.FriendRequestList.as_view()),
+
+    
+    path('api/friend_request/', get_friend_requests),
+    path('api/create_friend_request/', create_friend_request),
+    path('api/update_friend_request/', delete_friend_request),
+    path('api/delete_friend_request/', update_friend_request),
+
+
     path('api/friend/', get_friends),
     path('api/create_friend', create_friend),
     path('api/update_friend/<int:pk>', update_friend),
