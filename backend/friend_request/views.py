@@ -14,6 +14,14 @@ def get_friend_requests(request):
     serializer = FriendRequestSerializer(friends, many=True) # convert datas to serializer (JSON)
     return Response(serializer.data)
 
+@api_view((["GET"]))
+@permission_classes([AllowAny])
+def get_user_friend_request(request, friend_id):
+    user = FriendRequest.objects.filter(friend_id=friend_id, status = "pending")
+    serializer = FriendRequestSerializer(user, many=True)
+    return Response(serializer.data)
+
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_friend_request(request):
@@ -38,6 +46,21 @@ def update_friend_request(request, pk):
         serializer.save() # UPDATE
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["PATCH"])
+@permission_classes([AllowAny])
+def update_status_friend_request(request, pk, f_status):
+    try:
+        friend = FriendRequest.objects.get(pk=pk)
+    except FriendRequest.DoesNotExist:
+        return Response(status = status.HTTP_404_not_FOUND)
+    
+    serialzer = FriendRequestSerializer(friend, data={"status": f_status}, partial=True)
+    if serialzer.is_valid():
+        serialzer.save()
+        return Response(serialzer.data)
+    return Response(serialzer.errors, status = status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(["DELETE"])
 @permission_classes([AllowAny])

@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'user',
     'group',
-    'group_event',
     'friend',
     'friend_request',
     'member_role',

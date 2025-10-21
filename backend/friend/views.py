@@ -14,6 +14,16 @@ def get_friends(request):
     serializer = FriendSerializer(friends, many=True) # convert datas to serializer (JSON)
     return Response(serializer.data)
 
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def get_friend_by_user_id(request, user_id):
+    try:
+        friends = Friend.objects.filter(user_id = user_id)
+        serializer = FriendSerializer(friends, many = True)
+    except Friend.DoesNotExist:
+        return Response([], status=status.HTTP_404_NOT_FOUND)
+    return Response(serializer.data)
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_friend(request):
