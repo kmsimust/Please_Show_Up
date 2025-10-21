@@ -1,0 +1,23 @@
+.signup-bg {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('/login-background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+}
+
+.signup-card {
+    width: 400px;
+    padding: 30px;
+    background-color: #e0e0e0;
+    border: 3px solid #9c27b0;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
