@@ -5,11 +5,10 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-        index("routes/101_home.tsx"),
-        route("/about", "routes/102_about.tsx"),
-        route("/signup", "routes/103_signup.tsx"),
-        route("/login", "routes/104_login.tsx"),
-        route("/friend", "routes/105_friend.tsx"),
+        index("routes/about.tsx"),
+        route("/signup", "routes/signup.tsx"),
+        route("/login", "routes/login.tsx"),
+        route("/friend", "routes/friend.tsx"),
         
         // route("/channel/:channelId", "routes/201_channel.tsx"),
 ] satisfies RouteConfig;
