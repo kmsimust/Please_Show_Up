@@ -1,5 +1,5 @@
-import type { Route } from "./+types/about";
-import { AboutUsPage } from "../pages/about_us/about_us";
+import type { Route } from "./+types/learn";
+import LearnPage from "../pages/learn/learn";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,6 +8,6 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function AboutRoute() {
-  return <AboutUsPage />;
+export default function LearnRoute() {
+  return <LearnPage />;
 }

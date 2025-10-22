@@ -1,10 +1,13 @@
-import { Pages_Login } from "../pages/login/login";
-import NavbarUnauth from "~/components/navbar";
+import type { Route } from "./+types/login";
+import { LoginPage } from "../pages/login/login";
 
-export default function Login() {
-  return (
-      <>
-      <Pages_Login/>
-      </>
-    );
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "Login to Please show up system" },
+    { name: "description", content: "Welcome to React Router!" },
+  ];
+}
+
+export default function LoginRoute() {
+  return <LoginPage />;
 }

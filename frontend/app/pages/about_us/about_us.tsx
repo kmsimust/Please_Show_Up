@@ -3,6 +3,8 @@ import calendar from "../../assets/images/calendar.png";
 import event from "../../assets/images/event.png";
 import group from "../../assets/images/group.png";
 
+import "./about_us.css";
+
 export function AboutUsPage() {
   return (
     <div
@@ -13,15 +15,7 @@ export function AboutUsPage() {
       }}
     >
       {/* Header / Hero */}
-      <header
-        style={{
-          background: "#17563f",
-          color: "white",
-          padding: "36px 20px",
-          textAlign: "center",
-          position: "relative",
-        }}
-      >
+      <header className="main-header">
         <div
           style={{
             position: "absolute",

@@ -1,14 +1,15 @@
-import logo from "../assets/images/logo.png";
-//import { getUser } from "../utils/auth-me";
+import logo from "../images/logo.png";
+import userProfile from "../../public/user.png"
+import { getUser } from "../utils/auth-me";
 
 const NavBar = () => {
   // const [userProfile, setUserProfile] = useState<UserType | null>(null);
-  //const user = getUser();
+  const user = getUser();
   // const user_pfp = user?.profile_image;
   // if (user_pfp == "defualt"){
   //   user_pfp = "../public/user.png"
   // }
-
+  
   // console.log("user: ", user);
 
   // useEffect(() => {
@@ -27,17 +28,15 @@ const NavBar = () => {
 
         {/* Profile */}
         <div className="d-flex align-items-center">
-          <span className="fw-semibold fontGeorgia fs-6 me-2">
-            {/*user && <div>{user?.username}</div>*/}
-          </span>
+          <span className="fw-semibold fontGeorgia fs-6 me-2">{user && <div>{user?.username}</div>}</span>
+          
 
           <a href="/profile">
             <img
               src={
-                "/user.png"
-                /*user?.profile_image == "default"
+                user?.profile_image == "default"
                   ? userProfile
-                  : user?.profile_image*/
+                  : user?.profile_image
               }
               alt="profile"
               className="rounded-circle"
