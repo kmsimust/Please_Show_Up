@@ -59,8 +59,8 @@ urlpatterns = [
     #group request table
     path('api/get_group_request', get_group_request),
     path('api/create_group_request', create_group_request),
-    path('api/update_group_request', update_group_request),
-    path('api/delete_group_request', delete_group_request),
+    path('api/update_group_request/<int:pk>', update_group_request),
+    path('api/delete_group_request/<int:pk>', delete_group_request),
 
     
     #event table link

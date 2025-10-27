@@ -52,7 +52,6 @@ def update_friend(request, pk):
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def delete_friend(request, pk):
-    #id = request.GET.get('pk') # 4
     try:
         friend = Friend.objects.get(pk=pk)
     except Friend.DoesNotExist:
