@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import bgImg from "../images/login-background.png";
+import bgImg from "public/login-background.png";
 import axios from "axios";
 
 export function SignUpPage() {

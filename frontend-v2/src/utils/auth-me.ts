@@ -48,7 +48,7 @@ export const getUser = (): UserType | null => {
 };
 
 // ✅ Remove user cookie
-// removie cookie is kinda similar to this
+// remove cookie is kinda similar to this
 export const removeUser = () => {
   Cookies.remove(USER_KEY);
 };

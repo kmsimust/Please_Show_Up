@@ -4,7 +4,6 @@ import NavbarUnauth from "~/components/navbar";
 export default function Login() {
   return (
       <>
-      <NavbarUnauth />
       <Pages_Login/>
       </>
     );

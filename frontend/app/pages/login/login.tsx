@@ -1,5 +1,5 @@
 import { useState } from "react";
-import bgImg from '~/images/login-background.png'
+import bgImg from 'public/login-background.png'
 import axios from 'axios';
 
 // Unused imports
