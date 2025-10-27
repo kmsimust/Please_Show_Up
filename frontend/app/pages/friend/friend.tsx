@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import NavBar from "../../components/navbar";
 import Sidebar from "../../components/sidebar"; // ✅ import sidebar component
+
 export function FriendPage() {
   const [username, setUsername] = useState("");
   const [friend, setFriend] = useState<any>(null);

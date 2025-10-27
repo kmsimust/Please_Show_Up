@@ -1,56 +1,19 @@
 import "./group.css";
-import logo from "../../images/logo.png";
+import NavBar from "../../components/navbar";
+import Sidebar from "../../components/sidebar";
 
-
-export function Group() {
+export function GroupPage() {
   const handleCreateGroup = () => {};
 
   return (
     <>
-      {/* Navbar */}
-      <nav className="navbar navbar-expand-lg bg-green-main">
-        <div className="container-fluid d-flex justify-content-between align-items-center px-4">
-          {/* Logo */}
-          <a className="navbar-brand d-flex align-items-center" href="#">
-            <img src={logo} style={{ width: 140 }} alt="logo" />
-          </a>
-
-          {/* Profile */}
-          <div className="d-flex align-items-center">
-            <span className="fw-semibold fontGeorgia fs-6 me-2">Gotzibara</span>
-            <a href="/profile">
-              <img
-                src="/image/genki_dama.jpg"
-                alt="profile"
-                className="rounded-circle"
-                style={{ width: "50px", height: "50px" }}
-              />
-            </a>
-          </div>
-        </div>
-      </nav>
-
-      {/* Main content with sidebar */}
+      <NavBar />
       <div className="d-flex">
         {/* Sidebar */}
-        <div className="sidebar p-3">
-          <a href="/group">
-            <button className="sideBtn mb-3">Home</button>
-          </a>
-          <a href="/profile">
-            <button className="sideBtn mb-3">Profile</button>
-          </a>
-          <a href="/friend">
-            <button className="sideBtn mb-3">Friends</button>
-          </a>
-          <a href="/message">
-            <button className="sideBtn mb-3">Messages</button>
-          </a>
-        </div>
+        <Sidebar />
 
-        {/* Group content */}
+        {/* Main content */}
         <div className="flex-grow-1 p-4">
-          {/* Create group button */}
           <div className="mb-4">
             <button
               onClick={handleCreateGroup}
@@ -61,7 +24,7 @@ export function Group() {
             </button>
           </div>
 
-          {/* Group cards */}
+          {/* Example group card */}
           <div className="groupCard rounded-4 p-3 mb-4">
             <div className="d-flex justify-content-between align-items-center">
               <p className="fw-bold fontGeorgia fs-4 m-0">isp group work</p>
@@ -84,6 +47,7 @@ export function Group() {
             </div>
           </div>
 
+          {/* Another example */}
           <div className="groupCard rounded-4 p-3">
             <div className="d-flex justify-content-between align-items-center">
               <p className="fw-bold fontGeorgia fs-4 m-0">our friend gang</p>
