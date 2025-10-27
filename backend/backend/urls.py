@@ -6,7 +6,7 @@ from friend_request.views import get_user_friend_request, get_friend_requests,\
     update_status_friend_request
 
 from user.views import get_user, get_me_user, create_user, update_user,\
-    delete_user, login_user
+    delete_user, login_user, get_user_by_username
 
 from friend.views import get_friends, create_friend, delete_friend,\
     update_friend , get_friend_by_user_id
@@ -75,6 +75,7 @@ urlpatterns = [
     path('api/user/create/', create_user),
     path('api/user/login/', login_user),
     path('api/user/update/<int:pk>', update_user),
-    path('api/user/delete/<int:pk>', delete_user)
+    path('api/user/delete/<int:pk>', delete_user),
+    path('api/user/get_user_by_username/<int:username>', get_user_by_username)
 ]
 

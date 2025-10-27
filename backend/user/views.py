@@ -95,3 +95,11 @@ def delete_user(request, pk):
 
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_user_by_username(request, username):
+    users = User.objects.get(username = username)
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)

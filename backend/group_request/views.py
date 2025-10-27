@@ -12,7 +12,7 @@ from .models import GroupRequest
 @permission_classes([IsAuthenticated])
 def get_group_request(request):
     group_request = GroupRequest.objects.all()
-    serializer = GroupRequestSerializers(GroupRequest, many = True)
+    serializer = GroupRequestSerializers(group_request, many = True)
     return Response(serializer.data)
 
 @api_view(["POST"])
