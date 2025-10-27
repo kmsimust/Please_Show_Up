@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'member_role',
     'group_member',
     'event',
-    'inactive_date'
+    'inactive_date',
+    'group_request'
 ]
 
 MIDDLEWARE = [

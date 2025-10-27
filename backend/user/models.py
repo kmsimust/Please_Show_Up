@@ -7,7 +7,7 @@ class User(AbstractUser):
     email = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=255)
     profile_image = models.CharField(max_length=100, default="default")
-    banner = models.CharField(max_length=100, default="dafault")
+    banner = models.CharField(max_length=100, default="default")
     gender = models.CharField(max_length=10, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     phone_number = models.CharField(max_length=12, null=True, blank=True)

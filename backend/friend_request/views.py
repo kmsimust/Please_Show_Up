@@ -2,6 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from friend.models import Friend
+from friend.serializers import FriendSerializer
 from .serializers import FriendRequestSerializer
 from .models import FriendRequest
 
@@ -23,7 +25,7 @@ def get_user_friend_request(request, friend_id):
 
 
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def create_friend_request(request):
     body = request.data
     serializer = FriendRequestSerializer(data=body)
@@ -33,7 +35,7 @@ def create_friend_request(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PUT"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def update_friend_request(request, pk):
     body = request.data
     try:
@@ -48,22 +50,29 @@ def update_friend_request(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def update_status_friend_request(request, pk, f_status):
     try:
-        friend = FriendRequest.objects.get(pk=pk)
+        friend_request = FriendRequest.objects.get(pk=pk)
     except FriendRequest.DoesNotExist:
-        return Response(status = status.HTTP_404_not_FOUND)
-    
-    serialzer = FriendRequestSerializer(friend, data={"status": f_status}, partial=True)
-    if serialzer.is_valid():
-        serialzer.save()
-        return Response(serialzer.data)
-    return Response(serialzer.errors, status = status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    serializer = FriendRequestSerializer(friend_request, data={"status": f_status}, partial=True)
+    if serializer.is_valid():
+        serializer.save()  # Save status first
+        if f_status == "approved":
+            data = {"user_id": friend_request.user_id.id, "friend_id": friend_request.friend_id.id}
+
+            friend_serializer = FriendSerializer(data=data)
+            if friend_serializer.is_valid():
+                friend_serializer.save()
+        
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["DELETE"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def delete_friend_request(request, pk):
     #id = request.GET.get('pk') # 4
     try:
