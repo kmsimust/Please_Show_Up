@@ -23,7 +23,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost -uroot -prootpass"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -prootpass"
           --health-interval=5s
           --health-timeout=5s
           --health-retries=20
@@ -58,8 +58,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          # In case requirements.txt is missing something, ensure these essentials:
-          pip install "django>=5.0" djangorestframework python-dotenv mysqlclient django-cors-headers django-rest-knox || true
+          # Safety net if something's missing in requirements.txt
+          pip install python-dotenv mysqlclient djangorestframework django-cors-headers django-rest-knox || true
 
       - name: Create .env for CI (matches your settings.py)
         run: |
@@ -69,42 +69,37 @@ jobs:
           SECRET_KEY=ci-secret-key-change-me
           ALLOWED_HOSTS=*
 
-          # MySQL (as required by your settings.py)
+          # MySQL (names your settings.py expects)
           MYSQL_NAME=test_db
           MYSQL_USER=test_user
           MYSQL_PASSWORD=test_pass
-          DB_HOST=mysql
+          DB_HOST=127.0.0.1
           DB_PORT=3306
           EOF
 
-      - name: Wait for MySQL to accept connections
+      - name: Wait for MySQL (on localhost:3306)
         run: |
           for i in {1..40}; do
-            if mysqladmin ping -hmysql -utest_user -ptest_pass --silent; then
+            if mysqladmin ping -h 127.0.0.1 -utest_user -ptest_pass --silent; then
               echo "MySQL is up!"; break
             fi
             echo "Waiting for MySQL... ($i/40)"
             sleep 3
           done
 
-      - name: Show Django version
-        run: python -c "import django; print('Django', django.get_version())" || true
-
       - name: Apply migrations
-        run: |
-          python manage.py migrate --noinput
+        run: python manage.py migrate --noinput
 
       - name: Run ONLY friend_request tests
         env:
-          # If any code reads env directly (not via dotenv), export dupes too:
+          # If any code reads env directly (not just via dotenv), export duplicates too:
           MYSQL_NAME: test_db
           MYSQL_USER: test_user
           MYSQL_PASSWORD: test_pass
-          DB_HOST: mysql
+          DB_HOST: 127.0.0.1
           DB_PORT: "3306"
           SECRET_KEY: ci-secret-key-change-me
           DEBUG: "1"
         run: |
-          # Optional: check for unmade migrations without failing the job
           python manage.py makemigrations --check --dry-run || true
           python manage.py test friend_request -v 2
