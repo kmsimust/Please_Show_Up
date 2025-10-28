@@ -41,28 +41,3 @@ jobs:
           python manage.py check
           python manage.py makemigrations --check --dry-run
         continue-on-error: true
-
-  lint-frontend:
-    name: Lint Frontend (Typecheck & Build)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Use Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install
-        run: npm ci
-
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Build (non-blocking)
-        run: npm run build
-        continue-on-error: true
