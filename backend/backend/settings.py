@@ -43,11 +43,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'knox',
+    #'bcrypt',
     'corsheaders',
     'user',
     'group',
-    'group_event',
-    'user_profile'
+    'friend',
+    'friend_request',
+    'member_role',
+    'group_member',
+    'event',
+    'inactive_date',
+    'group_request'
 ]
 
 MIDDLEWARE = [
@@ -68,11 +74,9 @@ CORS_ALLOW_ORIGINS = [
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
 
-AUTH_USER_MODEL = 'user.CustomUser'
+AUTH_USER_MODEL = 'user.User'
 
-AUTHENTICATION_BACKENDS = [
-    'user.auth_backend.EmailAuthBackend',
-]
+#AUTHENTICATION_BACKENDS = ['user.auth_backend.EmailAuthBackend']
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -94,7 +98,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'knox.auth.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'user.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }
 
 # Database
@@ -126,6 +138,10 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
+#PASSWORD_HASHERS = [
+#    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+#]
 
 AUTH_PASSWORD_VALIDATORS = [
     {

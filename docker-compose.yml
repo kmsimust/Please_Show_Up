@@ -7,6 +7,8 @@ services:
     container_name: db
     environment:
       MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
       MYSQL_ROOT_PASSWORD: test
     volumes:
       - ./data:/var/lib/mysql
@@ -27,3 +29,24 @@ services:
        - db
     env_file:
       - ./backend/.env
+
+
+  # frontend:
+  #   build: ./frontend
+  #   image: frontend
+  #   container_name: frontend
+  #   ports:
+  #     - "80:3000"
+
+  #my_frontend:
+  #  build:  ./frontend
+  #  image: my_frontend:latest
+  #  container_name: my_frontend
+  #  restart: always
+  #  ports:
+  #    - 5173:5173
+  #  volumes:
+  #    - ./frontend:/app
+  #  depends_on:
+  #    - my_django
+      

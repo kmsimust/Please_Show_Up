@@ -13,8 +13,7 @@ python -m venv .venv
 
 2. activate environment in terminal.
 ```python
-(dir where env file exist)> .venv\Scripts\Activate.ps1
-or " .\.venv\Scripts\activate.bat " in command prompt
+(dir where env file exist)> " .\.venv\Scripts\activate " in command prompt
 
 # "(.venv) PS D:\directory>" should show up like this.
 ```

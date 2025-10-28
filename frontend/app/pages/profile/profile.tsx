@@ -1,50 +1,19 @@
 import "./profile.css";
-import logo from "../../images/logo.png";
+import NavBar from "../../components/navbar";
+import Sidebar from "../../components/sidebar"; // ✅ import Sidebar
+import miniuserProfile from "../../../public/user.png";
+import { getUser } from "../../utils/auth-me";
 
-
-export function Profile() {
+export function ProfilePage() {
+  const user = getUser();
   return (
     <>
-      {/* Navbar */}
-      <nav className="navbar navbar-expand-lg bg-green-main">
-        <div className="container-fluid d-flex justify-content-between align-items-center px-4">
-          {/* Logo */}
-          <a className="navbar-brand d-flex align-items-center" href="/group">
-            <img src={logo} style={{ width: 140 }} alt="logo" />
-          </a>
-
-          {/* Top-right PFP */}
-          <div className="d-flex align-items-center">
-            <span className="fw-semibold fontGeorgia fs-6 me-2">Gotzibara</span>
-            <a href="/profile">
-              <img
-                src="/image/genki_dama.jpg"
-                alt="profile"
-                className="rounded-circle"
-                style={{ width: "50px", height: "50px" }}
-              />
-            </a>
-          </div>
-        </div>
-      </nav>
+      <NavBar />
 
       {/* Body with sidebar */}
       <div className="d-flex">
-        {/* Sidebar */}
-        <div className="sidebar p-3">
-          <a href="/group">
-            <button className="sideBtn mb-3">Home</button>
-          </a>
-          <a href="/profile">
-            <button className="sideBtn mb-3">Profile</button>
-          </a>
-          <a href="/friend">
-            <button className="sideBtn mb-3">Friends</button>
-          </a>
-          <a href="/message">
-            <button className="sideBtn mb-3">Messages</button>
-          </a>
-        </div>
+        {/* ✅ Use Sidebar component */}
+        <Sidebar />
 
         {/* Main profile content */}
         <div className="flex-grow-1 p-4">
@@ -53,13 +22,17 @@ export function Profile() {
             <div className="profile-cover"></div>
 
             <img
-              src="/image/genki_dama.jpg"
+              src={
+                user?.profile_image == "default"
+                  ? miniuserProfile
+                  : user?.profile_image
+              }
               alt="profile"
               className="profile-avatar"
             />
 
             <div className="profile-bar">
-              <span className="profile-username">gotzibara #name</span>
+              <span className="profile-username">{user?.username}</span>
               <button className="edit-btn">edit profile</button>
             </div>
           </div>
@@ -68,14 +41,17 @@ export function Profile() {
           <div className="d-flex gap-4">
             <div className="info-box" style={{ width: "250px" }}>
               <h5 className="mb-3">personal info</h5>
-              <p>username: gotzibara</p>
-              <p>gender: --</p>
-              <p>birthdate: --</p>
-              <p>email: --</p>
-              <p>tel: --</p>
+              <p>username: {user?.username} </p>
+              <p>gender: {user?.gender == null ? "null" : user?.gender}</p>
+              <p>birthdate: {user?.date_of_birth == null ? "null" : user?.date_of_birth}</p>
+              <p>email: {user?.email == null ? "null" : user?.email}</p>
+              <p>tel: {user?.phone_number == null ? "null" : user?.phone_number}</p>
             </div>
 
-            <div className="info-box flex-grow-1" style={{ minHeight: "220px" }}>
+            <div
+              className="info-box flex-grow-1"
+              style={{ minHeight: "220px" }}
+            >
               {/* extra content (posts, etc.) */}
             </div>
           </div>

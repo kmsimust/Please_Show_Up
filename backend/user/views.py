@@ -1,98 +1,105 @@
-from django.shortcuts import render
-from rest_framework import viewsets, permissions
-from .serializers import *
-from .models import *
+# user/views.py
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from django.contrib.auth import get_user_model, authenticate
-from knox.models import AuthToken
-from .models import CustomUser
+from rest_framework import status
+from rest_framework.exceptions import APIException
+from django.contrib.auth import authenticate
+
+from .authentication import create_access_token, create_refresh_token
 from .serializers import UserSerializer
-from django.http import Http404
-from .serializers import RegisterSerializer
+from .models import User
 
 
-from rest_framework.exceptions import MethodNotAllowed
-User = get_user_model()
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_user(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_me_user(request):
+    # DRF's authentication system already set request.user
+    user = request.user
+
+    if not user or not user.is_authenticated:
+        raise APIException("Unauthenticated user.")
+
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
 
 
-class LoginViewset(viewsets.ViewSet):
-    permission_classes = [permissions.AllowAny]
-    serializer_class = LoginSerializer
-
-    def create(self, request):
-        serializer = self.serializer_class(data=request.data)
-
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            password = serializer.validated_data['password']
-
-            user = authenticate(request, email=email, password=password)
-
-            if user:
-                _, token = AuthToken.objects.create(user)
-
-                return Response(
-                    {
-                        "user": self.serializer_class(user).data,
-                        "token": token
-                    }
-                )
-        else:
-            return Response(
-                {"error": "invalid cred"}, 
-                status=401
-                )
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def create_user(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()  # password hashing handled in serializer.create
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class RegisterViewset(viewsets.ViewSet):
-    permission_classes = [permissions.AllowAny]
-    queryset = User.objects.all()
-    serializer_class = RegisterSerializer
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def login_user(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
 
-    def create(self, request):
-        serializer = self.serializer_class(data=request.data)
+    if not username or not password:
+        return Response({"detail": "Username and password required."},
+                        status=status.HTTP_400_BAD_REQUEST)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=400)
+    # Use Django's authenticate to verify password hash
+    user = authenticate(request, username=username, password=password)
+    if user is None:
+        raise APIException("Invalid credentials!")
 
-class SearchFriendViewset(viewsets.ViewSet):
-    """
-    Use DRF's built-in actions.
-    - GET /api/friends/?username=<name>  -> list() filtered by username
-    - GET /api/friends/<username>/       -> retrieve() by username
-    """
-    # GET /api/friends/?username=Gotzibara
-    def list(self, request):
-        username = request.query_params.get("username")
-        qs = CustomUser.objects.all()
-        if username:
-            qs = qs.filter(username__iexact=username)  # exact match, case-insensitive
-        # If you want to force a username param, uncomment next two lines:
-        # else:
-        #     return Response({"detail": "username query param is required"}, status=400)
-        serializer = UserSerializer(qs, many=True)
+    serializer = UserSerializer(user)
+    access_token = create_access_token(user.id)
+    refresh_token = create_refresh_token(user.id)
+    data = {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "user": serializer.data,  # password is write_only so it won't leak here
+    }
+    return Response(data, status=status.HTTP_200_OK)
+
+
+@api_view(["PUT", "PATCH"])
+@permission_classes([IsAuthenticated])
+def update_user(request, pk):
+    try:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # IMPORTANT: do NOT call user.set_password() here.
+    # Let the serializer hash it if "password" is present.
+    partial = request.method == "PATCH"
+    serializer = UserSerializer(user, data=request.data, partial=partial)
+    if serializer.is_valid():
+        serializer.save()  # password hashing handled in serializer.update
         return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # GET /api/friends/<username>/
-    # Router passes the path segment as pk (string is OK).
-    def retrieve(self, request, pk=None):
-        user = CustomUser.objects.filter(username__iexact=pk).first()
-        if not user:
-            raise Http404
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
 
-    def create(self, request):
-        raise MethodNotAllowed("POST")
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_user(request, pk):
+    try:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def update(self, request, pk=None):
-        raise MethodNotAllowed("PUT")
+    user.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def partial_update(self, request, pk=None):
-        raise MethodNotAllowed("PATCH")
 
-    def destroy(self, request, pk=None):
-        raise MethodNotAllowed("DELETE")
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_user_by_username(request, username):
+    users = User.objects.get(username = username)
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)

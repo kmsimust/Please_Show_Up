@@ -1,26 +1,52 @@
-import { NavLink } from "react-router";
+import logo from "../assets/images/logo.png";
+import { getUser } from "../utils/auth-me";
 
-export default function NavbarUnauth() {
-  return (
-    <header className="w-full px-8 text-gray-700 bg-white shadow-sm">
-      <div className="container flex flex-col md:flex-row items-center justify-between py-5 mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row items-center">
-          <NavLink to="/" className="flex items-center mb-5 md:mb-0">
-            <span className="text-xl font-black text-gray-900 select-none">
-              Please <span className="text-indigo-600">Show UP!</span>
-            </span>
-          </NavLink>
-          <nav className="flex flex-wrap items-center ml-0 md:ml-8 md:border-l md:pl-8">
-            <NavLink
-              to="/"
-              end
-              className="mr-5 font-medium text-gray-600 hover:text-gray-900"
-            >
-              About Us
-            </NavLink>
-          </nav>
-        </div>
-      </div>
-    </header>
-  );
-}
+const NavBar = () => {
+    // const [userProfile, setUserProfile] = useState<UserType | null>(null);
+    const user = getUser();
+    // const user_pfp = user?.profile_image;
+    // if (user_pfp == "defualt"){
+    //   user_pfp = "../public/user.png"
+    // }
+
+    // console.log("user: ", user);
+
+    // useEffect(() => {
+    //   if (user) {
+    //     setUserProfile(user);
+    //   }
+    // }, [user]);
+
+    return (
+        <nav className="navbar navbar-expand-lg bg-green-main">
+            <div className="container-fluid d-flex justify-content-between align-items-center px-4">
+                {/* Logo */}
+                <a className="navbar-brand d-flex align-items-center" href="#">
+                    <img src={logo} style={{ width: 140 }} alt="logo" />
+                </a>
+
+                {/* Profile */}
+                <div className="d-flex align-items-center">
+                    <span className="fw-semibold fontGeorgia fs-6 me-2">
+                        {user && <div>{user?.username}</div>}
+                    </span>
+
+                    <a href="/profile">
+                        <img
+                            src={
+                                user?.profile_image == "default"
+                                    ? "/user.png"
+                                    : user?.profile_image
+                            }
+                            alt="profile"
+                            className="rounded-circle"
+                            style={{ width: "50px", height: "50px" }}
+                        />
+                    </a>
+                </div>
+            </div>
+        </nav>
+    );
+};
+
+export default NavBar;
