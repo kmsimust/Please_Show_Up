@@ -42,14 +42,9 @@ export function SignUpPage() {
 
   return (
     // background
-    <div
+    <div className="flex-center"
       style={{
-        margin: 0,
-        padding: 0,
         height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
         backgroundImage: "url('" + bgImg + "')",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -57,17 +52,6 @@ export function SignUpPage() {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <div
-        style={{
-          margin: 0,
-          padding: 0,
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontFamily: "Arial, sans-serif",
-        }}
-      >
         <div
           style={{
             width: "400px",
@@ -185,7 +169,6 @@ export function SignUpPage() {
             </a>
           </div>
         </div>
-      </div>
     </div>
   );
 }

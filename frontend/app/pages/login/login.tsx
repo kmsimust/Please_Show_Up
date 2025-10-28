@@ -51,18 +51,8 @@ export function LoginPage() {
   };
 
   return (
-    <div className="bg-login">
-      <div
-        style={{
-          width: "400px",
-          padding: "30px",
-          background: "#e0e0e0",
-          border: "3px solid #9c27b0",
-          textAlign: "center",
-          borderRadius: "8px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-        }}
-      >
+    <div className="login-bg flex-center">
+      <div className="login-box">
         <h2
           style={{
             marginBottom: "25px",
@@ -76,22 +66,12 @@ export function LoginPage() {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
+            className="login-input"
             name="username"
             value={formData.username}
             onChange={handleChange}
             placeholder="Enter your username or Email"
             required
-            style={{
-              width: "100%",
-              padding: "14px",
-              margin: "10px 0",
-              border: "none",
-              background: "#fff",
-              fontSize: "16px",
-              fontWeight: "bold",
-              borderRadius: "4px",
-              boxSizing: "border-box",
-            }}
           />
 
           <input
