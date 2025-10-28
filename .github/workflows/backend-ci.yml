@@ -1,0 +1,81 @@
+name: PSU Backend CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  django:
+    name: Django migrate & checks (MySQL service)
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_DATABASE: test
+          MYSQL_USER: root
+          MYSQL_PASSWORD: test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -ptest"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+    env:
+      # Match your backend/.env expectations
+      MYSQL_NAME: test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: test
+      DB_HOST: 127.0.0.1
+      DB_PORT: "3306"
+      # Django defaults
+      PYTHONWARNINGS: ignore
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          # Optional test tooling if you later add pytest tests:
+          # pip install pytest pytest-django
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h"$DB_HOST" -P"$DB_PORT" -uroot -p"$MYSQL_PASSWORD" --silent; then
+              echo "MySQL is up"; break
+            fi
+            echo "Waiting for MySQL... ($i)"
+            sleep 2
+          done
+
+      - name: Django checks & migrations
+        run: |
+          python manage.py check
+          python manage.py migrate --noinput
+
+      # If/when you add real tests, switch to pytest or Django test runner:
+      # - name: Run tests
+      #   run: |
+      #     pytest -q
+      # or:
+      #     python manage.py test -v 2
