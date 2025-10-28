@@ -1,5 +1,4 @@
-import logo from "../images/logo.png";
-import userProfile from "../../public/user.png"
+import logo from "../assets/images/logo.png";
 import { getUser } from "../utils/auth-me";
 import "./navbar.css"
 

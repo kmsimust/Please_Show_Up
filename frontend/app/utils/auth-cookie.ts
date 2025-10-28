@@ -15,7 +15,7 @@ export const setAccessToken = (token: string | null, days = 7) => {
   window.dispatchEvent(new CustomEvent(AUTH_EVENT, { detail: { token } }));
 };
 
-export const getAccessToken = (): string | null =>
+export const getAccessToken = (): string | null => 
   Cookies.get(ACCESS_TOKEN_KEY) ?? null;
 
 //export const removeaccesstokrn
