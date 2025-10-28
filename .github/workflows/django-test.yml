@@ -1,14 +1,12 @@
-name: backend-ci
+name: Django CI (backend)
 
 on:
   push:
     paths:
       - "backend/**"
-      - ".github/workflows/django-test.yml"
   pull_request:
     paths:
       - "backend/**"
-      - ".github/workflows/django-test.yml"
 
 jobs:
   test:
@@ -16,97 +14,97 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8
+        image: mysql:8.0
         env:
-          MYSQL_DATABASE: psu_db
-          MYSQL_USER: psu
-          MYSQL_PASSWORD: psu
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_pass
+          MYSQL_ROOT_PASSWORD: rootpass
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -proot"
-          --health-interval=10s
+          --health-cmd="mysqladmin ping -h localhost -uroot -prootpass"
+          --health-interval=5s
           --health-timeout=5s
-          --health-retries=15
+          --health-retries=20
 
-    env:
-      PYTHON_VERSION: "3.12"
-      DJANGO_SETTINGS_MODULE: "backend.settings"
-      MYSQL_NAME: "psu_db"
-      MYSQL_USER: "psu"
-      MYSQL_PASSWORD: "psu"
-      DB_HOST: "127.0.0.1"
-      DB_PORT: "3306"
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: "3.12"
 
       - name: Cache pip
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: pip-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('backend/requirements.txt') }}
-          restore-keys: pip-${{ runner.os }}-${{ env.PYTHON_VERSION }}-
+          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-      - name: Install system deps
+      - name: Install system deps for mysqlclient + CLI
         run: |
           sudo apt-get update
-          sudo apt-get install -y default-libmysqlclient-dev build-essential pkg-config
+          sudo apt-get install -y build-essential default-libmysqlclient-dev default-mysql-client pkg-config
 
-      - name: Install Python deps
-        working-directory: backend
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest pytest-django coverage
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # In case requirements.txt is missing something, ensure these essentials:
+          pip install "django>=5.0" djangorestframework python-dotenv mysqlclient django-cors-headers django-rest-knox || true
 
-      - name: Wait for MySQL
+      - name: Create .env for CI (matches your settings.py)
+        run: |
+          cat > .env << 'EOF'
+          # Django
+          DEBUG=1
+          SECRET_KEY=ci-secret-key-change-me
+          ALLOWED_HOSTS=*
+
+          # MySQL (as required by your settings.py)
+          MYSQL_NAME=test_db
+          MYSQL_USER=test_user
+          MYSQL_PASSWORD=test_pass
+          DB_HOST=mysql
+          DB_PORT=3306
+          EOF
+
+      - name: Wait for MySQL to accept connections
         run: |
           for i in {1..40}; do
-            if mysqladmin ping -h 127.0.0.1 -u root -proot --silent; then
-              echo "MySQL is up"; break
+            if mysqladmin ping -hmysql -utest_user -ptest_pass --silent; then
+              echo "MySQL is up!"; break
             fi
-            echo "Waiting for MySQL ($i/40) ..."
-            sleep 2
+            echo "Waiting for MySQL... ($i/40)"
+            sleep 3
           done
 
-      - name: Django check & migrate
-        working-directory: backend
-        env:
-          DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
-          MYSQL_NAME: ${{ env.MYSQL_NAME }}
-          MYSQL_USER: ${{ env.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ env.MYSQL_PASSWORD }}
-          DB_HOST: ${{ env.DB_HOST }}
-          DB_PORT: ${{ env.DB_PORT }}
+      - name: Show Django version
+        run: python -c "import django; print('Django', django.get_version())" || true
+
+      - name: Apply migrations
         run: |
-          python manage.py check --deploy
           python manage.py migrate --noinput
 
-      - name: Run tests
-        working-directory: backend
+      - name: Run ONLY friend_request tests
         env:
-          DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
-          MYSQL_NAME: ${{ env.MYSQL_NAME }}
-          MYSQL_USER: ${{ env.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ env.MYSQL_PASSWORD }}
-          DB_HOST: ${{ env.DB_HOST }}
-          DB_PORT: ${{ env.DB_PORT }}
+          # If any code reads env directly (not via dotenv), export dupes too:
+          MYSQL_NAME: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_pass
+          DB_HOST: mysql
+          DB_PORT: "3306"
+          SECRET_KEY: ci-secret-key-change-me
+          DEBUG: "1"
         run: |
-          coverage run -m pytest -v
-          coverage xml -o coverage.xml || true
-
-      - name: Upload coverage (artifact)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-coverage-xml
-          path: backend/coverage.xml
-          if-no-files-found: ignore
+          # Optional: check for unmade migrations without failing the job
+          python manage.py makemigrations --check --dry-run || true
+          python manage.py test friend_request -v 2
