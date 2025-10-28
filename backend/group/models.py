@@ -12,3 +12,5 @@ class Group(models.Model):
     class Meta:
         ordering = ["-created_at"]
         db_table = "group"
+
+        
