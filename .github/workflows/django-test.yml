@@ -4,11 +4,11 @@ on:
   push:
     paths:
       - "backend/**"
-      - ".github/workflows/backend-ci.yml"
+      - ".github/workflows/django-test.yml"
   pull_request:
     paths:
       - "backend/**"
-      - ".github/workflows/backend-ci.yml"
+      - ".github/workflows/django-test.yml"
 
 jobs:
   test:
@@ -107,4 +107,3 @@ jobs:
           name: backend-coverage-xml
           path: backend/coverage.xml
           if-no-files-found: ignore
-#please work
