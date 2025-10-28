@@ -23,21 +23,20 @@ jobs:
           MYSQL_PASSWORD: psu
           MYSQL_ROOT_PASSWORD: root
         ports:
-          - 3305:3306
-        # Make GH runners wait until MySQL is actually ready
+          - 3306:3306
         options: >-
           --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -proot"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=10
+          --health-retries=15
 
+    # 👇 Match your settings.py exactly
     env:
-      # 👉 Adjust these to match your project
       PYTHON_VERSION: "3.12"
-      DJANGO_SETTINGS_MODULE: "backend.settings"     # <--- change if different
-      DB_NAME: "psu_db"
-      DB_USER: "psu"
-      DB_PASSWORD: "psu"
+      DJANGO_SETTINGS_MODULE: "backend.settings"
+      MYSQL_NAME: "psu_db"
+      MYSQL_USER: "psu"
+      MYSQL_PASSWORD: "psu"
       DB_HOST: "127.0.0.1"
       DB_PORT: "3306"
 
@@ -57,48 +56,38 @@ jobs:
           key: pip-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('backend/requirements.txt') }}
           restore-keys: pip-${{ runner.os }}-${{ env.PYTHON_VERSION }}-
 
-      - name: Install dependencies
+      # mysqlclient build deps (safe even if you use PyMySQL)
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-libmysqlclient-dev build-essential pkg-config
+
+      - name: Install Python deps
         working-directory: backend
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          # if you use pytest + coverage (recommended)
           pip install pytest pytest-django coverage
 
-      - name: Wait for MySQL (simple loop)
+      - name: Wait for MySQL
         run: |
-          for i in {1..30}; do
+          for i in {1..40}; do
             if mysqladmin ping -h 127.0.0.1 -u root -proot --silent; then
               echo "MySQL is up"; break
             fi
-            echo "Waiting for MySQL ($i/30) ..."
+            echo "Waiting for MySQL ($i/40) ..."
             sleep 2
           done
-
-      # If your Django settings read DB credentials from env vars, you're done.
-      # If you need a .env file, uncomment the next step to generate one for CI:
-      # - name: Create .env for CI
-      #   working-directory: backend
-      #   run: |
-      #     cat > .env <<EOF
-      #     DB_NAME=${DB_NAME}
-      #     DB_USER=${DB_USER}
-      #     DB_PASSWORD=${DB_PASSWORD}
-      #     DB_HOST=${DB_HOST}
-      #     DB_PORT=${DB_PORT}
-      #     DEBUG=0
-      #     SECRET_KEY=ci-secret-key
-      #     EOF
 
       - name: Django check & migrate
         working-directory: backend
         env:
-          DB_NAME: ${{ env.DB_NAME }}
-          DB_USER: ${{ env.DB_USER }}
-          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+          DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
+          MYSQL_NAME: ${{ env.MYSQL_NAME }}
+          MYSQL_USER: ${{ env.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ env.MYSQL_PASSWORD }}
           DB_HOST: ${{ env.DB_HOST }}
           DB_PORT: ${{ env.DB_PORT }}
-          DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
         run: |
           python manage.py check --deploy
           python manage.py migrate --noinput
@@ -108,7 +97,6 @@ jobs:
         env:
           DJANGO_SETTINGS_MODULE: ${{ env.DJANGO_SETTINGS_MODULE }}
         run: |
-          # If you don’t use coverage, just: pytest -q
           coverage run -m pytest -q
           coverage xml -o coverage.xml || true
 
