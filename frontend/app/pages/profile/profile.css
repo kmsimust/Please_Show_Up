@@ -53,7 +53,6 @@
 .profile-username {
   font-weight: bold;
   font-size: 26px;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: #000;
 }
 
@@ -64,7 +63,6 @@
   border-radius: 20px;
   padding: 6px 18px;
   font-weight: bold;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: black;
 }
 .edit-btn:hover {
@@ -77,6 +75,5 @@
   background-color: rgb(0, 191, 99);
   border-radius: 20px;
   padding: 20px;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: black;
 }

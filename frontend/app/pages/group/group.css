@@ -13,8 +13,9 @@
 /* Group card */
 .groupCard {
   height: 200px;
-  background-color: rgb(111, 230, 171);
-  border: 2px solid black;
+  background: rgb(60, 183, 124);
+  border: 2px solid rgb(39, 39, 44);
+  color: white;
 }
 
 .groupImg {
