@@ -59,8 +59,6 @@ jobs:
       # Runs only your specified test file
       - name: Run specific tests
         env:
-          # Add the project root (one level up) to the python path
-          PYTHONPATH: ${{ github.workspace }}
           # Set the DJANGO_SETTINGS_MODULE
           DJANGO_SETTINGS_MODULE: backend.settings
           
@@ -69,6 +67,12 @@ jobs:
           # to force Django to use the sqlite3 test database and skip
           # all the MySQL environment variables.
           USE_SQLITE_FOR_TESTS: '1'
+          
+          # We have removed the PYTHONPATH variable.
+          # Since the working directory is already './backend',
+          # Python will automatically look for modules (like 'user', 'group')
+          # in that directory, which is the correct behavior.
+          # The old PYTHONPATH was confusing pytest's module discovery.
           
         run: |
           # This command runs ONLY your specific test file
