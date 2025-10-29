@@ -21,8 +21,14 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # All commands will run from the project root.
-    
+    # --- FIX ---
+    # The error log "pytest-django found a Django project in backend"
+    # tells us that 'backend' is the real project root.
+    # We will set our working directory to 'backend' for all steps.
+    defaults:
+      run:
+        working-directory: ./backend
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -43,12 +49,13 @@ jobs:
           # Install the pytest-django plugin to load Django settings
           pip install pytest-django
           
-          echo "--- Listing files in root directory ---"
+          echo "--- Listing files in backend directory ---"
           ls -la
           
           # This line will install all your project dependencies
-          # We look for requirements.txt inside the 'backend' folder
-          pip install -r backend/requirements.txt
+          # --- FIX ---
+          # We are now IN the 'backend' folder, so we just look for 'requirements.txt'
+          pip install -r requirements.txt
           
           echo "--- Listing installed packages (to check for Django) ---"
           pip list
@@ -56,15 +63,15 @@ jobs:
       # Runs only your specified test file
       - name: Run specific tests
         env:
-          # Add the project root (the workspace) to the python path
-          # This allows imports like 'from backend.friend_request import ...' to work
-          PYTHONPATH: ${{ github.workspace }}
+          # --- FIX ---
+          # We have removed the PYTHONPATH variable.
+          # pytest-django is handling the path for us, since we
+          # are in the 'backend' directory.
           
           # --- FIX ---
-          # Your settings.py file is at 'backend/backend/settings.py'.
-          # When running from the root with PYTHONPATH set to the root,
-          # the correct module path is 'backend.backend.settings'.
-          DJANGO_SETTINGS_MODULE: backend.backend.settings
+          # Since we are in the 'backend' folder (which contains 'manage.py'),
+          # the correct path to the settings module is 'backend.settings'
+          DJANGO_SETTINGS_MODULE: backend.settings
           
           # Based on your settings.py, we set this to '1'
           # to force Django to use the sqlite3 test database.
@@ -73,6 +80,7 @@ jobs:
         run: |
           # This command runs ONLY your specific test file
           # --nomigrations skips running migrations for faster tests
-          # We provide the full path to the test file from the root
-          pytest --nomigrations backend/friend_request/tests.py
+          # --- FIX ---
+          # We are in the 'backend' folder, so the path is just 'friend_request/tests.py'
+          pytest --nomigrations friend_request/tests.py
 
