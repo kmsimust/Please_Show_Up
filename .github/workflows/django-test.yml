@@ -21,11 +21,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # --- FIX ---
-    # We have removed the 'defaults: run: working-directory' key.
-    # All commands will now run from the project root, which is what
-    # the 'ModuleNotFoundError' implies your project structure needs.
-
+    # All commands will run from the project root.
+    
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -50,8 +47,7 @@ jobs:
           ls -la
           
           # This line will install all your project dependencies
-          # --- FIX ---
-          # We now look for requirements.txt inside the 'backend' folder
+          # We look for requirements.txt inside the 'backend' folder
           pip install -r backend/requirements.txt
           
           echo "--- Listing installed packages (to check for Django) ---"
@@ -60,13 +56,15 @@ jobs:
       # Runs only your specified test file
       - name: Run specific tests
         env:
-          # --- FIX ---
           # Add the project root (the workspace) to the python path
           # This allows imports like 'from backend.friend_request import ...' to work
           PYTHONPATH: ${{ github.workspace }}
           
-          # Set the DJANGO_SETTINGS_MODULE
-          DJANGO_SETTINGS_MODULE: backend.settings
+          # --- FIX ---
+          # Your settings.py file is at 'backend/backend/settings.py'.
+          # When running from the root with PYTHONPATH set to the root,
+          # the correct module path is 'backend.backend.settings'.
+          DJANGO_SETTINGS_MODULE: backend.backend.settings
           
           # Based on your settings.py, we set this to '1'
           # to force Django to use the sqlite3 test database.
@@ -75,7 +73,6 @@ jobs:
         run: |
           # This command runs ONLY your specific test file
           # --nomigrations skips running migrations for faster tests
-          # --- FIX ---
-          # We now provide the full path to the test file from the root
+          # We provide the full path to the test file from the root
           pytest --nomigrations backend/friend_request/tests.py
 
