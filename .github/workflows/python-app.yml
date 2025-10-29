@@ -53,18 +53,18 @@ jobs:
       # This step installs pytest and any dependencies from requirements.txt.
       # It now checks both the root and the backend/ folder.
 
-    # - name: Run tests
-    #   env:
-    #     # This tells settings.py to use the test_db.sqlite3
-    #     USE_SQLITE_FOR_TESTS: "1" 
-    #     # This tells pytest-django which settings file to load
-    #     DJANGO_SETTINGS_MODULE: "backend.settings"
-    #     # This tells Python to look for apps inside the 'backend' folder
-    #     PYTHONPATH: ./backend
-    #   run: |
-    #     # Set up the test database schema
-    #     python backend/manage.py migrate
+    - name: Run tests
+      env:
+        # This tells settings.py to use the test_db.sqlite3
+        USE_SQLITE_FOR_TESTS: "1" 
+        # This tells pytest-django which settings file to load
+        DJANGO_SETTINGS_MODULE: "backend.settings"
+        # This tells Python to look for apps inside the 'backend' folder
+        PYTHONPATH: ./backend
+      run: |
+        # Set up the test database schema
+        python backend/manage.py migrate
         
-    #     # Run the specific test file
-    #     pytest backend/friend_request/test.py
+        # Run the specific test file
+        pytest backend/friend_request/test.py
 
