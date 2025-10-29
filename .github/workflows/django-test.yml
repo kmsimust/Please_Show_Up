@@ -21,6 +21,11 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Set the default working directory for all steps in this job
+    defaults:
+      run:
+        working-directory: ./backend
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -38,12 +43,25 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pytest
-          # If you have a requirements.txt file, uncomment the following line
-          # pip install -r requirements.txt
+          
+          echo "--- Listing files in backend directory ---"
+          ls -la
+          
+          # This line will install all your project dependencies
+          # This assumes requirements.txt is in the 'backend' folder
+          pip install -r requirements.txt
+          
+          echo "--- Listing installed packages (to check for Django) ---"
+          pip list
 
       # Runs only your specified test file
       - name: Run specific tests
+        env:
+          # Add the project root (one level up) to the python path
+          # This helps pytest find your 'backend' module and other root-level modules
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           # This command runs ONLY your specific test file
-          pytest backend/friend_request/tests.py
+          # We are now running from the 'backend' directory
+          pytest friend_request/tests.py
 
