@@ -62,12 +62,21 @@ jobs:
           # Add the project root (one level up) to the python path
           PYTHONPATH: ${{ github.workspace }}
           # Set the DJANGO_SETTINGS_MODULE
-          # --- IMPORTANT ---
-          # I've changed this from 'config.settings' to 'backend.settings'
-          # to fix the "ImportError: No module named 'config'".
-          # This assumes your settings file is at 'backend/backend/settings.py'.
-          # If it's at 'backend/my_project/settings.py', change this to 'my_project.settings'.
           DJANGO_SETTINGS_MODULE: backend.settings
+          
+          # --- FIX ---
+          # Provide dummy environment variables for your settings.py file.
+          # Your settings.py file needs these to load without crashing.
+          # pytest-django will likely override these with a test database anyway.
+          # If you have other variables in settings.py, add them here too.
+          MYSQL_NAME: 'test_db'
+          MYSQL_USER: 'test_user'
+          MYSQL_PASSWORD: 'test_password'
+          MYSQL_HOST: 'localhost'
+          MYSQL_PORT: '3306'
+          # Add any other required environment variables here
+          # SECRET_KEY: 'dummy_secret_key_for_testing' 
+          
         run: |
           # This command runs ONLY your specific test file
           # --nomigrations skips running migrations for faster tests
