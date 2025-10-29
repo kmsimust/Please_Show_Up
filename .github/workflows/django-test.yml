@@ -65,17 +65,10 @@ jobs:
           DJANGO_SETTINGS_MODULE: backend.settings
           
           # --- FIX ---
-          # Provide dummy environment variables for your settings.py file.
-          # Your settings.py file needs these to load without crashing.
-          # The previous error 'KeyError: 'MYSQL_NAME'' is fixed.
-          # This new fix addresses 'KeyError: 'DB_HOST''.
-          MYSQL_NAME: 'test_db'
-          MYSQL_USER: 'test_user'
-          MYSQL_PASSWORD: 'test_password'
-          DB_HOST: 'localhost' # Changed from MYSQL_HOST to DB_HOST
-          MYSQL_PORT: '3306'
-          # Add any other required environment variables here
-          # SECRET_KEY: 'dummy_secret_key_for_testing' 
+          # Based on your settings.py, we just need to set this variable to '1'
+          # to force Django to use the sqlite3 test database and skip
+          # all the MySQL environment variables.
+          USE_SQLITE_FOR_TESTS: '1'
           
         run: |
           # This command runs ONLY your specific test file
