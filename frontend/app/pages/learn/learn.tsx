@@ -2,13 +2,24 @@ import React, { useState } from "react";
 
 export default function LearnPage() {
     const x = 10; // Normal variable
+    //const [firstname, setFirstname] = useState('')
+    // {} is a object
     const [formData, setFormData] = useState({
         firstname: "",
         lastname: "",
         age: "",
     });
 
-    function formChange(event: any) {}
+    function formChange(event: any) {
+        const name = event.target.name; // name = firstname
+        const temp = structuredClone(formData); // temp = {firstname: "", lastname: "", age: ""}
+        setFormData({
+            ...temp,
+            [name]: event.target.value,
+        });
+
+        //event.target.value;
+    }
 
     /*function onFirstnameChange(event: any) {
         setFirstname(event.target.value); // modify value of firstname
@@ -31,6 +42,7 @@ export default function LearnPage() {
                                 <div className="col-9">
                                     <input
                                         type="text"
+                                        name="firstname"
                                         className="form-control"
                                         value={formData.firstname}
                                         onChange={formChange}
@@ -44,6 +56,7 @@ export default function LearnPage() {
                                 <div className="col-9">
                                     <input
                                         type="text"
+                                        name="lastname"
                                         className="form-control"
                                         value={formData.lastname}
                                         onChange={formChange}
@@ -57,8 +70,10 @@ export default function LearnPage() {
                                 <div className="col-9">
                                     <input
                                         type="number"
+                                        name="age"
                                         className="form-control"
                                         value={formData.age}
+                                        onChange={formChange}
                                     />
                                 </div>
                             </div>
