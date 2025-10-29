@@ -63,9 +63,11 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}
           # Set the DJANGO_SETTINGS_MODULE
           # --- IMPORTANT ---
-          # You may need to change 'config.settings' if your settings.py
-          # is in a different location (e.g., 'backend.settings')
-          DJANGO_SETTINGS_MODULE: config.settings
+          # I've changed this from 'config.settings' to 'backend.settings'
+          # to fix the "ImportError: No module named 'config'".
+          # This assumes your settings file is at 'backend/backend/settings.py'.
+          # If it's at 'backend/my_project/settings.py', change this to 'my_project.settings'.
+          DJANGO_SETTINGS_MODULE: backend.settings
         run: |
           # This command runs ONLY your specific test file
           # --nomigrations skips running migrations for faster tests
