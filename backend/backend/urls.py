@@ -14,8 +14,10 @@ from friend.views import get_friends, create_friend, delete_friend,\
 from group_request.views import get_group_request, create_group_request, update_group_request, delete_group_request 
 
 from member_role import views as member_role_view
-from group.views import get_group, create_group, update_group, delete_group, get_group_by_user_id
-from group_member.views import get_group_member, create_group_member, update_group_member, delete_group_member
+from group.views import get_group, create_group, update_group, delete_group, get_group_by_user_id , \
+get_group_info_by_pk 
+from group_member.views import get_group_member, create_group_member, update_group_member, delete_group_member,\
+get_all_member_by_group_id, get_all_group_by_member_id
 from event import views as event_view
 from inactive_date import views as inactive_date_view
 
@@ -46,6 +48,7 @@ urlpatterns = [
     path('api/create_group', create_group),
     path('api/update_group/<int:pk>', update_group),
     path('api/delete_group/<int:pk>', delete_group),
+    path('api/get_group_info_by_pk/<int:pk>', get_group_info_by_pk),
 
     #member role table
     path('api/member_role/', member_role_view.MemberRoleList.as_view()),
@@ -55,6 +58,8 @@ urlpatterns = [
     path('api/create_group_member', create_group_member),
     path('api/update_group_member/<int:pk>', update_group_member),
     path('api/delete_group_member/<int:pk>', delete_group_member),
+    path('api/get_all_member_by_group_id/<int:group_id>', get_all_member_by_group_id),
+    path('api/get_all_group_by_member_id/<int:member_id>',get_all_group_by_member_id),
 
     #group request table
     path('api/get_group_request', get_group_request),

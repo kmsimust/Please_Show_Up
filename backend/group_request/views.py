@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from group.models import Group
 # from group_member.serializers import GroupMemberSerializer
-from group_member.serializers import GroupMemberSerializer
-from .serializers import GroupRequestSerializers
+from group_member.serializers import GroupMemberSerializer, GroupMemberSerializerSave
+from .serializers import GroupRequestSerializers, GroupRequestSerializersSave
 from .models import GroupRequest
 
 
@@ -20,7 +20,7 @@ def get_group_request(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_invitation_by_user_id(request, invited_id):
-    group_request = GroupRequest.objects.filter(invited_user_id = invited_id, status = "pending")
+    group_request = GroupRequest.objects.filter(invited_user = invited_id, status = "pending")
     serializer = GroupRequestSerializers(group_request, many = True)
     return Response(serializer.data)
 
@@ -37,7 +37,7 @@ def create_group_request(request):
     if group.owner_id.id == body["invited_user_id"]:
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
-    serializer = GroupRequestSerializers(data=body)
+    serializer = GroupRequestSerializersSave(data=body)
 
     if serializer.is_valid():
         serializer.save()
@@ -53,13 +53,13 @@ def update_status_group_request(request, pk, g_status):
     except GroupRequest.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
     
-    serializer = GroupRequestSerializers(group_request, data = {"status":g_status}, partial = True)
+    serializer = GroupRequestSerializersSave(group_request, data = {"status":g_status}, partial = True)
     if serializer.is_valid():
         serializer.save()
         if g_status == "approved":
             data = {"group_id": group_request.group_id.id, "member_id": group_request.invited_user_id.id}
             
-            group_member_serializer = GroupMemberSerializer(data = data)
+            group_member_serializer = GroupMemberSerializerSave(data = data)
             if group_member_serializer.is_valid():
                 group_member_serializer.save()
                 
@@ -75,7 +75,7 @@ def update_group_request(request, pk):
     except GroupRequest.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
     
-    serializer = GroupRequestSerializers(group_request,data=body)
+    serializer = GroupRequestSerializersSave(group_request,data=body)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)

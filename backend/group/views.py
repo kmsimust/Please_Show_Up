@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 # from group_member.models import GroupMember
 # from group_member.serializers import GroupMemberSerializer
-from .serializers import GroupSerializer
+from .serializers import GroupSerializer, GroupSerializerSave
 from .models import Group
 
 # Create your views here.
@@ -19,15 +19,22 @@ def get_group(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_group_by_user_id(request, user_id):
-    groups = Group.objects.filter(owner_id=user_id)
+    groups = Group.objects.filter(owner=user_id)
     serializer = GroupSerializer(groups, many = True)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_group_info_by_pk(request, pk):
+    group = Group.objects.get(pk=pk)
+    serializer = GroupSerializer(group)
     return Response(serializer.data)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_group(request):
     body = request.data
-    serializer = GroupSerializer(data=body)
+    serializer = GroupSerializerSave(data=body)
     if serializer.is_valid():
         serializer.save() # INSERT 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
