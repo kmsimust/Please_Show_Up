@@ -51,18 +51,8 @@ export function LoginPage() {
     };
 
     return (
-        <div className="bg-login">
-            <div
-                style={{
-                    width: "400px",
-                    padding: "30px",
-                    background: "#e0e0e0",
-                    border: "3px solid #9c27b0",
-                    textAlign: "center",
-                    borderRadius: "8px",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                }}
-            >
+        <div className="login-bg flex-center">
+            <div className="login-box">
                 <h2
                     style={{
                         marginBottom: "25px",

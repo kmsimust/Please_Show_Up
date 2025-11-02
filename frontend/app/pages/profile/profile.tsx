@@ -40,7 +40,7 @@ export function ProfilePage() {
           {/* Info boxes */}
           <div className="d-flex gap-4">
             <div className="info-box" style={{ width: "250px" }}>
-              <h5 className="mb-3">personal info</h5>
+              <h5 className="mb-3 fw-bold">personal info</h5>
               <p>username: {user?.username} </p>
               <p>gender: {user?.gender == null ? "null" : user?.gender}</p>
               <p>birthdate: {user?.date_of_birth == null ? "null" : user?.date_of_birth}</p>

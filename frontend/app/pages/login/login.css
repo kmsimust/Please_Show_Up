@@ -1,14 +1,31 @@
 
-.bg-login {
-    margin: 0;
-    padding: 0;
+.login-bg {
     height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background-image: url("/login-background.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     font-family: Arial, sans-serif;
+}
+
+.login-box {
+    width: 400px;
+    padding: 30px;
+    background: #e0e0e0;
+    border: 3px solid #9c27b0;
+    text-align: center;
+    border-radius: 8px;
+    box-sizing: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.login-input {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border: none;
+    background: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    box-sizing: border-box;
 }

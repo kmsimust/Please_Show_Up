@@ -10,31 +10,6 @@
   background-color: rgb(2, 168, 88);
 }
 
-.sidebar {
-  width: 200px;
-  background-color: #e6e6e6;
-  min-height: calc(100vh - 70px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.sideBtn {
-  width: 140px;
-  padding: 10px;
-  font-weight: bold;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  background-color: rgb(0, 191, 99);
-  border: none;
-  border-radius: 25px;
-  color: black;
-  font-size: 18px;
-}
-.sideBtn:hover {
-  background-color: rgb(2, 168, 88);
-  color: white;
-}
-
 .profile-header {
   position: relative;
   border-radius: 8px;
@@ -78,7 +53,6 @@
 .profile-username {
   font-weight: bold;
   font-size: 26px;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: #000;
 }
 
@@ -89,7 +63,6 @@
   border-radius: 20px;
   padding: 6px 18px;
   font-weight: bold;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: black;
 }
 .edit-btn:hover {
@@ -102,6 +75,5 @@
   background-color: rgb(0, 191, 99);
   border-radius: 20px;
   padding: 20px;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: black;
 }
