@@ -19,7 +19,7 @@ from group.views import get_group, create_group, update_group, delete_group, get
 get_group_info_by_pk 
 from group_member.views import get_group_member, create_group_member, update_group_member, delete_group_member,\
 get_all_member_by_group_id, get_all_group_by_member_id
-from event import get_event , create_event , update_event , delete_event
+from event.views import get_event , create_event , update_event , delete_event
 from inactive_date import views as inactive_date_view
 
 
