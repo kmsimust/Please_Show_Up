@@ -5,6 +5,7 @@ from rest_framework import status
 from friend.serializers import FriendSerializer, FriendSerializerSave
 from .serializers import FriendRequestSerializer, FriendRequestSerializerSave
 from .models import FriendRequest
+from user.models import User
 
 # Create your views here.
 @api_view(["GET"])
@@ -27,6 +28,15 @@ def get_user_friend_request(request, friend_id):
 @permission_classes([IsAuthenticated])
 def create_friend_request(request):
     body = request.data
+
+    try:
+        user = User.objects.get(pk=body["friend"])
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if user.id == body["user"]:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+
     serializer = FriendRequestSerializerSave(data=body)
     if serializer.is_valid():
         serializer.save() # INSERT 
