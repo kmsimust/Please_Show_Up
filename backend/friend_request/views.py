@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from friend.serializers import FriendSerializer
-from .serializers import FriendRequestSerializer
+from friend.serializers import FriendSerializer, FriendSerializerSave
+from .serializers import FriendRequestSerializer, FriendRequestSerializerSave
 from .models import FriendRequest
 
 # Create your views here.
@@ -27,7 +27,7 @@ def get_user_friend_request(request, friend_id):
 @permission_classes([IsAuthenticated])
 def create_friend_request(request):
     body = request.data
-    serializer = FriendRequestSerializer(data=body)
+    serializer = FriendRequestSerializerSave(data=body)
     if serializer.is_valid():
         serializer.save() # INSERT 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -42,7 +42,7 @@ def update_friend_request(request, pk):
     except FriendRequest.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
-    serializer = FriendRequestSerializer(friend, data=body)
+    serializer = FriendRequestSerializerSave(friend, data=body)
     if serializer.is_valid():
         serializer.save() # UPDATE
         return Response(serializer.data)
@@ -56,13 +56,13 @@ def update_status_friend_request(request, pk, f_status):
     except FriendRequest.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    serializer = FriendRequestSerializer(friend_request, data={"status": f_status}, partial=True)
+    serializer = FriendRequestSerializerSave(friend_request, data={"status": f_status}, partial=True)
     if serializer.is_valid():
         serializer.save()  # Save status first
         if f_status == "approved":
-            data = {"user_id": friend_request.user_id.id, "friend_id": friend_request.friend_id.id}
+            data = {"user": friend_request.user.id, "friend": friend_request.friend.id}
 
-            friend_serializer = FriendSerializer(data=data)
+            friend_serializer = FriendSerializerSave(data=data)
             if friend_serializer.is_valid():
                 friend_serializer.save()
         

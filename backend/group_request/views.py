@@ -30,11 +30,11 @@ def create_group_request(request):
     body = request.data
 
     try:
-        group = Group.objects.get(pk = body["group_id"])
+        group = Group.objects.get(pk=body["group"])
     except Group.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if group.owner_id.id == body["invited_user_id"]:
+    if group.owner.id == body["invited_user"]:
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
     serializer = GroupRequestSerializersSave(data=body)
@@ -42,7 +42,7 @@ def create_group_request(request):
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["PATCH"])
@@ -51,20 +51,22 @@ def update_status_group_request(request, pk, g_status):
     try:
         group_request = GroupRequest.objects.get(pk=pk)
     except GroupRequest.DoesNotExist:
-        return Response(status = status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
-    serializer = GroupRequestSerializersSave(group_request, data = {"status":g_status}, partial = True)
+    serializer = GroupRequestSerializersSave(group_request, data={"status": g_status}, partial=True)
     if serializer.is_valid():
         serializer.save()
+
         if g_status == "approved":
-            data = {"group_id": group_request.group_id.id, "member_id": group_request.invited_user_id.id}
-            
-            group_member_serializer = GroupMemberSerializerSave(data = data)
+            data = { "group": group_request.group.id , "member": group_request.invited_user.id }
+            group_member_serializer = GroupMemberSerializerSave(data=data)
             if group_member_serializer.is_valid():
                 group_member_serializer.save()
-                
+
         return Response(serializer.data)
-    return Response(status = status.HTTP_400_BAD_REQUEST)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])

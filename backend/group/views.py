@@ -49,7 +49,7 @@ def update_group(request, pk):
     except Group.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
-    serializer = GroupSerializer(group, data=body)
+    serializer = GroupSerializerSave(group, data=body)
     if serializer.is_valid():
         serializer.save() # UPDATE
         return Response(serializer.data)

@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import FriendSerializer
+from .serializers import FriendSerializer, FriendSerializerSave
 from .models import Friend
 
 # Create your views here.
@@ -28,7 +28,7 @@ def get_friend_by_user_id(request, user_id):
 @permission_classes([IsAuthenticated])
 def create_friend(request):
     body = request.data
-    serializer = FriendSerializer(data=body)
+    serializer = FriendSerializerSave(data=body)
     if serializer.is_valid():
         serializer.save() # INSERT 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -43,7 +43,7 @@ def update_friend(request, pk):
     except Friend.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
-    serializer = FriendSerializer(friend, data=body)
+    serializer = FriendSerializerSave(friend, data=body)
     if serializer.is_valid():
         serializer.save() # UPDATE
         return Response(serializer.data)

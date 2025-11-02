@@ -11,7 +11,8 @@ from user.views import get_user, get_me_user, create_user, update_user,\
 from friend.views import get_friends, create_friend, delete_friend,\
     update_friend , get_friend_by_user_id
 
-from group_request.views import get_group_request, create_group_request, update_group_request, delete_group_request 
+from group_request.views import get_group_request, create_group_request, update_group_request, delete_group_request , update_status_group_request,\
+get_invitation_by_user_id
 
 from member_role import views as member_role_view
 from group.views import get_group, create_group, update_group, delete_group, get_group_by_user_id , \
@@ -66,6 +67,8 @@ urlpatterns = [
     path('api/create_group_request', create_group_request),
     path('api/update_group_request/<int:pk>', update_group_request),
     path('api/delete_group_request/<int:pk>', delete_group_request),
+    path('api/update_status_group_request/<int:pk>/<str:g_status>', update_status_group_request),
+    path('api/get_invitation_by_user_id/<int:invited_id>', get_invitation_by_user_id),
 
     
     #event table link
