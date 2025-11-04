@@ -14,8 +14,20 @@ body {
   }
 }
 
+:root {
+  --app-green: springgreen;
+  --app-green2: mediumseagreen;
+}
+
 .app-container-color {
   background-color: #e6e6e6;
+}
+
+.app-padding-test {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  background-color: red;
 }
 
 .flex-center {
@@ -83,8 +95,5 @@ body {
   background-color: #cecece;
 }
 
-.collapsed .hide-on-collapse {
-  opacity: 0;
-  visibility: hidden;
-}
+
 

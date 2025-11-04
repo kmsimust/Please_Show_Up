@@ -14,6 +14,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { CookiesProvider, useCookies } from "react-cookie";
 import { authMiddleware } from "app/middleware/authMiddleware";
+import { useEffect } from "react";
 
 export const middleware: Route.MiddlewareFunction[] = [authMiddleware];
 
@@ -31,6 +32,10 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+    /*useEffect(() => {
+        import("bootstrap/dist/js/bootstrap.bundle.min.js");
+    }, [])*/
+
     return (
         <html lang="en">
             <head>
