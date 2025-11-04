@@ -17,7 +17,7 @@ Moreover, it will be more convenient in a project for bosses to keep track of th
 ## 📘 Documents
 
 - [📑 GoogleDoc](https://docs.google.com/document/d/1llBzp3PViO052-bYdj2gJExWpR_8H1eHP4JyIaei_Os/edit?usp=sharing) 
-- [🎨 MockUp UI]() — ***still in progess*** 
+- [🎨 MockUp UI](https://www.figma.com/design/ipQhiaDhrvJzCVRj48IRSp/Please_Show_Up-?node-id=617-2&t=ubJu8vFyddEIbaQ8-1)
 - [📆 Jira Board](https://ku-team-y210t4g2.atlassian.net/jira/software/projects/ISP/boards/36?atlOrigin=eyJpIjoiZDViMzI1ZmI5N2YwNDYxZTk3ZTlkMmQ4YTkxOWVmMWEiLCJwIjoiaiJ9)
 
 
@@ -47,3 +47,5 @@ Moreover, it will be more convenient in a project for bosses to keep track of th
 
 - [Youtube](https://youtu.be/SEtLJMosBLw) — Sprint 1
 - [Youtube](https://youtu.be/lO1jIbKyTTU) — Sprint 2
+- [Youtube](https://youtu.be/Pro8c8oYaro) — Sprint 3
+- [Youtube](https://youtu.be/N8GAk3oWems) — Sprint 4
