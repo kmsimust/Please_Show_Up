@@ -83,7 +83,7 @@ def update_group_banner(request, pk):
     except Group.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
     
-    uploaded_file = request.FILES("banner_image")
+    uploaded_file = request.FILES["banner_image"]
 
     serialzer = GroupSerializer(group)
     current_group_id, uploaded_name = upload_file(serialzer, uploaded_file, "group")
@@ -91,7 +91,7 @@ def update_group_banner(request, pk):
      
     if serialzer.is_valid():
         serialzer.save()
-        return Response(status = status.HTTP_201_created)
+        return Response(status = status.HTTP_201_CREATED)
     return Response(serialzer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])
