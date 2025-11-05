@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from .authentication import create_access_token, create_refresh_token
 from .serializers import UserSerializer
 from .models import User
+from util.upload import upload_file
 
 
 @api_view(["GET"])
@@ -103,3 +104,44 @@ def get_user_by_username(request, username):
     users = User.objects.get(username = username)
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
+
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def update_user_profile_image(request, pk):
+    try:
+        user = User.objects.get(pk = pk)
+    except User.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
+    uploaded_file = request.FILES["profile_image"]
+
+
+    serializer = UserSerializer(user)
+    current_user_id, uploaded_name = upload_file(serializer, uploaded_file, "user", "profile_")
+    serializer = UserSerializer(user, data = {"profile_image": f"/upload/user/{pk}/profile_{uploaded_name}"}, partial = True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status = status.HTTP_200_OK)
+    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def update_user_banner_image(request, pk):
+    try:
+        user = User.objects.get(pk = pk)
+    except User.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
+    uploaded_file = request.FILES["banner"]
+
+
+    serializer = UserSerializer(user)
+    current_user_id, uploaded_name = upload_file(serializer, uploaded_file, "user", "banner_")
+    serializer = UserSerializer(user, data = {"banner": f"/upload/user/{pk}/banner_{uploaded_name}"}, partial = True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status = status.HTTP_200_OK)
+    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)

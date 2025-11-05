@@ -6,8 +6,6 @@ from rest_framework import status
 # from group_member.serializers import GroupMemberSerializer
 from .serializers import GroupSerializer, GroupSerializerSave
 from .models import Group
-import time
-from django.conf import settings
 
 from util.upload import upload_file
 
@@ -91,7 +89,7 @@ def update_group_banner(request, pk):
      
     if serializer.is_valid():
         serializer.save()
-        return Response(status = status.HTTP_201_CREATED)
+        return Response(status = status.HTTP_200_OK)
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])
