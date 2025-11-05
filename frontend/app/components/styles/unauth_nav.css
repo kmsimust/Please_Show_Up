@@ -1,6 +1,6 @@
 @import url(./styles.css);
 
-nav {
+.top-nav-bar {
   height: 60px;
   background-color: var(--body-dark);
   display: flex;
@@ -10,7 +10,7 @@ nav {
   z-index: 1000;
 }
 
-.links-container {
+.top-nav-bar .links-container {
   height: 100%;
   width: 100%;
   display: flex;
@@ -18,7 +18,7 @@ nav {
   align-items: center;
 }
 
-nav a {
+.top-nav-bar a {
   height: 100%;
   padding: 0 20px;
   display: flex;
@@ -27,15 +27,15 @@ nav a {
   color: var(--text);
 }
 
-nav a:hover {
+.top-nav-bar a:hover {
   background-color: var(--body-darker);
 }
 
-nav .home-link {
+.top-nav-bar .home-link {
   margin-right: auto;
 }
 
-nav svg {
+.top-nav-bar svg {
   fill: var(--text)
 }
 

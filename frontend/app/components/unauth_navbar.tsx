@@ -4,14 +4,14 @@ export function UnAuthNavBar() {
   return (
 
 <body>
-    <nav>
+    <div className="top-nav-bar">
         <div className="links-container">
-            <a className="home-link" href="/">Home</a>
+            <a className="home-link active" href="/">Home</a>
             <a href="/aboutus">About Us</a>
             <a href="/signup">Sign UP</a>
             <a href="/login">Login</a>           
         </div>
-    </nav>
+    </div>
 </body>
 
   )

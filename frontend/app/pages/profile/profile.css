@@ -1,3 +1,59 @@
+.profile-case {
+	width: 100%;
+	margin: 60px 80px 0px;
+	border-radius: 20px;
+	background-color: #e6e6e6;
+}
+
+.profile-banner {
+	width: 100%;
+	height: 200px;
+	border-radius: 20px 20px 0px 0px;
+	background: linear-gradient(to right, palegreen, springgreen);
+}
+
+.profile-user-case {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 240px;
+	padding: 40px;
+	justify-content: space-between;
+}
+
+.profile-user-case2 {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.profile-user-avatar {
+	--size: 128px;
+	width: var(--size);
+	height: var(--size);
+	border: 0px;
+	border-radius: 50%;
+	background-color: black;
+}
+
+.profile-user-name-case {
+	margin: 0px 40px;
+}
+
+.profile-user-display-name {
+	font-size: 2rem;
+}
+
+.profile-user-edit-profile-button {
+	padding: 0.5em 2em;
+	border-radius: 2em;
+	background-color: var(--app-green);
+}
+
+.profile-user-edit-profile-button:hover {
+	background-color: var(--app-green2);
+}
+
 .bg-green-main {
   background-color: rgb(0, 191, 99);
 }
@@ -8,31 +64,6 @@
 }
 .btn-green:hover {
   background-color: rgb(2, 168, 88);
-}
-
-.sidebar {
-  width: 200px;
-  background-color: #e6e6e6;
-  min-height: calc(100vh - 70px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.sideBtn {
-  width: 140px;
-  padding: 10px;
-  font-weight: bold;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  background-color: rgb(0, 191, 99);
-  border: none;
-  border-radius: 25px;
-  color: black;
-  font-size: 18px;
-}
-.sideBtn:hover {
-  background-color: rgb(2, 168, 88);
-  color: white;
 }
 
 .profile-header {
@@ -78,7 +109,6 @@
 .profile-username {
   font-weight: bold;
   font-size: 26px;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: #000;
 }
 
@@ -89,7 +119,6 @@
   border-radius: 20px;
   padding: 6px 18px;
   font-weight: bold;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: black;
 }
 .edit-btn:hover {
@@ -102,6 +131,5 @@
   background-color: rgb(0, 191, 99);
   border-radius: 20px;
   padding: 20px;
-  font-family: Georgia, "Times New Roman", Times, serif;
   color: black;
 }

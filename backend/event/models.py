@@ -1,9 +1,10 @@
 from django.db import models
+from group.models import Group
 
 # Create your models here.
 class Event(models.Model):
     name = models.CharField(max_length=50)
-    group_id = models.IntegerField()
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="group_owner_id", db_column="group_id")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
