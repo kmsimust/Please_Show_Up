@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 from friend_request.views import get_user_friend_request, get_friend_requests,\
     create_friend_request, delete_friend_request, update_friend_request,\
@@ -15,8 +17,8 @@ from group_request.views import get_group_request, create_group_request, update_
 get_invitation_by_user_id
 
 from member_role import views as member_role_view
-from group.views import get_group, create_group, update_group, delete_group, get_group_by_user_id , \
-get_group_info_by_pk 
+from group.views import get_group, create_group, update_group_info, delete_group, get_group_by_user_id , \
+get_group_info_by_pk , update_group_banner
 from group_member.views import get_group_member, create_group_member, update_group_member, delete_group_member,\
 get_all_member_by_group_id, get_all_group_by_member_id
 from event.views import get_event , create_event , update_event , delete_event
@@ -47,7 +49,7 @@ urlpatterns = [
     path('api/get_group/', get_group),
     path('api/get_group_by_user_id/<int:user_id>', get_group_by_user_id),
     path('api/create_group', create_group),
-    path('api/update_group/<int:pk>', update_group),
+    path('api/update_group_info/<int:pk>', update_group_info),
     path('api/delete_group/<int:pk>', delete_group),
     path('api/get_group_info_by_pk/<int:pk>', get_group_info_by_pk),
 
@@ -69,6 +71,7 @@ urlpatterns = [
     path('api/delete_group_request/<int:pk>', delete_group_request),
     path('api/update_status_group_request/<int:pk>/<str:g_status>', update_status_group_request),
     path('api/get_invitation_by_user_id/<int:invited_id>', get_invitation_by_user_id),
+    path('api/update_group_banner/<int:pk>', update_group_banner),
 
     
     #event table link
@@ -88,5 +91,5 @@ urlpatterns = [
     path('api/user/update/<int:pk>', update_user),
     path('api/user/delete/<int:pk>', delete_user),
     path('api/user/get_user_by_username/<int:username>', get_user_by_username)
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
