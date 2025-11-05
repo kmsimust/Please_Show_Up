@@ -11,6 +11,9 @@ export default [
         route("/login", "routes/login.tsx"),
         route("/friend", "routes/friend.tsx"),
         route("/profile", "routes/profile.tsx"),
+
+        route("/account/profile", "routes/edit_profile.tsx"),
+
         route("/group", "routes/group.tsx"),
         route("/learn", "routes/learn.tsx"),
         route("/learn-axios", "routes/learn_axios.tsx"),

@@ -44,7 +44,6 @@ export function SignUpPage() {
   return (
 <body>
   <UnAuthNavBar/>
-  // background
   <div
     style={{
       margin: 0,
