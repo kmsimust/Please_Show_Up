@@ -85,14 +85,14 @@ def update_group_banner(request, pk):
     
     uploaded_file = request.FILES["banner_image"]
 
-    serialzer = GroupSerializer(group)
-    current_group_id, uploaded_name = upload_file(serialzer, uploaded_file, "group")
-    serialzer = GroupSerializerSave(group, data = {"banner_image": f"/upload/group/{pk}/{uploaded_name}"}, partial = True)
+    serializer = GroupSerializer(group)
+    current_group_id, uploaded_name = upload_file(serializer, uploaded_file, "group")
+    serializer = GroupSerializerSave(group, data = {"banner_image": f"/upload/group/{pk}/{uploaded_name}"}, partial = True)
      
-    if serialzer.is_valid():
-        serialzer.save()
+    if serializer.is_valid():
+        serializer.save()
         return Response(status = status.HTTP_201_CREATED)
-    return Response(serialzer.errors, status = status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
