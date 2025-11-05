@@ -1,5 +1,5 @@
 import type { Route } from "./+types/edit_profile";
-import { ProfilePage } from "../pages/profile/profile";
+import { EditProfilePage } from "../pages/edit_account/edit_profile";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -8,6 +8,6 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export default function AboutRoute() {
-    return <ProfilePage />;
+export default function EPRoute() {
+    return <EditProfilePage />;
 }
