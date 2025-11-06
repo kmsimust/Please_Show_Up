@@ -17,7 +17,7 @@ from friend.views import get_friends, create_friend, delete_friend,\
 from group_request.views import get_group_request, create_group_request, update_group_request, delete_group_request , update_status_group_request,\
 get_invitation_by_user_id
 
-from member_role import views as member_role_view
+from member_role.views import get_member_role , create_member_role , update_member_role , delete_member_role
 from group.views import get_group, create_group, update_group_info, delete_group, get_group_by_user_id , \
 get_group_info_by_pk , update_group_banner
 from group_member.views import get_group_member, create_group_member, update_group_member, delete_group_member,\
@@ -55,7 +55,11 @@ urlpatterns = [
     path('api/get_group_info_by_pk/<int:pk>', get_group_info_by_pk),
 
     #member role table
-    path('api/member_role/', member_role_view.MemberRoleList.as_view()),
+    path('api/get_member_role', get_member_role),
+    path('api/create_member_role', create_member_role),
+    path('api/update_member_role/<int:pk>', update_member_role),
+    path('api/delete_member_role/<int:pk>', delete_member_role),
+
     
     #group member table
     path('api/get_group_member/', get_group_member),
