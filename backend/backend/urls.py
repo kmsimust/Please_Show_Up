@@ -91,10 +91,10 @@ urlpatterns = [
     #user table link
     path('api/user/', get_user),
     path('api/user/me/', get_me_user),
-    path('api/user/create/', create_user),
+    path('api/user/create_user/', create_user),
     path('api/user/login/', login_user),
-    path('api/user/update/<int:pk>', update_user),
-    path('api/user/delete/<int:pk>', delete_user),
+    path('api/user/update_user/<int:pk>', update_user),
+    path('api/user/delete_user/<int:pk>', delete_user),
     path('api/user/get_user_by_username/<int:username>', get_user_by_username),
     path('api/update_user_profile_image/<int:pk>', update_user_profile_image),
     path('api/update_user_banner_image/<int:pk>' , update_user_banner_image)

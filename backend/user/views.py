@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from django.contrib.auth import authenticate
-
+from django.db.models import Q
 from .authentication import create_access_token, create_refresh_token
 from .serializers import UserSerializer
 from .models import User
@@ -35,11 +35,22 @@ def get_me_user(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_user(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()  # password hashing handled in serializer.create
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    body = request.data
+    duplicate_flag = 1
+    
+    try:
+        #user = User.objects.get(email = body["email"], username = body["username"])
+        user = User.objects.get(Q(email = body["email"]) | Q(username = body["username"])) # | OR
+        return Response({"message": "duplicate email or username"}, status = status.HTTP_400_BAD_REQUEST)
+    except User.DoesNotExist:
+        duplicate_flag = 0
+    
+    if duplicate_flag == 0:
+        serializer = UserSerializer(data = body)
+        if serializer.is_valid():
+            serializer.save()  # password hashing handled in serializer.create
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
@@ -123,7 +134,7 @@ def update_user_profile_image(request, pk):
 
     if serializer.is_valid():
         serializer.save()
-        return Response(status = status.HTTP_200_OK)
+        return Response(serializer.data, status = status.HTTP_200_OK)
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
@@ -143,5 +154,5 @@ def update_user_banner_image(request, pk):
 
     if serializer.is_valid():
         serializer.save()
-        return Response(status = status.HTTP_200_OK)
+        return Response(serializer.data, status = status.HTTP_200_OK)
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
