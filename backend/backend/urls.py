@@ -18,11 +18,16 @@ from group_request.views import get_group_request, create_group_request, update_
 get_invitation_by_user_id
 
 from member_role.views import get_member_role , create_member_role , update_member_role , delete_member_role
+
 from group.views import get_group, create_group, update_group_info, delete_group, get_group_by_user_id , \
 get_group_info_by_pk , update_group_banner
+
 from group_member.views import get_group_member, create_group_member, update_group_member, delete_group_member,\
 get_all_member_by_group_id, get_all_group_by_member_id
-from event.views import get_event , create_event , update_event , delete_event
+
+from event.views import get_event , create_event , update_event , delete_event , get_event_by_group_id , get_event_info ,\
+      update_name_and_description , update_event_date , update_start_and_end_date
+
 from inactive_date import views as inactive_date_view
 
 
@@ -84,6 +89,11 @@ urlpatterns = [
     path('api/create_event/', create_event),
     path('api/update_event/', update_event),
     path('api/delete_event/', delete_event),
+    path('api/get_event_by_group_id/<int:group_id>', get_event_by_group_id),
+    path('api/get_event_info/<int:pk>', get_event_info),
+    path('api/update_name_and_description/<int:pk>', update_name_and_description),
+    path('api/update_event_date<int:pk>', update_event_date),
+    path('api/update_start_and_end_date/<int:pk>', update_start_and_end_date),
 
     #inactive table link
     path('api/inactive_date/', inactive_date_view.InactiveDateList.as_view()),
