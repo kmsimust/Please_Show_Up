@@ -1,6 +1,3 @@
-import os
-import time
-from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -9,6 +6,8 @@ from rest_framework import status
 # from group_member.serializers import GroupMemberSerializer
 from .serializers import GroupSerializer, GroupSerializerSave
 from .models import Group
+
+from util.upload import upload_file
 
 # Create your views here.
 @api_view(["GET"])
@@ -44,45 +43,54 @@ def create_group(request):
     if serializer.is_valid():
         serializer.save() # INSERT 
         
-        serializer_dict = dict(serializer.data) #make it to dict for easy acess
-        new_group_id = serializer_dict["id"]#this get a group id for folder making
-        uploaded_path = f"{settings.BASE_DIR}/public/upload/group/{serializer_dict["id"]}" #this si just a path to upload file to
-        file_ext = uploaded_file.name.split(".")[-1] # test.png
-        uploaded_name = f"group_{serializer_dict["id"]}_{int(time.time() * 1000)}.{file_ext}" #get the file name and it's type
+        # Call upload function
+        new_group_id, uploaded_name = upload_file(serializer, uploaded_file, "group")
 
-        if not os.path.isdir(uploaded_path):#check if the directory exist or not if not create it so file can be upload
-            os.mkdir(uploaded_path)
-
-        with open(f"{uploaded_path}/{uploaded_name}", "wb+") as f: #just upload file to the path 
-            for chunk in uploaded_file.chunks():
-                f.write(chunk)
-
-        try: #this will help change string in database for image to be the path of it until line 66
+        try: #this will help change string in database for image to be the path of it
             group = Group.objects.get(pk=new_group_id)
         except Group.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        serializer = GroupSerializerSave(group, data={"banner_image": f"/upload/group/{serializer_dict['id']}/{uploaded_name}"}, partial=True)
+        serializer = GroupSerializerSave(group, data={"banner_image": f"/upload/group/{new_group_id}/{uploaded_name}"}, partial=True)
         if serializer.is_valid():
             serializer.save() # UPDATE
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(["PUT"])
+@api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
-def update_group(request, pk):
+def update_group_info(request, pk):
     body = request.data
     try:
         group = Group.objects.get(pk=pk)
     except Group.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
-    serializer = GroupSerializerSave(group, data=body)
+    serializer = GroupSerializerSave(group, data=body, partial = True)
     if serializer.is_valid():
         serializer.save() # UPDATE
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def update_group_banner(request, pk):
+    try:
+        group = Group.objects.get(pk = pk)
+    except Group.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
+    uploaded_file = request.FILES["banner_image"]
+
+    serializer = GroupSerializer(group)
+    current_group_id, uploaded_name = upload_file(serializer, uploaded_file, "group")
+    serializer = GroupSerializerSave(group, data = {"banner_image": f"/upload/group/{pk}/{uploaded_name}"}, partial = True)
+     
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status = status.HTTP_200_OK)
+    return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "./login.css";
+import { UnAuthNavBar } from "../../components/unauth_navbar";
 
 // Unused imports
 import { useNavigate } from "react-router";
@@ -51,6 +52,8 @@ export function LoginPage() {
     };
 
     return (
+    <body>
+        <UnAuthNavBar/>
         <div className="login-bg flex-center">
             <div className="login-box">
                 <h2
@@ -157,5 +160,6 @@ export function LoginPage() {
                 </div>
             </div>
         </div>
+    </body>
     );
 }
