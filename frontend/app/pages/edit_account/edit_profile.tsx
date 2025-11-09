@@ -75,10 +75,10 @@ export function EditProfilePage() {
     console.log("Header uploaded:", headerFile);
   };
 
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value.slice(0, maxDescriptionLength);
-    setDescription(value);
-  };
+//   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+//     const value = e.target.value.slice(0, maxDescriptionLength);
+//     setDescription(value);
+//   };
 
   return (
     <>
@@ -148,7 +148,7 @@ export function EditProfilePage() {
             <div className="settings-content">
               {activeTab === "profile" && (
                 <>
-                  <h1 className="settings-title">Profile settings</h1>
+                  <h1 className="settings-title">Profile picture settings</h1>
 
                   {/* Avatar */}
                   <div className="settings-section">
@@ -182,7 +182,7 @@ export function EditProfilePage() {
 
                   {/* Header */}
                   <div className="settings-section">
-                    <h2 className="section-title">Header</h2>
+                    <h2 className="section-title">Banner</h2>
                     <p className="section-description">
                       File Size: &lt; 1.5MB, File Formats: | .jpg | .png | .gif | .webp | .webm |, Recommended resolution: 1500×430
                     </p>
@@ -211,7 +211,7 @@ export function EditProfilePage() {
                   </div>
 
                   {/* Description */}
-                  <div className="settings-section">
+                  {/* <div className="settings-section">
                     <h2 className="section-title">Description</h2>
                     <p className="section-description">Visible on your profile page. You can tell users about yourself.</p>
 
@@ -235,7 +235,7 @@ export function EditProfilePage() {
                         Submit
                       </button>
                     </form>
-                  </div>
+                  </div> */}
                 </>
               )}
 
@@ -248,7 +248,7 @@ export function EditProfilePage() {
                     <p className="section-description">Change your display name</p>
 
                     <form onSubmit={(e) => e.preventDefault()}>
-                      <input type="text" placeholder="User" className="settings-input" defaultValue="User" />
+                      <input type="text" placeholder="User" className="settings-input"/>
                       <button type="submit" className="submit-btn">
                         Submit
                       </button>
@@ -271,6 +271,78 @@ export function EditProfilePage() {
                     <form onSubmit={(e) => e.preventDefault()}>
                       <input type="email" placeholder="New email" className="settings-input" />
                       <input type="password" placeholder="Current password" className="settings-input" />
+                      <button type="submit" className="submit-btn">
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+
+                  <div className="settings-section">
+                    <h2 className="section-title">Change gender</h2>
+                    <p className="section-description">Input your gender as you like</p>
+
+                    <form onSubmit={(e) => e.preventDefault()}>
+                      <input type="text" placeholder="example: Male/Female/Non-binary/prefer not to say" className="settings-input"/>
+                      <button type="submit" className="submit-btn">
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+
+                  <div className="settings-section">
+                    <h2 className="section-title">Change date of birth</h2>
+                    <p className="section-description">Input your date of birth as you like</p>
+
+                    <form onSubmit={(e) => e.preventDefault()}>
+                      <input type="text" placeholder="example: 2000-01-01" className="settings-input"/>
+                      <button type="submit" className="submit-btn">
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+
+                  <div className="settings-section">
+                    <h2 className="section-title">Change phone_number</h2>
+                    <p className="section-description">Input your phone_number</p>
+
+                    <form onSubmit={(e) => e.preventDefault()}>
+                      <input type="text" placeholder="example: 098-232-xxxx" className="settings-input"/>
+                      <button type="submit" className="submit-btn">
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+
+                  <div className="settings-section">
+                    <h2 className="section-title">Change display name</h2>
+                    <p className="section-description">Input the display name you want</p>
+
+                    <form onSubmit={(e) => e.preventDefault()}>
+                      <input type="text" placeholder="name" className="settings-input"/>
+                      <button type="submit" className="submit-btn">
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+
+                  <div className="settings-section">
+                    <h2 className="section-title">Change Firstname</h2>
+                    <p className="section-description">Input your Firstname</p>
+
+                    <form onSubmit={(e) => e.preventDefault()}>
+                      <input type="text" placeholder="Firstname" className="settings-input" />
+                      <button type="submit" className="submit-btn">
+                        Submit
+                      </button>
+                    </form>
+                  </div>
+
+                  <div className="settings-section">
+                    <h2 className="section-title">Change Lastname</h2>
+                    <p className="section-description">Input your Lastname</p>
+
+                    <form onSubmit={(e) => e.preventDefault()}>
+                      <input type="text" placeholder="Lastname" className="settings-input"/>
                       <button type="submit" className="submit-btn">
                         Submit
                       </button>
