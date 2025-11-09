@@ -12,7 +12,7 @@ export default [
         route("/friend", "routes/friend.tsx"),
         route("/profile", "routes/profile.tsx"),
 
-        route("/account/profile", "routes/edit_profile.tsx"),
+        route("/account/:tab?", "routes/edit_profile.tsx"),
 
         route("/group", "routes/group.tsx"),
         route("/learn", "routes/learn.tsx"),
