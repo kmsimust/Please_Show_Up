@@ -33,9 +33,9 @@ export function ProfilePage() {
 					</div>
 
 					<div>
-						<button className="profile-user-edit-profile-button">
+						<a href = "account" className="profile-user-edit-profile-button">
 							Edit profile
-						</button>
+						</a>
 					</div>
 				</div>
 			</div>
