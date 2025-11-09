@@ -9,7 +9,7 @@
   --wura: #dda82b;
   --primary: #1abc9c;
   --primary-text: #f8f8ff;
-  --primary-dark: #19b898;
+  --primary-dark: #1da68b;
   --primary-faded: rgba(26, 188, 156, 0.2);
 
 /* Fixed Color */
@@ -90,3 +90,18 @@ html, body {
   margin: 0;
 }
 
+.default-btn {
+  background-color: var(--primary);
+  color: var(--primary-text);
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.default-btn:hover {
+  background-color: var(--primary-dark);
+}

@@ -1,5 +1,5 @@
 import type { Route } from "./+types/group";
-import { GroupPage } from "../pages/group/group";
+import { GroupPage } from "../pages/group_list/group";
 
 export function meta({}: Route.MetaArgs) {
     return [

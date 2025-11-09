@@ -52,124 +52,114 @@ export function LoginPage() {
     };
 
     return (
-<body>
-    <UnAuthNavBar/>
-    <div className="bg-login">
-        <div
-            style={{
-                width: "400px",
-                padding: "30px",
-                background: "#e0e0e0",
-                border: "3px solid #9c27b0",
-                textAlign: "center",
-                borderRadius: "8px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-            }}
-        >
-            <h2
-                style={{
-                    marginBottom: "25px",
-                    fontSize: "32px",
-                    fontWeight: "bold",
-                }}
-            >
-                Login
-            </h2>
-
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    placeholder="Enter your username or Email"
-                    required
+    <body>
+        <UnAuthNavBar/>
+        <div className="login-bg flex-center">
+            <div className="login-box">
+                <h2
                     style={{
-                        width: "100%",
-                        padding: "14px",
-                        margin: "10px 0",
-                        border: "none",
-                        background: "#fff",
-                        fontSize: "16px",
+                        marginBottom: "25px",
+                        fontSize: "32px",
                         fontWeight: "bold",
-                        borderRadius: "4px",
-                        boxSizing: "border-box",
-                    }}
-                />
-
-                <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Enter your Password"
-                    required
-                    style={{
-                        width: "100%",
-                        padding: "14px",
-                        margin: "10px 0",
-                        border: "none",
-                        background: "#fff",
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        borderRadius: "4px",
-                        boxSizing: "border-box",
-                    }}
-                />
-
-                <div
-                    style={{
-                        textAlign: "left",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                        margin: "5px 0 15px 5px",
-                    }}
-                >
-                    <a
-                        href="#"
-                        style={{ color: "#000", textDecoration: "none" }}
-                    >
-                        Forgot your password?
-                    </a>
-                </div>
-
-                <button
-                    type="submit"
-                    style={{
-                        width: "100%",
-                        padding: "14px",
-                        background: "#00c853",
-                        color: "#fff",
-                        fontSize: "18px",
-                        fontWeight: "bold",
-                        border: "none",
-                        cursor: "pointer",
-                        marginTop: "10px",
-                        borderRadius: "4px",
-                        boxSizing: "border-box",
                     }}
                 >
                     Login
-                </button>
-            </form>
+                </h2>
 
-            <div
-                style={{
-                    marginTop: "18px",
-                    fontSize: "15px",
-                    fontWeight: "bold",
-                }}
-            >
-                Don't have an account?{" "}
-                <a
-                    href="/signup"
-                    style={{ color: "#00a843", textDecoration: "none" }}
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        placeholder="Enter your username or Email"
+                        required
+                        style={{
+                            width: "100%",
+                            padding: "14px",
+                            margin: "10px 0",
+                            border: "none",
+                            background: "#fff",
+                            fontSize: "16px",
+                            fontWeight: "bold",
+                            borderRadius: "4px",
+                            boxSizing: "border-box",
+                        }}
+                    />
+
+                    <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Enter your Password"
+                        required
+                        style={{
+                            width: "100%",
+                            padding: "14px",
+                            margin: "10px 0",
+                            border: "none",
+                            background: "#fff",
+                            fontSize: "16px",
+                            fontWeight: "bold",
+                            borderRadius: "4px",
+                            boxSizing: "border-box",
+                        }}
+                    />
+
+                    <div
+                        style={{
+                            textAlign: "left",
+                            fontSize: "14px",
+                            fontWeight: "bold",
+                            margin: "5px 0 15px 5px",
+                        }}
+                    >
+                        <a
+                            href="#"
+                            style={{ color: "#000", textDecoration: "none" }}
+                        >
+                            Forgot your password?
+                        </a>
+                    </div>
+
+                    <button
+                        type="submit"
+                        style={{
+                            width: "100%",
+                            padding: "14px",
+                            background: "#00c853",
+                            color: "#fff",
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                            border: "none",
+                            cursor: "pointer",
+                            marginTop: "10px",
+                            borderRadius: "4px",
+                            boxSizing: "border-box",
+                        }}
+                    >
+                        Login
+                    </button>
+                </form>
+
+                <div
+                    style={{
+                        marginTop: "18px",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                    }}
                 >
-                    sign up
-                </a>
+                    Don't have an account?{" "}
+                    <a
+                        href="/signup"
+                        style={{ color: "#00a843", textDecoration: "none" }}
+                    >
+                        sign up
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</body>
+    </body>
     );
 }

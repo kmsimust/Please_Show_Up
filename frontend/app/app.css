@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./components/styles/styles.css";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
@@ -13,3 +14,87 @@ body {
     color-scheme: dark;
   }
 }
+
+:root {
+  --app-green: springgreen;
+  --app-green2: mediumseagreen;
+}
+
+.app-container-color {
+  background-color: #e6e6e6;
+}
+
+.app-padding-test {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  background-color: red;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.test-login {
+    height: 100vh;
+    background-image: url("/login-background.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #e6e6e6;
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+.sidebar-icon {
+  width: 80px;
+  height: 80px;
+} 
+
+.sidebar-link {
+  height: 64px;
+  color: #18181f;
+  transition: all 0.2 ease;
+  border-radius: 8px;
+  white-space: nowrap;
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+
+.sidebar-link:hover {
+  background-color: #56e0a2;
+}
+
+.navbar-height {
+  height: 60px;
+}
+
+.navbar-link {
+  display: flex;
+  width: 70px;
+  height: 60px;
+  color: #18181f;
+  white-space: nowrap;
+  font-size: 1.25rem;
+  text-decoration: none;
+  justify-content: center;
+}
+
+.navbar-link:hover {
+  background-color: #cecece;
+}
+
+
+

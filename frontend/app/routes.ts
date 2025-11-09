@@ -17,6 +17,7 @@ export default [
         route("/group", "routes/group.tsx"),
         route("/learn", "routes/learn.tsx"),
         route("/learn-axios", "routes/learn_axios.tsx"),
+        route("/create_group", "routes/create_group.tsx"),
         
         // route("/channel/:channelId", "routes/201_channel.tsx"),
 ] satisfies RouteConfig;

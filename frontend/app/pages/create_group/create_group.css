@@ -1,0 +1,69 @@
+.cg-section {
+    padding: 0.5rem;
+}
+
+.cg-section-box {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--body-alt);
+}
+
+.cg-l {
+    font-size: 1.25rem;
+    color: var(--text);
+}
+
+.cg-p {
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+.cg-input {
+    margin: 0.5rem;
+    line-height: 2rem;
+    background-color: var(--body);
+    border: 2px solid var(--body-darker);
+    border-radius: 0.5rem;
+}
+
+.cg-back-button {
+    padding: 1rem;
+    color: var(--text);
+}
+
+.upload-area {
+  margin: 1rem;
+}
+
+.upload-label {
+  display: block;
+  border: 2px dashed var(--body-darker);
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: var(--body);
+}
+
+.upload-label:hover {
+  border-color: var(--primary);
+  background-color: var(--primary-faded);
+}
+
+.upload-content {
+  pointer-events: none;
+}
+
+.upload-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.upload-subtitle {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
