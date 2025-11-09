@@ -11,8 +11,6 @@ export function EditProfilePage() {
   const [activeTab, setActiveTab] = useState<string>(tab || 'profile');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [headerFile, setHeaderFile] = useState<File | null>(null);
-  const [description, setDescription] = useState<string>('');
-  const maxDescriptionLength = 5000;
 
   useEffect(() => {
     if (tab) setActiveTab(tab);
@@ -42,21 +40,6 @@ export function EditProfilePage() {
     e.preventDefault();
     console.log('Header uploaded:', headerFile);
   };
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    if (value.length <= maxDescriptionLength) {
-      setDescription(value);
-    }
-  };
-
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (onSubmit) {
-  //     onSubmit(description);
-  //   }
-  //   console.log('Description saved:', description);
-  // };
 
   return (
 <div className="page-container">
@@ -174,22 +157,6 @@ export function EditProfilePage() {
                             <p className="file-selected">Selected: {headerFile.name}</p>
                         )}
                         </div>
-                        <button type="submit" className="submit-btn">Submit</button>
-                    </form>
-                    </div>
-
-                    {/* Avatar Section */}
-                    <div className="settings-section">
-                    <h2 className="section-title">Description</h2>
-                    <p className="section-description">
-                        Visible on your profile page. You can tell users about yourself
-                    </p>
-
-                    <form onSubmit={(e) => e.preventDefault()}>
-                        <input
-                        type="description"
-                        className="settings-input"
-                        />
                         <button type="submit" className="submit-btn">Submit</button>
                     </form>
                     </div>
