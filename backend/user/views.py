@@ -130,7 +130,7 @@ def update_user_profile_image(request, pk):
 
     serializer = UserSerializer(user)
     current_user_id, uploaded_name = upload_file(serializer, uploaded_file, "user", "profile_")
-    serializer = UserSerializer(user, data = {"profile_image": f"/upload/user/{pk}/profile_{uploaded_name}"}, partial = True)
+    serializer = UserSerializer(user, data = {"profile_image": f"/upload/user/{pk}/{uploaded_name}"}, partial = True)
 
     if serializer.is_valid():
         serializer.save()
@@ -150,7 +150,7 @@ def update_user_banner_image(request, pk):
 
     serializer = UserSerializer(user)
     current_user_id, uploaded_name = upload_file(serializer, uploaded_file, "user", "banner_")
-    serializer = UserSerializer(user, data = {"banner": f"/upload/user/{pk}/banner_{uploaded_name}"}, partial = True)
+    serializer = UserSerializer(user, data = {"banner": f"/upload/user/{pk}/{uploaded_name}"}, partial = True)
 
     if serializer.is_valid():
         serializer.save()
