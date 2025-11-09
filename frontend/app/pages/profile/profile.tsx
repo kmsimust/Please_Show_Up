@@ -1,46 +1,82 @@
 import "./profile.css";
 import NavBar from "../../components/navbar";
 import Sidebar from "../../components/sidebar"; // ✅ import Sidebar
-import miniuserProfile from "../../../public/user.png";
 import { getUser } from "../../utils/auth-me";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 export function ProfilePage() {
-	const user = getUser();
-	return (
-		<>
-		<NavBar />
+    const user = getUser(); // array / object
+	const [userdata, setuserdata] = useState("")
+	
+	useEffect(() => { // Run at page loaded / Refresh
+		get_user_data()
+		console.log("Page loaded");
+		}, []);
+	
 
-		{/* Body with sidebar */}
-		<div className="d-flex">
-			{/* ✅ Use Sidebar component */}
-			<Sidebar />
+	async function get_user_data() {
+		const resp = await axios.get("http://localhost:8000/api/user/me/");
+		setuserdata(resp.data)
+	}
+    return (
+        <>
+            <NavBar />
+            {JSON.stringify(user)}
 
-			<div className="profile-case">
-				<div className="profile-banner">
+            {user?.id}
+            {userdata}
+            {/* Body with sidebar */}
+            <div className="d-flex">
+                {/* ✅ Use Sidebar component */}
+                <Sidebar />
 
-				</div>
+                <div className="profile-case">
+                    <div
+                        className="profile-banner"
+                        style={{
+                            backgroundImage:
+                                user?.banner != "default"
+                                    ? "url(http://localhost:8000/public/" +
+                                      user?.banner +
+                                      ")"
+                                    : "url(/default_banner.jpg)",
+                        }}
+                    ></div>
 
-				<div className="profile-user-case">
-					<div className="profile-user-case2">
-						<img className="profile-user-avatar"/>
-						
-						<div className="profile-user-name-case">
-							<div className="profile-user-display-name">
-								Display Name
-							</div>
-							Username
-						</div>
-					</div>
+                    <div className="profile-user-case">
+                        <div className="profile-user-case2">
+                            <img
+                                className="profile-user-avatar"
+                                src={
+                                    user?.profile_image != "default"
+                                        ? user?.profile_image
+                                        : "/default_user.png"
+                                }
+                            />
 
-					<div>
-						<button className="profile-user-edit-profile-button">
-							Edit profile
-						</button>
-					</div>
-				</div>
-			</div>
+                            <div className="profile-user-name-case">
+                                <div className="profile-user-display-name">
+                                    {user?.display_name
+                                        ? user.display_name
+                                        : user?.username}
+                                    {/*if display os null, show username*/}
+                                </div>
+                                {user?.username}
+                            </div>
+                        </div>
 
-			{/*
+                        <div>
+                            <a href="/account/:tab?">
+                                <button className="profile-user-edit-profile-button">
+                                    Edit profile
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {/*
 			{/* Main profile content 
 			<div className="flex-grow-1 p-4">
 			{/* Header with cover + avatar + name 
@@ -82,7 +118,7 @@ export function ProfilePage() {
 				</div>
 			</div>
 			</div>*/}
-		</div>
-		</>
-	);
+            </div>
+        </>
+    );
 }
