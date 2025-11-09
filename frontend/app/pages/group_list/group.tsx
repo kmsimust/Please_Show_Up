@@ -15,7 +15,7 @@ export function GroupPage() {
 			{/* Main content */}
 			<div className="flex-grow-1 p-4">
 				<div className="group-button-case mb-4">
-					<a href="#" className="group-create-group-button">
+					<a href="/create_group" className="group-create-group-button">
 						Create group
 					</a>
 				</div>
