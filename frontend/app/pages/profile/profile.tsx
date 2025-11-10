@@ -1,5 +1,6 @@
 import "./profile.css";
 import NavBar from "../../components/navbar";
+import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar"; // ✅ import Sidebar
 import miniuserProfile from "../../../public/user.png";
 import { getUser } from "../../utils/auth-me";
@@ -8,10 +9,10 @@ export function ProfilePage() {
 	const user = getUser();
 	return (
 		<>
-		<NavBar />
+		<AuthNavBar />
 
 		{/* Body with sidebar */}
-		<div className="d-flex">
+		<div className="flex">
 			{/* ✅ Use Sidebar component */}
 			<Sidebar />
 

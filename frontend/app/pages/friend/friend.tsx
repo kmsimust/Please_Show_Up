@@ -2,7 +2,10 @@ import "./friend.css";
 import { useState } from "react";
 import axios from "axios";
 import NavBar from "../../components/navbar";
+import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar"; // ✅ import sidebar component
+
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export function FriendPage() {
   const [username, setUsername] = useState("");
@@ -40,7 +43,7 @@ export function FriendPage() {
 
   return (
     <>
-      <NavBar />
+      <AuthNavBar />
 
       <div className="d-flex">
         {/* ✅ Use Sidebar component */}

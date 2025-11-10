@@ -1,5 +1,6 @@
 import "./group.css";
 import NavBar from "../../components/navbar";
+import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 
 export function GroupPage() {
@@ -7,8 +8,8 @@ export function GroupPage() {
 
 	return (
 		<>
-		<NavBar />
-		<div className="d-flex">
+		<AuthNavBar />
+		<div className="flex">
 			{/* Sidebar */}
 			<Sidebar />
 
@@ -29,8 +30,8 @@ export function GroupPage() {
 								</label>
 							</div>
 							<div className="flex justify-end">
-								<img className="group-member-image bg-dark"></img>
-								<img className="group-member-image bg-danger"></img>
+								<img className="group-member-image"></img>
+								<img className="group-member-image"></img>
 								<img className="group-member-image"></img>
 								<img className="group-member-image"></img>
 							</div>
@@ -45,8 +46,8 @@ export function GroupPage() {
 								</label>
 							</div>
 							<div className="flex justify-end">
-								<img className="group-member-image bg-dark"></img>
-								<img className="group-member-image bg-danger"></img>
+								<img className="group-member-image"></img>
+								<img className="group-member-image"></img>
 								<img className="group-member-image"></img>
 								<img className="group-member-image"></img>
 							</div>
