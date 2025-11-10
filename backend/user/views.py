@@ -66,7 +66,8 @@ def login_user(request):
     # Use Django's authenticate to verify password hash
     user = authenticate(request, username=username, password=password)
     if user is None:
-        raise APIException("Invalid credentials!")
+        # raise APIException("Invalid credentials!")
+        return Response({"detail": "wrong username or password"}, status = status.HTTP_400_BAD_REQUEST)
 
     serializer = UserSerializer(user)
     access_token = create_access_token(user.id)
