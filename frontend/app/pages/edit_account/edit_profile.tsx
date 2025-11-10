@@ -2,12 +2,16 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router";
 import NavBar from "../../components/navbar";
 import Sidebar from "../../components/sidebar";
+import { AuthNavBar } from "../../components/auth_navbar"
 import "./edit.css";
 
 type TabKey = "profile" | "account" | "notifications" | "history";
 const VALID_TABS: TabKey[] = ["profile", "account", "notifications", "history"];
 
 export function EditProfilePage() {
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const navigate = useNavigate();
   const params = useParams();
   const tabParam = (params.tab as string | undefined)?.toLowerCase();
@@ -83,12 +87,15 @@ export function EditProfilePage() {
   return (
     <>
       {/* Same top bar as GroupPage */}
-      <NavBar />
+      <AuthNavBar 
+      onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
       {/* Same 2-column layout as GroupPage */}
       <div className="d-flex">
         {/* Sidebar */}
-        <Sidebar />
+        <Sidebar 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)} />
 
         {/* Main content */}
         <div className="flex-grow-1 p-4">
