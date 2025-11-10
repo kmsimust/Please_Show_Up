@@ -37,6 +37,9 @@ def get_event_by_group_id(request, group_id):
 def create_event(request):
     body = request.data
 
+
+    body["end_date"] = str(datetime.strptime(body["start_date"], '%Y-%m-%d').date() + timedelta(days=6)) #"2025-11-26"
+
     serializer = EventSerializerSave(data=body)
     if serializer.is_valid():
         serializer.save() # INSERT 
@@ -45,10 +48,11 @@ def create_event(request):
         group_id = serializer_dict["group"]
         group_member = GroupMember.objects.filter(group = group_id)
         group_member_serializer = GroupMemberSerializer(group_member, many = True)
-        group_member_serializer_list = list(group_member_serializer)
+        #print(group_member_serializer)
+        group_member_serializer_list = list(group_member_serializer.data)
         # {} # dict
-        start_date_str = serializer_dict["start_date"]
-        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        start_date_str = serializer_dict["start_date"] #"2025-11-10"
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date() # type date
 
         for group_member_serializer_dict in group_member_serializer_list:
             for i in range(7):
@@ -126,6 +130,14 @@ def update_event_date(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     body = request.data
+    event_serializer = EventSerializer(event, many = True)
+    start_date = datetime.strptime(event_serializer["start_date"], '%Y-%m-%d').date()
+    end_date = datetime.strptime(event_serializer["end_date"], '%Y-%m-%d').date()
+    event_date = datetime.strptime(event_serializer["event_date"], '%Y-%m-%d').date()
+
+    if not(start_date <= event_date <= end_date):
+        return Response({"message":"event date must be between start and end date"}, status = status.HTTP_400_BAD_REQUEST)
+
     serializer = EventSerializerSave(event, data = {"event_date": body["event_date"]}, partial = True)
 
     if serializer.is_valid():
