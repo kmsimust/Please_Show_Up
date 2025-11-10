@@ -5,6 +5,7 @@ from rest_framework import status
 from group.models import Group
 # from group_member.serializers import GroupMemberSerializer
 from group_member.serializers import GroupMemberSerializer, GroupMemberSerializerSave
+from group_member.models import GroupMember
 from .serializers import GroupRequestSerializers, GroupRequestSerializersSave
 from .models import GroupRequest
 
@@ -28,6 +29,7 @@ def get_invitation_by_user_id(request, invited_id):
 @permission_classes([IsAuthenticated])
 def create_group_request(request):
     body = request.data
+    duplicate = 0
 
     try:
         group = Group.objects.get(pk=body["group"])
@@ -35,23 +37,28 @@ def create_group_request(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if group.owner.id == body["invited_user"]:
-        return Response(status = status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Cannot self invite"}, status = status.HTTP_400_BAD_REQUEST)
+    
 
-    serializer = GroupRequestSerializersSave(data=body)
+    group_member = GroupRequest.objects.filter(invited_user = body["invited_user"], group = body["group"])
+    if len(group_member) > 0: 
+        return Response({"message": f"this user (id = {body["invited_user"]}) has already invite"}, status = status.HTTP_400_BAD_REQUEST)
+    else:
+        serializer = GroupRequestSerializersSave(data=body)
 
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
 def update_status_group_request(request, pk, g_status):
     try:
-        group_request = GroupRequest.objects.get(pk=pk)
+        group_request = GroupRequest.objects.get(pk=pk, status = "pending")
     except GroupRequest.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({"message":"grouprequest not found or status already setted"},status=status.HTTP_404_NOT_FOUND)
     
     serializer = GroupRequestSerializersSave(group_request, data={"status": g_status}, partial=True)
     if serializer.is_valid():
