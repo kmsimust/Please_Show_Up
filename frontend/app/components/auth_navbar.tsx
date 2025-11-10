@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getUser } from '../utils/auth-me';
 import "../components/styles/auth_navbar.css"
@@ -8,12 +9,30 @@ interface AuthNavBarProps {
 
 export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
   const user = getUser();
-  
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const handleToggle = () => {
     if (onToggleSidebar) {
       onToggleSidebar();
     }
   };
+
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <div className="top-nav-bar">
@@ -58,57 +77,62 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
           <span>{user?.username || 'User'}</span>
         </Link> */}
 
-        {/*User dropdown*/}
-        <Link to="/#" className="nav-link nav-link-icon" aria-label="Profile">
-          <div className="dropdown">
-            
-            <a href="/profile" className="navbar-link p-1">
-              {/*Replace icon*/}
-              <img className="user-icon"></img>
-            </a>
-
+        {/* User dropdown */}
+        <div className={`dropdown ${isDropdownOpen ? 'active' : ''}`} ref={dropdownRef}>
+          <button 
+            onClick={toggleDropdown} 
+            className="nav-link nav-link-icon dropdown-trigger"
+            aria-label="User menu"
+          >
+            <img 
+              src={user?.profile_image === "default" ? "/user.png" : user?.profile_image} 
+              alt="User" 
+              className="user-icon"
+            />
+          </button>
+          
+          {isDropdownOpen && (
             <div className="dropdown-content">
-
               <a href="/profile" className="dropdown-userbox">
-                {/*Replace icon*/}
-                <img className="user-icon"></img>
+                <img 
+                  src={user?.profile_image === "default" ? "/user.png" : user?.profile_image}
+                  alt="User" 
+                  className="user-icon"
+                />
                 <div>
                   <div className="dropdown-username">
-                    <span>{user?.username || 'User'}</span>
+                    <span>{user?.display_name || user?.username || 'User'}</span>
                   </div>
-                  <div className="dropdown-username">
-                    <span>{user?.display_name || `@${user?.username}` || 'User'}</span>
+                  <div className="dropdown-handle">
+                    <span>@{user?.username || 'user'}</span>
                   </div>
                 </div>
               </a>
-
+              
               <div className="dropdown-divider"></div>
-
-              <a href="#" className="dropdown-option">
-                Notification
+              
+              <a href="/notifications" className="dropdown-option">
+                <span>Notification</span>
                 <i className="bi bi-bell"></i>
               </a>
-
               <a href="/friend" className="dropdown-option">
-                Friends
+                <span>Friends</span>
                 <i className="bi bi-people"></i>
               </a>
-
-              <a href="#" className="dropdown-option">
-                Messages
+              <a href="/messages" className="dropdown-option">
+                <span>Messages</span>
                 <i className="bi bi-envelope"></i>
               </a>
-
+              
               <div className="dropdown-divider"></div>
-
+              
               <a href="/login" className="dropdown-option">
-                Log out
+                <span>Log out</span>
                 <i className="bi bi-box-arrow-right"></i>
               </a>
-              
             </div>
-          </div> 
-        </Link>
+          )}
+        </div>
 
       </div>
     </div>
