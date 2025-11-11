@@ -5,6 +5,9 @@ from rest_framework import status
 
 from .models import AvailableDate
 from .serializer import AvailableDateSerializer, AvailableDateSerializerSave
+from datetime import datetime
+from event.models import Event
+from event.serializers import EventSerializer, EventSerializerSave
 
 # Create your views here.
 @api_view(["GET"])
@@ -67,8 +70,20 @@ def update_status(request, pk):
     
     body = request.data
     serializer = AvailableDateSerializerSave(available_date, data = {"status": body["status"]}, partial = True)
-    
+
     if serializer.is_valid():
+        try:
+            event = Event.objects.get(pk = serializer["event"].value)
+        except Event.DoesNotExist:
+            return Response(status= status.HTTP_404_NOT_FOUND)
+        
+        event_serializer = EventSerializer(event)
+        
+        date_str =  dict(event_serializer.data)["end_date"]
+        if datetime.now().date() > datetime.strptime(date_str, '%Y-%m-%d').date():
+            return Response({"message":"Cannot edit anything after the end_date"} ,status = status.HTTP_400_BAD_REQUEST)
+    
+    
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
