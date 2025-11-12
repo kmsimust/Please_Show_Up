@@ -1,14 +1,19 @@
 import './create_group.css'
+import { useState } from 'react';
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 
 export function CreateGroup() {
+
+    // Every page need this function.
+      const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     return (
         <div>
-        <AuthNavBar/>
+        <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
         <div className='flex'>
-            <Sidebar/>
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             <div className='grow p-4'>
                 <div className='cg-section flex justify-between'>
