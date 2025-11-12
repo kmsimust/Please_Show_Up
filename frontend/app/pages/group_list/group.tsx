@@ -11,14 +11,15 @@ export function GroupPage() {
 	const handleCreateGroup = () => {};
 
 	return (
-		<>
+	<div className="page-container">
 		<AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-		<div className="d-flex">
+
+		<div className="main-content">
 			{/* Sidebar */}
 			<Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
 			{/* Main content */}
-			<div className="flex-grow-1 p-4">
+			<div className="content-area">
 				<div className="group-button-case mb-4">
 					<a href="/create_group" className="group-create-group-button">
 						Create group
@@ -60,6 +61,6 @@ export function GroupPage() {
 				</div>
 			</div>
 		</div>
-		</>
+	</div>
 	);
 }

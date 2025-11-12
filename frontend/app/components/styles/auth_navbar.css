@@ -1,62 +1,14 @@
 @import url(./styles.css);
 
-/*
- * === TOP-NAV-BAR FIX ===
- */
-
-/* 1. The Main Bar: 
- * Tells the bar to be flexible and push the left/right 
- * containers to opposite ends.
- */
 .top-nav-bar {
+  height: 60px;
+  background-color: var(--body-dark);
   display: flex;
-  justify-content: space-between; /* Pushes left and right containers apart */
-  align-items: center;            /* Vertically centers everything */
-  
-  width: 100%;
-  padding: 8px 16px; /* 8px top/bottom, 16px left/right */
-  box-sizing: border-box; /* Ensures padding doesn't break layout */
-}
-
-/* 2. The Left Container (THE FIX):
- * This forces the button and logo to be on the left
- * and stay next to each other.
- */
-.left-links-container {
-  display: flex;
-  align-items: center; /* Vertically aligns button and logo */
-  
-  /* --- THIS IS THE KEY --- */
-  justify-content: flex-start; /* Aligns items to the START (left) */
-  flex-grow: 0;                /* Tells it NOT to grow and fill empty space */
-  /* --- END KEY --- */
-
-  gap: 12px; /* Adds a nice space BETWEEN the button and logo */
-}
-
-/* 3. The Right Container:
- * This groups your right-side icons together.
- */
-.right-links-container {
-  display: flex;
-  align-items: center;
-  gap: 16px; /* Space between the mail, bell, and profile icons */
-}
-
-/* 4. The Hamburger Button:
- * Just cleans up the button styling.
- */
-.open-sidebar-button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  margin: 0;
-  
-  /* Helps center the SVG inside the button */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  top: 0;
+  position: sticky;
+  z-index: 1000;
+  border-bottom: 1px solid var(--body-darker);
 }
 
 .top-nav-bar .left-links-container {

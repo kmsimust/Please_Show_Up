@@ -23,8 +23,12 @@ export function EditProfilePage() {
 
     const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
 
+    // image files handlers
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
     const [headerFile, setHeaderFile] = useState<File | null>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const [headerPreview, setHeaderPreview] = useState<string | null>(null);
+
     const [description, setDescription] = useState<string>("");
     const maxDescriptionLength = 5000;
 
@@ -75,6 +79,14 @@ export function EditProfilePage() {
         if (file && validateFile(file, HEADER_MAX)) setHeaderFile(file);
     };
 
+    // Cleanup preview URLs on unmount
+    useEffect(() => {
+    return () => {
+        if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+        if (headerPreview) URL.revokeObjectURL(headerPreview);
+        };
+    }, [avatarPreview, headerPreview]);
+
     const handleSubmitAvatar = (e: React.FormEvent) => {
         e.preventDefault();
         if (!avatarFile) return;
@@ -93,22 +105,17 @@ export function EditProfilePage() {
     //   };
 
     return (
-        <div>
+        <div className="page-container">
             {/* Same top bar as GroupPage */}
-            <AuthNavBar
-                onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-            />
+            <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
             {/* Same 2-column layout as GroupPage */}
             <div className="main-content">
                 {/* Sidebar */}
-                <Sidebar
-                    isOpen={isSidebarOpen}
-                    onClose={() => setIsSidebarOpen(false)}
-                />
+                <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
                 {/* Main content */}
-                <div className="flex-grow-1 p-4">
+                <div className="content-area">
                     <div className="settings-container">
                         {/* Settings Sidebar (left tabs inside main content) */}
                         <div

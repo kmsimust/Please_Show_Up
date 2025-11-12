@@ -7,6 +7,9 @@ import React, { useEffect, useState } from "react";
 import { get_user_data } from "~/services/user";
 
 export function ProfilePage() {
+    // Every page need this function.
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     const [userdata, setUserdata] = useState<any | null>(null);
     const [error, setError] = useState("");
 
@@ -23,33 +26,50 @@ export function ProfilePage() {
     // ✅ Loading screen
     if (!userdata && !error) {
         return (
-            <>
-                <AuthNavBar />
-                <div className="d-flex justify-content-center p-5">
-                    Loading profile...
-                </div>
-            </>
+<div className="page-container">
+    <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+
+    <div className="main-content">
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                
+        <div className="content-area">
+        <div className="d-flex justify-content-center p-5">
+            Loading profile...
+        </div>
+        </div>
+    </div>
+</div>
         );
     }
 
     // ✅ Error screen
     if (error) {
         return (
-            <>
-                <AuthNavBar />
-                <div className="text-center text-danger p-5">
-                    Failed to load profile: {JSON.stringify(error)}
-                </div>
-            </>
+<div className="page-container">
+    <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+        
+    <div className="main-content">
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                
+        <div className="content-area">
+        <div className="text-center text-danger p-5">
+            Failed to load profile: {JSON.stringify(error)}
+        </div>
+        </div>
+    </div>
+</div>
         );
     }
 
     // ✅ Main profile UI (uses userdata)
     return (
-        <>
-            <AuthNavBar />
-            <div className="d-flex">
-                <Sidebar />
+        
+        <div className="page-container">
+           <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+
+            <div className="main-content">
+                <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
                 <div className="profile-case">
                     <div
                         className="profile-banner"
@@ -67,7 +87,7 @@ export function ProfilePage() {
                                 className="profile-user-avatar"
                                 src={
                                     userdata.profile_image !== "default"
-                                        ? 'http://localhost:8000/public/'+userdata.profile_image
+                                        ? userdata.profile_image
                                         : "/default_user.png"
                                 }
                             />
@@ -76,7 +96,7 @@ export function ProfilePage() {
                                 <div className="profile-user-display-name">
                                     {userdata.display_name || userdata.username}
                                 </div>
-                                {userdata.username}
+                                <span>@{userdata?.username || 'user'}</span>
                             </div>
                         </div>
 
@@ -90,6 +110,6 @@ export function ProfilePage() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
