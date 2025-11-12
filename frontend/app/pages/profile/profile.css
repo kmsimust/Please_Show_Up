@@ -49,6 +49,7 @@
 	padding: 0.5em 2em;
 	border-radius: 2em;
 	background-color: var(--app-green);
+  color: black;
 }
 
 .profile-user-edit-profile-button:hover {

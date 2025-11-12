@@ -1,56 +1,23 @@
 import "./profile.css";
 import NavBar from "../../components/navbar";
 import Sidebar from "../../components/sidebar";
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 
-// ✅ Read cookie
-function getCookie(name: string) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(";");
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i].trim();
-        if (c.indexOf(nameEQ) === 0)
-            return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
+import { get_user_data } from "~/services/user";
 
 export function ProfilePage() {
     const [userdata, setUserdata] = useState<any | null>(null);
     const [error, setError] = useState("");
 
     useEffect(() => {
-        get_user_data();
+        page_load();
     }, []);
 
-    async function get_user_data() {
-        try {
-            // ✅ use cookie token first
-            let token = getCookie("accessToken");
-
-            // ✅ fallback to localStorage (if you store JWT there)
-            if (!token) {
-                token = localStorage.getItem("accessToken") || "";
-            }
-
-            console.log("TOKEN:", token);
-
-            // ✅ API request
-            const resp = await axios.get("http://localhost:8000/api/user/me/", {
-                headers: {
-                    Authorization: "Bearer " + token,
-                },
-                // ❌ REMOVE withCredentials unless your backend requires cookies
-                // withCredentials: true,
-            });
-
-            console.log("API RESPONSE:", resp.data);
-            setUserdata(resp.data);
-        } catch (err: any) {
-            console.error("ERROR /me:", err);
-            setError(err.response?.data || "Failed to load profile.");
-        }
+    async function page_load() {
+        const { result, error } = await get_user_data(); // Call service api function
+        setUserdata(result);
+        setError(error);
     }
 
     // ✅ Loading screen
@@ -81,10 +48,8 @@ export function ProfilePage() {
     return (
         <>
             <NavBar />
-
             <div className="d-flex">
                 <Sidebar />
-
                 <div className="profile-case">
                     <div
                         className="profile-banner"
@@ -102,7 +67,7 @@ export function ProfilePage() {
                                 className="profile-user-avatar"
                                 src={
                                     userdata.profile_image !== "default"
-                                        ? userdata.profile_image
+                                        ? 'http://localhost:8000/public/'+userdata.profile_image
                                         : "/default_user.png"
                                 }
                             />
