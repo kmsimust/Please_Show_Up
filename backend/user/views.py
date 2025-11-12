@@ -114,7 +114,7 @@ def delete_user(request, pk):
 @permission_classes([IsAuthenticated])
 def get_user_by_username(request, username):
     users = User.objects.get(username = username)
-    serializer = UserSerializer(users, many=True)
+    serializer = UserSerializer(users)
     return Response(serializer.data)
 
 

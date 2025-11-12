@@ -1,6 +1,6 @@
 import "./profile.css";
-import NavBar from "../../components/navbar";
 import Sidebar from "../../components/sidebar";
+import { AuthNavBar } from "~/components/auth_navbar";
 
 import React, { useEffect, useState } from "react";
 
@@ -24,7 +24,7 @@ export function ProfilePage() {
     if (!userdata && !error) {
         return (
             <>
-                <NavBar />
+                <AuthNavBar />
                 <div className="d-flex justify-content-center p-5">
                     Loading profile...
                 </div>
@@ -36,7 +36,7 @@ export function ProfilePage() {
     if (error) {
         return (
             <>
-                <NavBar />
+                <AuthNavBar />
                 <div className="text-center text-danger p-5">
                     Failed to load profile: {JSON.stringify(error)}
                 </div>
@@ -47,7 +47,7 @@ export function ProfilePage() {
     // ✅ Main profile UI (uses userdata)
     return (
         <>
-            <NavBar />
+            <AuthNavBar />
             <div className="d-flex">
                 <Sidebar />
                 <div className="profile-case">
