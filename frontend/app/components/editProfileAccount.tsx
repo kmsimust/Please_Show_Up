@@ -51,6 +51,7 @@ export default function EditProfileAccount() {
                                 type="text"
                                 name="username"
                                 placeholder="Enter your Username"
+                                value={formData.username}
                                 className="settings-input form-control"
                                 onChange={formChange}
                             />
@@ -60,6 +61,7 @@ export default function EditProfileAccount() {
                                 type="text"
                                 name="email"
                                 placeholder="Enter your email"
+                                value={formData.email}
                                 className="settings-input form-control"
                                 onChange={formChange}
                             />
@@ -69,6 +71,7 @@ export default function EditProfileAccount() {
                                 type="text"
                                 name="first_name"
                                 placeholder="Enter your firstname"
+                                value={formData.first_name}
                                 className="settings-input form-control"
                                 onChange={formChange}
                             />
@@ -78,6 +81,7 @@ export default function EditProfileAccount() {
                                 type="text"
                                 name="last_name"
                                 placeholder="Enter your lastname"
+                                value={formData.last_name}
                                 className="settings-input form-control"
                                 onChange={formChange}
                             />
@@ -87,6 +91,7 @@ export default function EditProfileAccount() {
                                 type="text"
                                 name="display_name"
                                 placeholder="Enter your display name"
+                                value={formData.display_name}
                                 className="settings-input form-control"
                                 onChange={formChange}
                             />
@@ -96,6 +101,7 @@ export default function EditProfileAccount() {
                                 type="text"
                                 name="phone_number"
                                 placeholder="Enter your phone number"
+                                value={formData.phone_number}
                                 className="settings-input form-control"
                                 onChange={formChange}
                             />
@@ -105,6 +111,7 @@ export default function EditProfileAccount() {
                                 type="text"
                                 name="gender"
                                 placeholder="Enter your gender"
+                                 value={formData.gender}
                                 className="settings-input form-control"
                                 onChange={formChange}
                             />
@@ -114,6 +121,7 @@ export default function EditProfileAccount() {
                                 type="text"
                                 name="date_of_birth"
                                 placeholder="Enter your date of birth"
+                                value={formData.date_of_birth}
                                 className="settings-input form-control"
                                 onChange={formChange}
                             />
