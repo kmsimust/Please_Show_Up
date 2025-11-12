@@ -1,5 +1,5 @@
 import "./profile.css";
-import NavBar from "../../components/navbar";
+import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -17,6 +17,10 @@ function getCookie(name: string) {
 }
 
 export function ProfilePage() {
+
+    // Every page need this function.
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     const [userdata, setUserdata] = useState<any | null>(null);
     const [error, setError] = useState("");
 
@@ -56,34 +60,49 @@ export function ProfilePage() {
     // ✅ Loading screen
     if (!userdata && !error) {
         return (
-            <>
-                <NavBar />
-                <div className="d-flex justify-content-center p-5">
-                    Loading profile...
-                </div>
-            </>
+<div className="page-container">
+    <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+
+    <div className="main-content">
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                
+        <div className="content-area">
+        <div className="d-flex justify-content-center p-5">
+            Loading profile...
+        </div>
+        </div>
+    </div>
+</div>
         );
     }
 
     // ✅ Error screen
     if (error) {
         return (
-            <>
-                <NavBar />
-                <div className="text-center text-danger p-5">
-                    Failed to load profile: {JSON.stringify(error)}
-                </div>
-            </>
+<div className="page-container">
+    <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+        
+    <div className="main-content">
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                
+        <div className="content-area">
+        <div className="text-center text-danger p-5">
+            Failed to load profile: {JSON.stringify(error)}
+        </div>
+        </div>
+    </div>
+</div>
         );
     }
 
     // ✅ Main profile UI (uses userdata)
     return (
-        <>
-            <NavBar />
+        
+        <div className="page-container">
+           <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-            <div className="d-flex">
-                <Sidebar />
+            <div className="main-content">
+                <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
                 <div className="profile-case">
                     <div
@@ -125,6 +144,6 @@ export function ProfilePage() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

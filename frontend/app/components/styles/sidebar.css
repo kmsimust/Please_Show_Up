@@ -3,10 +3,10 @@
 /* Sidebar - fixed width, scrollable */
 .side-bar {
   width: 255px;
+  height: auto;
   background-color: var(--body-dark);
   border-right: 1px solid var(--body-darker);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: visible; /* Remove all overflow */
   flex-shrink: 0;
   transition: width 0.3s ease;
 }

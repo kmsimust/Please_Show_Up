@@ -22,8 +22,12 @@ export function EditProfilePage() {
 
   const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
 
+  // image files handlers
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [headerFile, setHeaderFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [headerPreview, setHeaderPreview] = useState<string | null>(null);
+
   const [description, setDescription] = useState<string>("");
   const maxDescriptionLength = 5000;
 
@@ -59,14 +63,32 @@ export function EditProfilePage() {
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && validateFile(file, AVATAR_MAX)) setAvatarFile(file);
-  };
+  const file = e.target.files?.[0];
+  if (file && validateFile(file, AVATAR_MAX)) {
+    setAvatarFile(file);
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setAvatarPreview(previewUrl);
+  }
+};
 
-  const handleHeaderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && validateFile(file, HEADER_MAX)) setHeaderFile(file);
+const handleHeaderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file && validateFile(file, HEADER_MAX)) {
+    setHeaderFile(file);
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setHeaderPreview(previewUrl);
+  }
+};
+
+// Cleanup preview URLs on unmount
+useEffect(() => {
+  return () => {
+    if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+    if (headerPreview) URL.revokeObjectURL(headerPreview);
   };
+}, [avatarPreview, headerPreview]);
 
   const handleSubmitAvatar = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,13 +102,8 @@ export function EditProfilePage() {
     console.log("Header uploaded:", headerFile);
   };
 
-//   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-//     const value = e.target.value.slice(0, maxDescriptionLength);
-//     setDescription(value);
-//   };
-
   return (
-    <div>
+    <div className="page-container">
       {/* Same top bar as GroupPage */}
       <AuthNavBar 
       onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
@@ -99,7 +116,7 @@ export function EditProfilePage() {
         onClose={() => setIsSidebarOpen(false)} />
 
         {/* Main content */}
-        <div className="flex-grow-1 p-4">
+        <div className="content-area">
           <div className="settings-container">
             {/* Settings Sidebar (left tabs inside main content) */}
             <div className="settings-sidebar" role="tablist" aria-label="Settings tabs">
@@ -196,7 +213,6 @@ export function EditProfilePage() {
                     <p className="section-description">
                       File Size: &lt; 1.5MB, File Formats: | .jpg | .png | .gif | .webp | .webm |, Recommended resolution: 1500×430
                     </p>
-
                     <form onSubmit={handleSubmitHeader}>
                       <div className="upload-area">
                         <input
@@ -206,12 +222,28 @@ export function EditProfilePage() {
                           onChange={handleHeaderUpload}
                           hidden
                         />
-                        <label htmlFor="header-upload" className="upload-label">
-                          <div className="upload-content">
-                            <p className="upload-title">Upload file(s)</p>
-                            <p className="upload-subtitle">Drop file(s) here, or click to select.</p>
+                        {headerPreview ? (
+                          <div className="image-preview-container">
+                            <img src={headerPreview} alt="Header preview" className="image-preview header-preview" />
+                            <button 
+                              type="button" 
+                              className="remove-preview-btn"
+                              onClick={() => {
+                                setHeaderFile(null);
+                                setHeaderPreview(null);
+                              }}
+                            >
+                              ×
+                            </button>
                           </div>
-                        </label>
+                        ) : (
+                          <label htmlFor="header-upload" className="upload-label">
+                            <div className="upload-content">
+                              <p className="upload-title">Upload file(s)</p>
+                              <p className="upload-subtitle">Drop file(s) here, or click to select.</p>
+                            </div>
+                          </label>
+                        )}
                         {headerFile && <p className="file-selected">Selected: {headerFile.name}</p>}
                       </div>
                       <button type="submit" className="submit-btn" disabled={!headerFile}>
