@@ -105,3 +105,18 @@ html, body {
 .default-btn:hover {
   background-color: var(--primary-dark);
 }
+
+.default-back-button {
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.default-back-button:hover {
+  background-color: var(--body-darker);
+}

@@ -48,3 +48,39 @@
 .ig-side-member-name {
     margin: 0 1rem;
 }
+
+.ig-invite-modal-box {
+    display: flex;
+    flex-direction: column;
+    width: 32rem;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background-color: var(--body);
+}
+
+.ig-search-bar {
+    margin: 1rem 0;
+}
+
+.ig-invite-user-list-case {
+    max-height: calc((42px + 0.5rem)*6);
+    overflow-y: auto;
+}
+
+.ig-invite-user-case {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.ig-invite-user-case:hover {
+    background-color: var(--body-dark);
+}
+
+.ig-invite-invite-btn {
+    font-size: 0.875rem !important;
+    padding: 0.5rem 0.75rem !important;
+}
