@@ -29,7 +29,7 @@ export function SignUpPage() {
         res.preventDefault();
         try {
             const response = await axios.post(
-                "http://localhost:8000/api/user/create/",
+                "http://localhost:8000/api/user/create_user/",
                 formData,
             );
             console.log("Data sent successfully:", response.data);

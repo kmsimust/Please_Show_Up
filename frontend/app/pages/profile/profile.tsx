@@ -1,51 +1,88 @@
 import "./profile.css";
 import NavBar from "../../components/navbar";
-import Sidebar from "../../components/sidebar"; // ✅ import Sidebar
-import { getUser } from "../../utils/auth-me";
+import Sidebar from "../../components/sidebar";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+// ✅ Read cookie
 function getCookie(name: string) {
-  const nameEQ = name + "=";
-  const ca = document.cookie.split(';');
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(nameEQ) === 0)
+            return c.substring(nameEQ.length, c.length);
+    }
+    return null;
 }
 
 export function ProfilePage() {
-    const user = getUser(); // array / object
-	const [userdata, setuserdata] = useState("")
-	console.log(user, 'check poit');
-	useEffect(() => { // Run at page loaded / Refresh
-		get_user_data()
-		console.log("Page loaded");
-		}, []);
-	
+    const [userdata, setUserdata] = useState<any | null>(null);
+    const [error, setError] = useState("");
 
-	async function get_user_data() {
-        const token = getCookie('accessToken')
-		const resp = await axios.get("http://localhost:8000/api/user/me/", {
-            withCredentials: true,
-            headers: {
-                'Authorization': 'Bearer '+ token
+    useEffect(() => {
+        get_user_data();
+    }, []);
+
+    async function get_user_data() {
+        try {
+            // ✅ use cookie token first
+            let token = getCookie("accessToken");
+
+            // ✅ fallback to localStorage (if you store JWT there)
+            if (!token) {
+                token = localStorage.getItem("accessToken") || "";
             }
-        });
-		setuserdata(resp.data)
-	}
+
+            console.log("TOKEN:", token);
+
+            // ✅ API request
+            const resp = await axios.get("http://localhost:8000/api/user/me/", {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+                // ❌ REMOVE withCredentials unless your backend requires cookies
+                // withCredentials: true,
+            });
+
+            console.log("API RESPONSE:", resp.data);
+            setUserdata(resp.data);
+        } catch (err: any) {
+            console.error("ERROR /me:", err);
+            setError(err.response?.data || "Failed to load profile.");
+        }
+    }
+
+    // ✅ Loading screen
+    if (!userdata && !error) {
+        return (
+            <>
+                <NavBar />
+                <div className="d-flex justify-content-center p-5">
+                    Loading profile...
+                </div>
+            </>
+        );
+    }
+
+    // ✅ Error screen
+    if (error) {
+        return (
+            <>
+                <NavBar />
+                <div className="text-center text-danger p-5">
+                    Failed to load profile: {JSON.stringify(error)}
+                </div>
+            </>
+        );
+    }
+
+    // ✅ Main profile UI (uses userdata)
     return (
         <>
             <NavBar />
-            {JSON.stringify(user)}
 
-            {user?.id}
-            {userdata}
-            {/* Body with sidebar */}
             <div className="d-flex">
-                {/* ✅ Use Sidebar component */}
                 <Sidebar />
 
                 <div className="profile-case">
@@ -53,10 +90,8 @@ export function ProfilePage() {
                         className="profile-banner"
                         style={{
                             backgroundImage:
-                                user?.banner != "default"
-                                    ? "url(http://localhost:8000/public/" +
-                                      user?.banner +
-                                      ")"
+                                userdata.banner !== "default"
+                                    ? `url(http://localhost:8000/public/${userdata.banner})`
                                     : "url(/default_banner.jpg)",
                         }}
                     ></div>
@@ -66,20 +101,17 @@ export function ProfilePage() {
                             <img
                                 className="profile-user-avatar"
                                 src={
-                                    user?.profile_image != "default"
-                                        ? user?.profile_image
+                                    userdata.profile_image !== "default"
+                                        ? userdata.profile_image
                                         : "/default_user.png"
                                 }
                             />
 
                             <div className="profile-user-name-case">
                                 <div className="profile-user-display-name">
-                                    {user?.display_name
-                                        ? user.display_name
-                                        : user?.username}
-                                    {/*if display os null, show username*/}
+                                    {userdata.display_name || userdata.username}
                                 </div>
-                                {user?.username}
+                                {userdata.username}
                             </div>
                         </div>
 
@@ -92,49 +124,6 @@ export function ProfilePage() {
                         </div>
                     </div>
                 </div>
-
-                {/*
-			{/* Main profile content 
-			<div className="flex-grow-1 p-4">
-			{/* Header with cover + avatar + name 
-			<div className="profile-header">
-				<div className="profile-cover"></div>
-
-				<img
-				src={
-					user?.profile_image == "default"
-					? miniuserProfile
-					: user?.profile_image
-				}
-				alt="profile"
-				className="profile-avatar"
-				/>
-
-				<div className="profile-bar">
-				<span className="profile-username">{user?.username}</span>
-				<button className="edit-btn">edit profile</button>
-				</div>
-			</div>
-
-			{/* Info boxes 
-			<div className="d-flex gap-4">
-				<div className="info-box" style={{ width: "250px" }}>
-				<h5 className="mb-3 fw-bold">personal info</h5>
-				<p>username: {user?.username} </p>
-				<p>gender: {user?.gender == null ? "null" : user?.gender}</p>
-				<p>birthdate: {user?.date_of_birth == null ? "null" : user?.date_of_birth}</p>
-				<p>email: {user?.email == null ? "null" : user?.email}</p>
-				<p>tel: {user?.phone_number == null ? "null" : user?.phone_number}</p>
-				</div>
-
-				<div
-				className="info-box flex-grow-1"
-				style={{ minHeight: "220px" }}
-				>
-				{/* extra content (posts, etc.) 
-				</div>
-			</div>
-			</div>*/}
             </div>
         </>
     );
