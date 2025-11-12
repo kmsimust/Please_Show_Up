@@ -15,6 +15,7 @@ export default [
         route("/account/:tab?", "routes/edit_profile.tsx"),
 
         route("/group", "routes/group.tsx"),
+        route("/notification", "routes/notification.tsx"),
         route("/learn", "routes/learn.tsx"),
         route("/learn-axios", "routes/learn_axios.tsx"),
         route("/create_group", "routes/create_group.tsx"),

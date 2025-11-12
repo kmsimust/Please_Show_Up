@@ -1,0 +1,14 @@
+@import url(../../components/styles/styles.css);
+
+.content-area {
+  flex: 1;
+  overflow-y: auto; /* scrollable content */
+  padding: 1rem;
+}
+
+.content-container {
+  display: flex;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
