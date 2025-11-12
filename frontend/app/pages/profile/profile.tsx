@@ -60,38 +60,38 @@ export function ProfilePage() {
     // ✅ Loading screen
     if (!userdata && !error) {
         return (
-<>
-<AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+<div className="page-container">
+    <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-  <div className="main-content">
-    <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-            
-    <div className="content-area">
-      <div className="d-flex justify-content-center p-5">
-        Loading profile...
-      </div>
+    <div className="main-content">
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                
+        <div className="content-area">
+        <div className="d-flex justify-content-center p-5">
+            Loading profile...
+        </div>
+        </div>
     </div>
-  </div>
-</>
+</div>
         );
     }
 
     // ✅ Error screen
     if (error) {
         return (
-<>
-<AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-    
-  <div className="main-content">
-    <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-            
-    <div className="content-area">
-      <div className="text-center text-danger p-5">
-        Failed to load profile: {JSON.stringify(error)}
-      </div>
+<div className="page-container">
+    <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+        
+    <div className="main-content">
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                
+        <div className="content-area">
+        <div className="text-center text-danger p-5">
+            Failed to load profile: {JSON.stringify(error)}
+        </div>
+        </div>
     </div>
-  </div>
-</>
+</div>
         );
     }
 
