@@ -73,7 +73,7 @@ def update_status(request, pk):
 
     if serializer.is_valid():
         try:
-            event = Event.objects.get(pk = serializer["event"].value)
+            event = Event.objects.get(pk = available_date.event_id)
         except Event.DoesNotExist:
             return Response(status= status.HTTP_404_NOT_FOUND)
         
