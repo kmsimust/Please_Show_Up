@@ -68,7 +68,7 @@ export function FriendPage() {
     <div className="page-container">
       <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
       
-      <div className="main-wrapper">
+      <div className="main-content">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         
         <div className="content-area">

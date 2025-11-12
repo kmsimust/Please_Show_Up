@@ -1,40 +1,4 @@
-@import url(../../components/styles/styles.css);
-
-/* Parent container - fills viewport */
-.page-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-/* Top navbar - fixed 60px */
-.top-nav-bar {
-  height: 60px;
-  flex-shrink: 0; /* prevent shrinking */
-  background-color: var(--navbar-bg);
-  /* your navbar styles here */
-}
-
-/* Content area - takes remaining space */
-.main-content {
-  flex: 1; /* fills remaining space */
-  display: flex; /* for sidebar layout */
-  overflow: hidden; /* prevents page scroll */
-}
-
-/* Sidebar */
-.side-bar {
-  width: 255px;
-  background-color: var(--body-dark);
-  overflow-y: auto; /* scrollable if content overflows */
-}
-
-/* Main content area */
-.content-area {
-  flex: 1;
-  overflow-y: auto; /* scrollable content */
-  padding: 1rem;
-}
+@import url(../../components/styles/layout.css);
 
 /* Settings Container */
 .settings-container {
@@ -217,4 +181,55 @@
   .settings-nav-item span {
     white-space: nowrap;
   }
+}
+
+/* Image Preview */
+.image-preview-container {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-preview {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  border: 2px solid var(--body-darker);
+}
+
+.header-preview {
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.avatar-preview {
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+.remove-preview-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.remove-preview-btn:hover {
+  background-color: var(--danger);
 }
