@@ -1,7 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getUser } from '../utils/auth-me';
 import "../components/styles/auth_navbar.css"
+
+// --- Helper function to delete cookies ---
+// We need this because JavaScript can't just "remove" a cookie.
+// You have to set its expiration date to the past.
+function deleteCookie(name: string) {
+  // Sets the cookie's expiration to a time in the past
+  // 'path=/' ensures it deletes the cookie from the root path, which
+  // matches what your screenshot shows.
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+}
+
 
 interface AuthNavBarProps {
   onToggleSidebar?: () => void;
@@ -13,6 +24,7 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
   const [dropdownPosition, setDropdownPosition] = useState({ top: 68, right: 10 });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate(); 
 
   const handleToggle = () => {
     if (onToggleSidebar) {
@@ -23,17 +35,47 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
   const toggleDropdown = (e: React.MouseEvent) => {
     e.preventDefault();
     
-    // Calculate dropdown position based on button
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       setDropdownPosition({
-        top: rect.bottom + 8, // 8px gap below button
+        top: rect.bottom + 8,
         right: window.innerWidth - rect.right
       });
     }
     
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  // --- Start: Updated Logout Handler ---
+  /**
+   * Handles the complete logout process.
+   */
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault(); 
+
+    try {
+      // 1. (Still good practice) Call your backend to invalidate the session.
+      await fetch('/api/v1/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+    } catch (error) {
+      console.error("Server logout failed (continuing client-side):", error);
+    }
+
+    // 2. Clear client-side cookies.
+    // THIS IS THE FIX. We are now deleting the cookies from your screenshot.
+    deleteCookie('accessToken');
+    deleteCookie('user');
+
+    // 3. Redirect to the login page
+    navigate('/login');
+  };
+  // --- End: Updated Logout Handler ---
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -174,10 +216,12 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
               
               <div className="dropdown-divider"></div>
               
-              <a href="/login" className="dropdown-option">
+              {/* --- Logout Button --- */}
+              <button onClick={handleLogout} className="dropdown-option">
                 <span>Log out</span>
                 <i className="bi bi-box-arrow-right"></i>
-              </a>
+              </button>
+              
             </div>
           )}
         </div>
