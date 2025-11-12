@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from django.contrib.auth import authenticate
-
+from django.db.models import Q
 from .authentication import create_access_token, create_refresh_token
 from .serializers import UserSerializer
 from .models import User
@@ -35,11 +35,22 @@ def get_me_user(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_user(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()  # password hashing handled in serializer.create
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    body = request.data
+    duplicate_flag = 1
+    
+    try:
+        #user = User.objects.get(email = body["email"], username = body["username"])
+        user = User.objects.get(Q(email = body["email"]) | Q(username = body["username"])) # | OR
+        return Response({"message": "duplicate email or username"}, status = status.HTTP_400_BAD_REQUEST)
+    except User.DoesNotExist:
+        duplicate_flag = 0
+    
+    if duplicate_flag == 0:
+        serializer = UserSerializer(data = body)
+        if serializer.is_valid():
+            serializer.save()  # password hashing handled in serializer.create
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
@@ -55,7 +66,8 @@ def login_user(request):
     # Use Django's authenticate to verify password hash
     user = authenticate(request, username=username, password=password)
     if user is None:
-        raise APIException("Invalid credentials!")
+        # raise APIException("Invalid credentials!")
+        return Response({"detail": "wrong username or password"}, status = status.HTTP_400_BAD_REQUEST)
 
     serializer = UserSerializer(user)
     access_token = create_access_token(user.id)
@@ -119,11 +131,11 @@ def update_user_profile_image(request, pk):
 
     serializer = UserSerializer(user)
     current_user_id, uploaded_name = upload_file(serializer, uploaded_file, "user", "profile_")
-    serializer = UserSerializer(user, data = {"profile_image": f"/upload/user/{pk}/profile_{uploaded_name}"}, partial = True)
+    serializer = UserSerializer(user, data = {"profile_image": f"/upload/user/{pk}/{uploaded_name}"}, partial = True)
 
     if serializer.is_valid():
         serializer.save()
-        return Response(status = status.HTTP_200_OK)
+        return Response(serializer.data, status = status.HTTP_200_OK)
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
@@ -139,9 +151,9 @@ def update_user_banner_image(request, pk):
 
     serializer = UserSerializer(user)
     current_user_id, uploaded_name = upload_file(serializer, uploaded_file, "user", "banner_")
-    serializer = UserSerializer(user, data = {"banner": f"/upload/user/{pk}/banner_{uploaded_name}"}, partial = True)
+    serializer = UserSerializer(user, data = {"banner": f"/upload/user/{pk}/{uploaded_name}"}, partial = True)
 
     if serializer.is_valid():
         serializer.save()
-        return Response(status = status.HTTP_200_OK)
+        return Response(serializer.data, status = status.HTTP_200_OK)
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)

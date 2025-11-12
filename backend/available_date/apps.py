@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class InactiveDateConfig(AppConfig):
+class AvailableDateConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'inactive_date'
+    name = 'available_date'

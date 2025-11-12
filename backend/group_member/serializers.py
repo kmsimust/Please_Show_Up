@@ -10,7 +10,7 @@ class GroupMemberSerializerSave(serializers.ModelSerializer):
 
 class GroupMemberSerializer(serializers.ModelSerializer):
     group = GroupSerializer()
-    member = UserSerializer
+    member = UserSerializer()
     class Meta:
         model = GroupMember
         fields = ('id', 'group', 'member', 'created_at')

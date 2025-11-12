@@ -31,18 +31,18 @@ services:
       - ./backend/.env
 
 
-  # frontend:
-  #   build: ./frontend
-  #   image: frontend
-  #   container_name: frontend
-  #   ports:
-  #     - "80:3000"
+  frontend:
+    build: ./frontend
+    image: frontend
+    container_name: frontend
+    ports:
+      - "80:3000"
 
-  #my_frontend:
+  # my_frontend:
   #  build:  ./frontend
   #  image: my_frontend:latest
   #  container_name: my_frontend
-  #  restart: always
+  # #  restart: always
   #  ports:
   #    - 5173:5173
   #  volumes:

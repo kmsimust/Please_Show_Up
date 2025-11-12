@@ -49,10 +49,9 @@ INSTALLED_APPS = [
     'group',
     'friend',
     'friend_request',
-    'member_role',
     'group_member',
     'event',
-    'inactive_date',
+    'available_date',
     'group_request'
 ]
 

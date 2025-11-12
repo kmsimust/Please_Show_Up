@@ -1,89 +1,131 @@
 import "./profile.css";
 import NavBar from "../../components/navbar";
-import { AuthNavBar } from "../../components/auth_navbar";
-import Sidebar from "../../components/sidebar"; // ✅ import Sidebar
-import miniuserProfile from "../../../public/user.png";
-import { getUser } from "../../utils/auth-me";
+import Sidebar from "../../components/sidebar";
+import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+// ✅ Read cookie
+function getCookie(name: string) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(nameEQ) === 0)
+            return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
 
 export function ProfilePage() {
-	const user = getUser();
-	return (
-		<>
-		<AuthNavBar />
+    const [userdata, setUserdata] = useState<any | null>(null);
+    const [error, setError] = useState("");
 
-		{/* Body with sidebar */}
-		<div className="flex">
-			{/* ✅ Use Sidebar component */}
-			<Sidebar />
+    useEffect(() => {
+        get_user_data();
+    }, []);
 
-			<div className="profile-case">
-				<div className="profile-banner">
+    async function get_user_data() {
+        try {
+            // ✅ use cookie token first
+            let token = getCookie("accessToken");
 
-				</div>
+            // ✅ fallback to localStorage (if you store JWT there)
+            if (!token) {
+                token = localStorage.getItem("accessToken") || "";
+            }
 
-				<div className="profile-user-case">
-					<div className="profile-user-case2">
-						<img className="profile-user-avatar"/>
-						
-						<div className="profile-user-name-case">
-							<div className="profile-user-display-name">
-								Display Name
-							</div>
-							Username
-						</div>
-					</div>
+            console.log("TOKEN:", token);
 
-					<div>
-						<button className="profile-user-edit-profile-button">
-							Edit profile
-						</button>
-					</div>
-				</div>
-			</div>
+            // ✅ API request
+            const resp = await axios.get("http://localhost:8000/api/user/me/", {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+                // ❌ REMOVE withCredentials unless your backend requires cookies
+                // withCredentials: true,
+            });
 
-			{/*
-			{/* Main profile content 
-			<div className="flex-grow-1 p-4">
-			{/* Header with cover + avatar + name 
-			<div className="profile-header">
-				<div className="profile-cover"></div>
+            console.log("API RESPONSE:", resp.data);
+            setUserdata(resp.data);
+        } catch (err: any) {
+            console.error("ERROR /me:", err);
+            setError(err.response?.data || "Failed to load profile.");
+        }
+    }
 
-				<img
-				src={
-					user?.profile_image == "default"
-					? miniuserProfile
-					: user?.profile_image
-				}
-				alt="profile"
-				className="profile-avatar"
-				/>
+    // ✅ Loading screen
+    if (!userdata && !error) {
+        return (
+            <>
+                <NavBar />
+                <div className="d-flex justify-content-center p-5">
+                    Loading profile...
+                </div>
+            </>
+        );
+    }
 
-				<div className="profile-bar">
-				<span className="profile-username">{user?.username}</span>
-				<button className="edit-btn">edit profile</button>
-				</div>
-			</div>
+    // ✅ Error screen
+    if (error) {
+        return (
+            <>
+                <NavBar />
+                <div className="text-center text-danger p-5">
+                    Failed to load profile: {JSON.stringify(error)}
+                </div>
+            </>
+        );
+    }
 
-			{/* Info boxes 
-			<div className="d-flex gap-4">
-				<div className="info-box" style={{ width: "250px" }}>
-				<h5 className="mb-3 fw-bold">personal info</h5>
-				<p>username: {user?.username} </p>
-				<p>gender: {user?.gender == null ? "null" : user?.gender}</p>
-				<p>birthdate: {user?.date_of_birth == null ? "null" : user?.date_of_birth}</p>
-				<p>email: {user?.email == null ? "null" : user?.email}</p>
-				<p>tel: {user?.phone_number == null ? "null" : user?.phone_number}</p>
-				</div>
+    // ✅ Main profile UI (uses userdata)
+    return (
+        <>
+            <NavBar />
 
-				<div
-				className="info-box flex-grow-1"
-				style={{ minHeight: "220px" }}
-				>
-				{/* extra content (posts, etc.) 
-				</div>
-			</div>
-			</div>*/}
-		</div>
-		</>
-	);
+            <div className="flex">
+                <Sidebar />
+
+                <div className="profile-case">
+                    <div
+                        className="profile-banner"
+                        style={{
+                            backgroundImage:
+                                userdata.banner !== "default"
+                                    ? `url(http://localhost:8000/public/${userdata.banner})`
+                                    : "url(/default_banner.jpg)",
+                        }}
+                    ></div>
+
+                    <div className="profile-user-case">
+                        <div className="profile-user-case2">
+                            <img
+                                className="profile-user-avatar"
+                                src={
+                                    userdata.profile_image !== "default"
+                                        ? userdata.profile_image
+                                        : "/default_user.png"
+                                }
+                            />
+
+                            <div className="profile-user-name-case">
+                                <div className="profile-user-display-name">
+                                    {userdata.display_name || userdata.username}
+                                </div>
+                                {userdata.username}
+                            </div>
+                        </div>
+
+                        <div>
+                            <a href="/account/:tab?">
+                                <button className="profile-user-edit-profile-button">
+                                    Edit profile
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
 }

@@ -1,17 +1,22 @@
 import "./group.css";
 import NavBar from "../../components/navbar";
+import { useState } from 'react';
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 
 export function GroupPage() {
+
+	// Every page need this function.
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 	const handleCreateGroup = () => {};
 
 	return (
 		<>
-		<AuthNavBar />
+		<AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 		<div className="flex">
 			{/* Sidebar */}
-			<Sidebar />
+			<Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
 			{/* Main content */}
 			<div className="flex-grow-1 p-4">
