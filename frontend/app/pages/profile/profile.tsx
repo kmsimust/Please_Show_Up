@@ -63,12 +63,16 @@ export function ProfilePage() {
 
     // ✅ Main profile UI (uses userdata)
     return (
-        
         <div className="page-container">
-           <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+            <AuthNavBar
+                onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            />
 
             <div className="main-content">
-                <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                <Sidebar
+                    isOpen={isSidebarOpen}
+                    onClose={() => setIsSidebarOpen(false)}
+                />
 
                 <div className="profile-case">
                     <div
@@ -87,7 +91,8 @@ export function ProfilePage() {
                                 className="profile-user-avatar"
                                 src={
                                     userdata.profile_image !== "default"
-                                        ? userdata.profile_image
+                                        ? "http://localhost:8000/public/" +
+                                          userdata.profile_image
                                         : "/default_user.png"
                                 }
                             />
@@ -96,7 +101,7 @@ export function ProfilePage() {
                                 <div className="profile-user-display-name">
                                     {userdata.display_name || userdata.username}
                                 </div>
-                                <span>@{userdata?.username || 'user'}</span>
+                                <span>@{userdata?.username || "user"}</span>
                             </div>
                         </div>
 
