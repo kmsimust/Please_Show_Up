@@ -26,7 +26,6 @@
 /* Main content area */
 .content-area {
   flex: 1;
-  overflow-y: auto; /* scrollable content */
+  overflow-y: scroll; /* scrollable content */
   padding: 1rem;
 }
-

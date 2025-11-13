@@ -9,13 +9,13 @@ export function CreateGroup() {
       const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-        <div>
+    <div className="page-container">
         <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-        <div className='flex'>
+        <div className="main-content">
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-            <div className='grow p-4'>
+            <div className="content-area">
                 <div className='cg-section flex justify-between'>
                     <div>
                         <label className='cg-l'>
@@ -72,6 +72,6 @@ export function CreateGroup() {
                 </div>
             </div>
         </div>
-        </div>
+    </div>
     )
 }
