@@ -1,7 +1,9 @@
 import "./group.css";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
+import { Link } from "react-router";
+import { get_user_data } from "~/services/user";
 
 export function GroupPage() {
 
@@ -9,6 +11,31 @@ export function GroupPage() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	const handleCreateGroup = () => {};
+
+	// loading user and prevent fail fetch
+	const [userdata, setUserdata] = useState<any | null>(null);
+	const [error, setError] = useState("");
+	const [isLoading, setIsLoading] = useState(true); // Add loading state
+
+	useEffect(() => {
+		page_load();
+	}, []);
+
+	async function page_load() {
+    setIsLoading(true);
+    const { result, error } = await get_user_data();
+    setUserdata(result);
+    setError(error);
+    setIsLoading(false);
+  }
+
+  if (isLoading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
 	return (
 	<div className="page-container">
@@ -27,6 +54,7 @@ export function GroupPage() {
 				</div>
 
 				<div className="group-list-case">
+
 					<div className="group-card">
 						<div className="group-info-case">
 							<div className="flex justify-end">
@@ -43,6 +71,22 @@ export function GroupPage() {
 						</div>
 					</div>
 
+					<Link to="/nigger" className="group-card">
+						<div className="group-info-case">
+							<div className="flex justify-end">
+								<label className="group-name">
+									{userdata.name}
+								</label>
+							</div>
+							<div className="flex justify-end">
+								<img className="group-member-image bg-dark"></img>
+								<img className="group-member-image bg-danger"></img>
+								<img className="group-member-image"></img>
+								<img className="group-member-image"></img>
+							</div>
+						</div>
+					</Link>
+
 					<div className="group-card">
 						<div className="group-info-case">
 							<div className="flex justify-end">
@@ -58,6 +102,37 @@ export function GroupPage() {
 							</div>
 						</div>
 					</div>
+					<div className="group-card">
+						<div className="group-info-case">
+							<div className="flex justify-end">
+								<label className="group-name">
+									AAAAAAAAAAAAdohoenfpwnpdnfpnapfn
+								</label>
+							</div>
+							<div className="flex justify-end">
+								<img className="group-member-image bg-dark"></img>
+								<img className="group-member-image bg-danger"></img>
+								<img className="group-member-image"></img>
+								<img className="group-member-image"></img>
+							</div>
+						</div>
+					</div>
+					<div className="group-card">
+						<div className="group-info-case">
+							<div className="flex justify-end">
+								<label className="group-name">
+									AAAAAAAAAAAAdohoenfpwnpdnfpnapfn
+								</label>
+							</div>
+							<div className="flex justify-end">
+								<img className="group-member-image bg-dark"></img>
+								<img className="group-member-image bg-danger"></img>
+								<img className="group-member-image"></img>
+								<img className="group-member-image"></img>
+							</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>
