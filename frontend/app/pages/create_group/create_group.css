@@ -69,3 +69,105 @@
   color: var(--muted);
   font-size: 0.875rem;
 }
+
+.create-group-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--body-alt);
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--body);
+  border: 1px solid var(--body-darker);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.9375rem;
+}
+
+.field-description {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.upload-label {
+  display: block;
+  border: 2px dashed var(--body-darker);
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-label:hover {
+  border-color: var(--primary);
+  background-color: var(--primary-faded);
+}
+
+.banner-preview {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.btn-submit,
+.btn-cancel {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-submit {
+  background-color: var(--primary);
+  color: var(--primary-text);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  background-color: var(--body-darker);
+  color: var(--text);
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: var(--danger);
+  color: var(--danger-text);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}

@@ -19,6 +19,14 @@
 }
 
 .group-list-case {
+  margin-left: 80px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .group-list-case {
+    margin-left: 20px;
+  }
 }
 
 .group-card {
@@ -31,6 +39,7 @@
   border-width: 2px;
   border-color: black;
   justify-content: end;
+  max-width: 1200px;
 }
 
 .group-info-case {

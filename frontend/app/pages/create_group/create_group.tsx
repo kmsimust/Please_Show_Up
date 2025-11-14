@@ -1,12 +1,155 @@
 import './create_group.css'
-import { useState } from 'react';
+import Cookies from "js-cookie";
+import axios from "axios";
+
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 
-export function CreateGroup() {
+import { useState, useEffect } from 'react';
+import { get_user_data } from "~/services/user";
+import { useNavigate } from "react-router";
+
+
+interface CreateGroupFormProps {
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+
+export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
 
     // Every page need this function.
-      const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    // loading user and prevent fail fetch
+    const [userdata, setUserdata] = useState<any | null>(null);
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(true); // Add loading state
+
+    useEffect(() => {
+        page_load();
+    }, []);
+
+    async function page_load() {
+    setIsLoading(true);
+    const { result, error } = await get_user_data();
+    setUserdata(result);
+    setError(error);
+    setIsLoading(false);
+    }
+
+    const [formData, setFormData] = useState({
+        name: '',
+        description: '',
+        // Add other fields your serializer expects
+    });
+    const [bannerFile, setBannerFile] = useState<File | null>(null);
+    const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+        ...prev,
+        [name]: value
+        }));
+    };
+
+    const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            setError('Invalid file type. Use JPG, PNG, GIF, or WEBP.');
+            return;
+        }
+        
+        // Validate file size (1.5MB max)
+        if (file.size > 1.5 * 1024 * 1024) {
+            setError('File too large. Maximum size is 1.5MB.');
+            return;
+        }
+
+        setBannerFile(file);
+        setError('');
+        
+        // Create preview
+        const previewUrl = URL.createObjectURL(file);
+        setBannerPreview(previewUrl);
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError('');
+
+        try {
+        // Create FormData object
+        const formDataToSend = new FormData();
+        
+        // Append text fields
+        Object.entries(formData).forEach(([key, value]) => {
+            formDataToSend.append(key, value);
+        });
+        
+        // Append banner image
+        if (bannerFile) {
+            formDataToSend.append('banner_image', bannerFile);
+        }
+
+        for (let [key, value] of formDataToSend.entries()) {
+  console.log(`${key}:`, value);
+}
+
+        // Get auth token (adjust based on your auth setup)
+        let token = Cookies.get("accessToken");
+
+        // Send request
+        const response = await fetch('http://localhost:8000/api/create_group', {
+            method: 'POST',
+            headers: {
+             Authorization: "Bearer " + token , // or Token ${token} depending on your setup
+            },
+            body: formDataToSend, // Don't set Content-Type - browser will set it automatically with boundary
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to create group');
+        }
+
+        const result = await response.json();
+        console.log('Group created:', result);
+        
+        // Call success callback
+        if (onSuccess) onSuccess();
+        
+        } catch (err: any) {
+        setError(err.message || 'An error occurred');
+        console.error('Error creating group:', err);
+        } finally {
+        setIsSubmitting(false);
+        }
+    };
+
+    // Cleanup preview URL
+    useEffect(() => {
+        return () => {
+        if (bannerPreview) URL.revokeObjectURL(bannerPreview);
+        };
+    }, [bannerPreview]);
+      
+
+    // Returning Pages
+    if (isLoading) {
+        return <div className="loading">Loading...</div>;
+    }
+    
+    if (error) {
+        return <div className="error">{error}</div>;
+    }
 
     return (
     <div className="page-container">
@@ -16,60 +159,103 @@ export function CreateGroup() {
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             <div className="content-area">
-                <div className='cg-section flex justify-between'>
-                    <div>
-                        <label className='cg-l'>
-                            Create New Group
-                        </label>
-                        <p className='cg-p pt-2 mb-0'>
-                            Create a Group to invite people to and plan events with!
+                <div className="create-group-form">
+                    <h2>Create Group</h2>
+                    
+                    {error && (
+                        <div className="error-message">{error}</div>
+                    )}
+
+                    <form onSubmit={handleSubmit}>
+                        {/* Group Name */}
+                        <div className="form-group">
+                        <label htmlFor="name">Group Name *</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="Enter group name"
+                        />
+                        </div>
+
+                        {/* Description */}
+                        <div className="form-group">
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleInputChange}
+                            rows={4}
+                            placeholder="Describe your group"
+                        />
+                        </div>
+
+                        {/* Banner Image */}
+                        <div className="form-group">
+                        <label htmlFor="banner_image">Banner Image *</label>
+                        <p className="field-description">
+                            Max size: 1.5MB | Formats: JPG, PNG, GIF, WEBP | Recommended: 1500×430
                         </p>
-                    </div>
-                    <div>
-                        <a href='/group' className='cg-back-button'>
-                            <i className="bi bi-x-lg text-2xl"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div className='cg-section-box'>
-                    <label className='cg-l'>
-                        Group Name
-                    </label>
-                    <div>
-                        <input className='cg-input'></input>
-                    </div>
-                </div>
-
-                <div className='cg-section-box'>
-                    <label className='cg-l'>
-                        Group Banner
-                    </label>
-                    <div>
-                        <form>
-                        <div className="upload-area">
-                            <input
+                        
+                        <input
                             type="file"
-                            id="header-upload"
-                            accept=".jpg,.jpeg,.png,.gif,.webp,.webm"
+                            id="banner_image"
+                            accept=".jpg,.jpeg,.png,.gif,.webp"
+                            onChange={handleBannerUpload}
                             hidden
-                            />
-                            <label htmlFor="header-upload" className="upload-label">
+                            required
+                        />
+                        
+                        {bannerPreview ? (
+                            <div className="image-preview-container">
+                            <img src={bannerPreview} alt="Banner preview" className="banner-preview" />
+                            <button 
+                                type="button" 
+                                className="remove-preview-btn"
+                                onClick={() => {
+                                setBannerFile(null);
+                                setBannerPreview(null);
+                                }}
+                            >
+                                ×
+                            </button>
+                            </div>
+                        ) : (
+                            <label htmlFor="banner_image" className="upload-label">
                             <div className="upload-content">
-                                <p className="upload-title">Upload file(s)</p>
-                                <p className="upload-subtitle">Drop file(s) here, or click to select.</p>
+                                <p className="upload-title">Upload Banner</p>
+                                <p className="upload-subtitle">Click to select or drag & drop</p>
                             </div>
                             </label>
+                        )}
                         </div>
-                        </form>
-                    </div>
-                </div>
 
-                <div className='p-2'>
-                    <button className='default-btn'>
-                        Create Group
-                    </button>
-                </div>
+                        {/* Actions */}
+                        <div className="form-actions">
+                        {onCancel && (
+                            <button 
+                            type="button" 
+                            className="btn-cancel"
+                            onClick={onCancel}
+                            disabled={isSubmitting}
+                            >
+                            Cancel
+                            </button>
+                        )}
+                        <button 
+                            type="submit" 
+                            className="btn-submit"
+                            disabled={isSubmitting || !bannerFile}
+                        >
+                            {isSubmitting ? 'Creating...' : 'Create Group'}
+                        </button>
+                        </div>
+                    </form>
+                    </div>
             </div>
         </div>
     </div>
