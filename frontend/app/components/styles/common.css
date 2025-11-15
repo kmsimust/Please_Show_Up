@@ -1,0 +1,43 @@
+@import './styles.css';
+
+/*
+=========================================================
+These classes are NOT full components
+
+modify further with additional tags and classes for use
+=========================================================
+*/
+
+/* default green button */
+.common-btn {
+    height: auto;
+    background-color: var(--primary);
+    color: var(--primary-text);
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.common-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* small round back button with no background */
+.common-back-button {
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.common-back-button:hover {
+  background-color: var(--body-darker);
+}

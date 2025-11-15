@@ -1,0 +1,50 @@
+.ig-page {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 2rem;
+}
+
+.ig-side-section {
+    width: 20rem;
+    margin: 2rem 0;
+    padding-bottom: 1px;
+    border-radius: 0.5rem;
+    background-color: var(--body-dark);
+}
+
+.ig-side-member-list {
+    margin: 0 1rem 1rem;
+    padding: 1px 0.5rem;
+    border-radius: 0.5rem;
+    background-color: var(--body);
+}
+
+.ig-group-member-button {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.ig-group-member-button:hover {
+    background-color: var(--body-darker);
+}
+
+.ig-side-member-case {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0.5rem 0;
+}
+
+.ig-side-member-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: black;
+}
+
+.ig-side-member-name {
+    margin: 0 1rem;
+}
