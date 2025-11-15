@@ -7,6 +7,10 @@ import "./edit.css";
 
 import EditProfileAccount from "~/components/editProfileAccount";
 
+import "bootstrap/dist/css/bootstrap.min.css"; // try to not use bootstrap
+
+
+
 type TabKey = "profile" | "account" | "notifications" | "history";
 const VALID_TABS: TabKey[] = ["profile", "account", "notifications", "history"];
 
