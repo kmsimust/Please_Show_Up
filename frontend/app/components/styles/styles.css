@@ -71,8 +71,11 @@
 }
 
 * {
+  /*
   margin: 0;
-  padding: 0;
+  padding: 0;*/
+
+  /* This overrides tailwind margin and padding classes */
 }
 
 body {

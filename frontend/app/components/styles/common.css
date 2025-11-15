@@ -32,6 +32,8 @@ modify further with additional tags and classes for use
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.5rem;
+  border-width: 0;
+  background: none;
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -40,4 +42,10 @@ modify further with additional tags and classes for use
 
 .common-back-button:hover {
   background-color: var(--body-darker);
+}
+
+.app-pfp-md {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
 }
