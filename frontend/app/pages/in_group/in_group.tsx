@@ -145,7 +145,7 @@ export function InGroup() {
                         <div className='flex items-center'>
                             <img className='app-pfp-md bg-blue-500'></img>
                             <label className='ml-4'>
-                                Username
+                                Show friends first here
                             </label>
                         </div>
                         <button className='btn default-btn ig-invite-invite-btn'>
