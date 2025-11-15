@@ -26,7 +26,7 @@ def get_me_user(request):
     user = request.user
 
     if not user or not user.is_authenticated:
-        raise APIException("Unauthenticated user.")
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     serializer = UserSerializer(user)
     return Response(serializer.data)

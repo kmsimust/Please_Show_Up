@@ -4,7 +4,7 @@ import { Test } from "../pages/test/test"
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Test page" },
+    { title: "Test page2" },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }

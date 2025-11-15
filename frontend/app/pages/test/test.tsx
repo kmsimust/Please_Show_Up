@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+
+import { showTextByKey } from "~/utils/text-util";
+import "./test.css";
 
 export function Test() {
     // Normal variable
@@ -7,20 +10,49 @@ export function Test() {
     const name = "Batman";
 
     // useState variable (Edit / Show real-time)
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState(""); // use at search
     const [searchResult, setSearchResult] =  useState([]);
 
-    async function onSearchChange(event: any) {
+    useEffect(() => {
+        someFunction()
+    }, [])
+
+    const onSearchChange = async (event: any) => {
         const inputTag = event.target
         setSearch(inputTag.value); // edit search variable
         
         const resp = await axios.get(`https://api.tvmaze.com/search/shows?q=${search}`);
         
         console.log(resp.data);
-        setSearchResult(resp.data)
+        setSearchResult(resp.data);
+
     }
+
+    // arrow function
+    const someFunction = () => {
+        console.log('Page loaded');
+    }
+
+    function MovieList() {
+        return searchResult.map((obj) => {
+            return (
+                <div className="col-6 mb-4" key={obj?.show?.id}>
+                    <div className="card">
+                        <img className="card-img-top movie-cover" src = {showTextByKey(obj?.show?.image?.medium, "https://media-cache.cinematerial.com/p/500x/lc5nstq3/default-movie-poster.jpg?v=1456502005")} alt="..."/>
+                        <div className="card-body">
+                            <h5 className="card-title">{showTextByKey(obj?.show?.name, 'No title')}</h5>
+                            <p className="mb-2">Rating: {showTextByKey(obj?.show?.rating?.average, '-')}</p>
+                            <p className="mb-2">Runtime: {showTextByKey(obj?.show?.runtime, "-")} </p>
+                            <p className="mb-2">Start date: {showTextByKey(obj?.show?.premiered, "-")} </p>
+                            <p className="mb-2">End date: {showTextByKey(obj?.show?.ended, "-")} </p>
+                        </div>
+                    </div>
+                </div>
+            )
+        })
+    }
+
     
-     
 
     return (
         <div className="container-fluid">
@@ -36,28 +68,7 @@ export function Test() {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-6">
-                                    <div className="card">
-                                        <img src = "..." className="card-img-top" alt="..."/>
-                                        <div className="card-body">
-                                            <h5 className="card-title">Card title</h5>
-                                            <p className="">Rating: {searchResult[0]["show"]["rating"]["average"]}</p>
-                                            <p className="">Runtime: {searchResult[0]["show"]["runtime"]}</p>
-                                            <p className="">Start date: {searchResult[0]["show"]["premiered"]}</p>
-                                            <p className="">End date: {searchResult[0]["show"]["ended"]}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-6">
-                                    <div className="card">
-                                        <img src = "..."className="card-img-top" alt="..."/>
-                                        <div className="card-body">
-                                            <h5 className="card-title"></h5>
-                                            <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-                                            <a href="#" className="btn btn-primary">Go somewhere</a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <MovieList/> {/* React-component */}
                             </div>
                         </div>
                     </div>
