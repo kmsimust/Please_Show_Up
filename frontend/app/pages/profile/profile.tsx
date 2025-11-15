@@ -6,6 +6,9 @@ import React, { useEffect, useState } from "react";
 
 import { get_user_data } from "~/services/user";
 
+import "bootstrap/dist/css/bootstrap.min.css"; // try to not use bootstrap
+
+
 export function ProfilePage() {
     // Every page need this function.
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
