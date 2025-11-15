@@ -3,11 +3,13 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from group.models import Group
+from friend.models import Friend
 # from group_member.serializers import GroupMemberSerializer
 from group_member.serializers import GroupMemberSerializer, GroupMemberSerializerSave
 from group_member.models import GroupMember
 from .serializers import GroupRequestSerializers, GroupRequestSerializersSave
 from .models import GroupRequest
+from django.db.models import Q
 
 
 @api_view(["GET"])
@@ -29,28 +31,34 @@ def get_invitation_by_user_id(request, invited_id):
 @permission_classes([IsAuthenticated])
 def create_group_request(request):
     body = request.data
-    duplicate = 0
+    current_user = request.user
 
     try:
         group = Group.objects.get(pk=body["group"])
     except Group.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if group.owner.id == body["invited_user"]:
-        return Response({"message": "Cannot self invite"}, status = status.HTTP_400_BAD_REQUEST)
+    # Check if current user is friends with invited user (both directions)
+    try:
+        Friend.objects.filter(user=current_user.id, friend=body["invited_user"])
+    except Friend.DoesNotExist:
+        try:
+            Friend.objects.filter(user=body["invited_user"], friend=current_user.id)
+        except Friend.DoesNotExist:
+            return Response({"message": "Cannot add a non-friend into group"}, status=status.HTTP_400_BAD_REQUEST)
     
-
-    group_member = GroupRequest.objects.filter(invited_user = body["invited_user"], group = body["group"])
-    if len(group_member) > 0: 
-        return Response({"message": f"this user (id = {body["invited_user"]}) has already invite"}, status = status.HTTP_400_BAD_REQUEST)
-    else:
-        serializer = GroupRequestSerializersSave(data=body)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    if group.owner.id == body["invited_user"]:
+        return Response({"message": "Cannot self invite"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Check for existing invite
+    if GroupRequest.objects.filter(invited_user=body["invited_user"], group=body["group"]).exists():
+        return Response({"message": f"this user (id = {body['invited_user']}) has already invite"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    serializer = GroupRequestSerializersSave(data=body)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
