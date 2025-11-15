@@ -19,18 +19,14 @@ export function Noti() {
                     onClose={() => setIsSidebarOpen(false)}
                 />
 
-                {/* ✅ No more Bootstrap row/columns, just our own wrapper */}
-                <div className="noti-wrapper">
-                    <div className="noti-container">
+                {/* Main notification area (no Bootstrap) */}
+                <main className="noti-main">
+                    <div className="noti-panel">
                         <h1 className="noti-title">Notifications</h1>
 
-                        {/* Group Invites */}
-                        <section className="noti-section">
-                            <h2 className="noti-section-title">
-                                Group Invites
-                            </h2>
-
-                            <div className="noti-card">
+                        <div className="noti-list">
+                            {/* Group invite */}
+                            <div className="noti-item">
                                 <div className="noti-left">
                                     <div className="noti-avatar">
                                         <span>U</span>
@@ -39,7 +35,6 @@ export function Noti() {
                                         User X has invited you to join Group Y
                                     </p>
                                 </div>
-
                                 <div className="noti-actions">
                                     <button className="noti-btn noti-btn-decline">
                                         ✕
@@ -49,17 +44,9 @@ export function Noti() {
                                     </button>
                                 </div>
                             </div>
-                        </section>
 
-                        <hr className="noti-divider" />
-
-                        {/* Friend Requests */}
-                        <section className="noti-section">
-                            <h2 className="noti-section-title">
-                                Friend Requests
-                            </h2>
-
-                            <div className="noti-card">
+                            {/* Friend request */}
+                            <div className="noti-item">
                                 <div className="noti-left">
                                     <div className="noti-avatar">
                                         <span>U</span>
@@ -68,7 +55,6 @@ export function Noti() {
                                         User Z wants to be your friend
                                     </p>
                                 </div>
-
                                 <div className="noti-actions">
                                     <button className="noti-btn noti-btn-decline">
                                         ✕
@@ -78,9 +64,9 @@ export function Noti() {
                                     </button>
                                 </div>
                             </div>
-                        </section>
+                        </div>
                     </div>
-                </div>
+                </main>
             </div>
         </div>
     );
