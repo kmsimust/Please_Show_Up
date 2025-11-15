@@ -10,8 +10,6 @@ export function GroupPage() {
 	// Every page need this function.
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-	const handleCreateGroup = () => {};
-
 	// loading user and prevent fail fetch
 	const [userdata, setUserdata] = useState<any | null>(null);
 	const [error, setError] = useState("");
@@ -22,20 +20,20 @@ export function GroupPage() {
 	}, []);
 
 	async function page_load() {
-    setIsLoading(true);
-    const { result, error } = await get_user_data();
-    setUserdata(result);
-    setError(error);
-    setIsLoading(false);
-  }
+		setIsLoading(true);
+		const { result, error } = await get_user_data();
+		setUserdata(result);
+		setError(error);
+		setIsLoading(false);
+  	}
 
-  if (isLoading) {
-    return <div className="loading">Loading...</div>;
-  }
+	if (isLoading) {
+		return <div className="loading">Loading...</div>;
+	}
 
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
+	if (error) {
+		return <div className="error">{error}</div>;
+	}
 
 	return (
 	<div className="page-container">
