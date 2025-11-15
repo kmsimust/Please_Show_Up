@@ -1,35 +1,33 @@
-/* ============================================================
-   LAYOUT OVERRIDES JUST FOR THE NOTIFICATION PAGE
-   (page-container has class "noti-page" in Noti.tsx)
-   ============================================================ */
+/* ==============================
+   Layout for notification page
+   ============================== */
 
-/* main-content usually is flex (sidebar + content).
-   Here we force it to align content to the TOP. */
+/* main-content already has sidebar on the left */
 .noti-page .main-content {
-    display: flex;               /* keep sidebar + content side by side */
-    align-items: flex-start;     /* ⬆ content sits at top instead of middle */
-    justify-content: flex-start; /* no vertical centering tricks */
-    margin-top: 0;
-    padding-top: 1.5rem;         /* distance from navbar; adjust if needed */
+    display: flex;
+    align-items: flex-start; /* content sticks to top */
 }
 
-/* Wrapper around the white notification card */
-.noti-wrapper {
-    flex: 1;                     /* take remaining space next to sidebar */
-    max-width: 900px;            /* similar width to your mockup */
-    margin: 0 auto;              /* center horizontally */
-    padding: 0 1.5rem 2rem;      /* side + bottom padding */
+/* Area to the right of sidebar */
+.noti-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;   /* center panel horizontally */
+    padding: 1.5rem 2rem 2rem; /* space from navbar + sides */
 }
 
-/* ============================================================
-   NOTIFICATION CARD STYLES
-   ============================================================ */
-
-.noti-container {
-    padding: 2rem 2.5rem;
+/* White rounded panel */
+.noti-panel {
+    width: 100%;
+    max-width: 900px;
     background-color: #f5f5f5;
     border-radius: 1.5rem;
+    padding: 2rem 2.5rem;
 }
+
+/* ==============================
+   Typography
+   ============================== */
 
 .noti-title {
     font-size: 2rem;
@@ -38,17 +36,18 @@
     margin-bottom: 2rem;
 }
 
-.noti-section {
-    margin-bottom: 1.5rem;
+/* unified list */
+.noti-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.noti-section-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
+/* ==============================
+   Notification items
+   ============================== */
 
-.noti-card {
+.noti-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -56,7 +55,6 @@
     background-color: #ffffff;
     border-radius: 999px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1rem;
 }
 
 .noti-left {
@@ -110,22 +108,20 @@
     filter: brightness(0.9);
 }
 
-/* Divider */
-.noti-divider {
-    border-top: 1px solid #ddd;
-    margin: 1.5rem 0;
-}
-
-/* ============================================================
-   RESPONSIVE TWEAKS
-   ============================================================ */
+/* ==============================
+   Responsive tweaks
+   ============================== */
 
 @media (max-width: 768px) {
-    .noti-wrapper {
-        padding: 0 1rem 2rem;
+    .noti-main {
+        padding: 1rem;
     }
 
-    .noti-card {
+    .noti-panel {
+        padding: 1.5rem;
+    }
+
+    .noti-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.75rem;
