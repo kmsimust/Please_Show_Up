@@ -3,15 +3,19 @@ import { useState, useEffect } from 'react';
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 import { Link } from "react-router";
-import { get_user_data } from "~/services/user";
+import { get_group } from "~/services/group";
+import { get_group_member } from "~/services/group_member";
+import { showTextByKey } from "~/utils/text-util";
 
 export function GroupPage() {
 
-	// Every page need this function.
+	// Every page need this variable.
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	// loading user and prevent fail fetch
-	const [userdata, setUserdata] = useState<any | null>(null);
+	const [groupData, setGroupData] = useState([]);
+	const [groupMember, setGroupMember] = useState([]);
+
 	const [error, setError] = useState("");
 	const [isLoading, setIsLoading] = useState(true); // Add loading state
 
@@ -21,8 +25,14 @@ export function GroupPage() {
 
 	async function page_load() {
 		setIsLoading(true);
-		const { result, error } = await get_user_data();
-		setUserdata(result);
+		const { result, error } = await get_group();
+
+		for(const obj of result) {
+			const {result: members, error: members_error} = await get_group_member(obj.id);
+			obj.members = members;
+		};
+
+		setGroupData(result);
 		setError(error);
 		setIsLoading(false);
   	}
@@ -33,6 +43,25 @@ export function GroupPage() {
 
 	if (error) {
 		return <div className="error">{error}</div>;
+	}
+
+
+	function GroupList() {
+		return groupData.map((obj) => {
+			return (
+					<Link to="/Nothing" className="group-card" key={obj?.id}>
+						<div className="group-info-case">
+							<div className="flex justify-end">
+								<label className="group-name">
+									{showTextByKey(obj?.group_name, "-")}
+								</label>
+							</div>
+							<div className="flex justify-end" key={obj?.id}>
+								<img className="group-member-image bg-dark"></img>
+							</div>
+						</div>
+					</Link>
+				)});
 	}
 
 	return (
@@ -52,85 +81,7 @@ export function GroupPage() {
 				</div>
 
 				<div className="group-list-case">
-
-					<div className="group-card">
-						<div className="group-info-case">
-							<div className="flex justify-end">
-								<label className="group-name">
-									Group Name
-								</label>
-							</div>
-							<div className="flex justify-end">
-								<img className="group-member-image bg-dark"></img>
-								<img className="group-member-image bg-danger"></img>
-								<img className="group-member-image"></img>
-								<img className="group-member-image"></img>
-							</div>
-						</div>
-					</div>
-
-					<Link to="/nigger" className="group-card">
-						<div className="group-info-case">
-							<div className="flex justify-end">
-								<label className="group-name">
-									{userdata.name}
-								</label>
-							</div>
-							<div className="flex justify-end">
-								<img className="group-member-image bg-dark"></img>
-								<img className="group-member-image bg-danger"></img>
-								<img className="group-member-image"></img>
-								<img className="group-member-image"></img>
-							</div>
-						</div>
-					</Link>
-
-					<div className="group-card">
-						<div className="group-info-case">
-							<div className="flex justify-end">
-								<label className="group-name">
-									AAAAAAAAAAAAdohoenfpwnpdnfpnapfn
-								</label>
-							</div>
-							<div className="flex justify-end">
-								<img className="group-member-image bg-dark"></img>
-								<img className="group-member-image bg-danger"></img>
-								<img className="group-member-image"></img>
-								<img className="group-member-image"></img>
-							</div>
-						</div>
-					</div>
-					<div className="group-card">
-						<div className="group-info-case">
-							<div className="flex justify-end">
-								<label className="group-name">
-									AAAAAAAAAAAAdohoenfpwnpdnfpnapfn
-								</label>
-							</div>
-							<div className="flex justify-end">
-								<img className="group-member-image bg-dark"></img>
-								<img className="group-member-image bg-danger"></img>
-								<img className="group-member-image"></img>
-								<img className="group-member-image"></img>
-							</div>
-						</div>
-					</div>
-					<div className="group-card">
-						<div className="group-info-case">
-							<div className="flex justify-end">
-								<label className="group-name">
-									AAAAAAAAAAAAdohoenfpwnpdnfpnapfn
-								</label>
-							</div>
-							<div className="flex justify-end">
-								<img className="group-member-image bg-dark"></img>
-								<img className="group-member-image bg-danger"></img>
-								<img className="group-member-image"></img>
-								<img className="group-member-image"></img>
-							</div>
-						</div>
-					</div>
-
+					<GroupList/>
 				</div>
 			</div>
 		</div>
