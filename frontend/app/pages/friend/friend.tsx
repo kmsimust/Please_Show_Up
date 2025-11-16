@@ -1,95 +1,189 @@
 import axios from "axios";
 import Sidebar from "../../components/sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AuthNavBar } from "../../components/auth_navbar";
 import Cookies from "js-cookie";
 import "./friend.css";
 
 interface Friend {
-    id: string;
-    username: string;
-    display_name: string;
-    avatar: string; // This is a URL to an image
-    status: "online" | "offline";
+    id: number;
+    user: number;
+    friend: number;
 }
 
-interface FriendRequest {
-    id: string;
+interface UserData {
+    id: number;
     username: string;
     display_name: string;
-    avatar: string;
-    timestamp: string;
+    profile_image?: string;
+}
+
+interface FriendRequestData {
+    id: number;
+    user: number;
+    friend: number;
+    status: string;
 }
 
 export function FriendPage() {
-    // Every page need this function.
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // New state to manage the active tab
-    const [activeTab, setActiveTab] = useState<"users" | "friends">("users");
-
     const [username, setUsername] = useState("");
-    const [friend, setFriend] = useState<Friend | null>(null);
-    const [error, setError] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [foundUser, setFoundUser] = useState<UserData | null>(null);
 
-    // These arrays are not used in the search logic, but are part of your original file
-    const friends: Friend[] = [];
-    const requests: FriendRequest[] = [];
+    const [friendStatus, setFriendStatus] = useState<
+        "none" | "pending" | "friend"
+    >("none");
+    const [requestId, setRequestId] = useState<number | null>(null);
 
-    // handle "Enter" key
-    const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            e.preventDefault(); // stop form submit or reload
+    const [myId, setMyId] = useState<number | null>(null);
 
-            if (!username.trim()) return;
+    const token = Cookies.get("accessToken");
 
-            // Reset state for new search
-            setError("");
-            setFriend(null);
-            setIsLoading(true);
-
+    // Load logged-in user info
+    useEffect(() => {
+        async function loadMe() {
             try {
-                const token = Cookies.get("accessToken");
                 const res = await axios.get(
-                    `http://localhost:8000/api/user/get_user_by_username/${encodeURIComponent(
-                        username.trim(),
-                    )}`,
+                    "http://localhost:8000/api/user/me/",
                     {
                         headers: { Authorization: "Bearer " + token },
                     },
                 );
-                console.log("Friend data:", res.data);
+                setMyId(res.data.id);
+            } catch (e) {
+                console.log("Failed loading user");
+            }
+        }
+        loadMe();
+    }, [token]);
 
-                if (res.data) {
-                    setFriend(res.data); // Set the found user
-                    setError("");
-                } else {
-                    setError("User not found");
-                    setFriend(null);
-                }
-            } catch (err: any) {
-                console.error("Error fetching user:", err);
-                if (err.response?.status === 404) {
-                    setError("User not found");
-                } else {
-                    setError("Failed to fetch user");
-                }
-                setFriend(null);
-            } finally {
-                setIsLoading(false);
+    // Re-check relationship when myId becomes available AND when foundUser changes
+    useEffect(() => {
+        if (myId && foundUser) {
+            checkRelationship(foundUser.id);
+        }
+    }, [myId, foundUser?.id]);
+
+    // Check relationship (friend / pending / none)
+    async function checkRelationship(targetId: number) {
+        if (!myId) return;
+
+        try {
+            // Check if we are friends (user -> friend relationship)
+            const myFriendsRes = await axios.get(
+                `http://localhost:8000/api/get_friend_by_user_id/${myId}`,
+                { headers: { Authorization: "Bearer " + token } },
+            );
+
+            const isFriendOfMine = myFriendsRes.data.some(
+                (f: Friend) => f.friend === targetId,
+            );
+
+            if (isFriendOfMine) {
+                setFriendStatus("friend");
+                return;
+            }
+
+            // Check if they are friends with me (friend -> user relationship)
+            const theirFriendsRes = await axios.get(
+                `http://localhost:8000/api/get_friend_by_user_id/${targetId}`,
+                { headers: { Authorization: "Bearer " + token } },
+            );
+
+            const amFriendOfTheirs = theirFriendsRes.data.some(
+                (f: Friend) => f.friend === myId,
+            );
+
+            if (amFriendOfTheirs) {
+                setFriendStatus("friend");
+                return;
+            }
+
+            // Check if I sent them a pending request (I am user, they are friend)
+            const theirPendingRes = await axios.get(
+                `http://localhost:8000/api/get_user_friend_request/${targetId}`,
+                { headers: { Authorization: "Bearer " + token } },
+            );
+
+            const iSentRequest = theirPendingRes.data.find(
+                (r: FriendRequestData) =>
+                    r.user === myId && r.status === "pending",
+            );
+
+            if (iSentRequest) {
+                setFriendStatus("pending");
+                setRequestId(iSentRequest.id);
+                return;
+            }
+
+            // Check if they sent me a pending request (they are user, I am friend)
+            const myPendingRes = await axios.get(
+                `http://localhost:8000/api/get_user_friend_request/${myId}`,
+                { headers: { Authorization: "Bearer " + token } },
+            );
+
+            const theySentRequest = myPendingRes.data.find(
+                (r: FriendRequestData) =>
+                    r.user === targetId && r.status === "pending",
+            );
+
+            if (theySentRequest) {
+                setFriendStatus("pending");
+                setRequestId(theySentRequest.id);
+                return;
+            }
+
+            setFriendStatus("none");
+        } catch (error) {
+            console.error("Error checking relationship:", error);
+        }
+    }
+
+    // Search user
+    const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            if (!username.trim()) return;
+
+            setFoundUser(null);
+            setFriendStatus("none");
+
+            try {
+                const res = await axios.get(
+                    `http://localhost:8000/api/user/get_user_by_username/${username}`,
+                    { headers: { Authorization: "Bearer " + token } },
+                );
+
+                setFoundUser(res.data);
+                // checkRelationship will be called automatically by the useEffect
+            } catch {
+                setFoundUser(null);
             }
         }
     };
 
-    // Helper function to get avatar background class based on first letter
-    // This matches the colors in your image mockup
-    const getAvatarClass = (letter: string) => {
-        const l = letter.toUpperCase();
-        if (l === "J") return "avatar-green";
-        if (l === "M") return "avatar-purple";
-        if (l === "A") return "avatar-blue";
-        return "avatar-default"; // A fallback color
+    // Send friend request
+    const sendFriendRequest = async () => {
+        if (!foundUser || !myId) return;
+
+        try {
+            const body = {
+                user: myId,
+                friend: foundUser.id,
+                status: "pending",
+            };
+
+            const res = await axios.post(
+                "http://localhost:8000/api/create_friend_request/",
+                body,
+                { headers: { Authorization: "Bearer " + token } },
+            );
+
+            setFriendStatus("pending");
+            setRequestId(res.data.id);
+        } catch (e) {
+            console.log("Error sending request");
+        }
     };
 
     return (
@@ -104,101 +198,61 @@ export function FriendPage() {
                     onClose={() => setIsSidebarOpen(false)}
                 />
 
-                {/* 👇 START OF NEW CONTENT AREA CODE 👇 */}
                 <div className="content-area">
                     <div className="friend-search-container">
-                        {/* --- Tabs --- */}
-                        <div className="search-tabs">
-                            <button
-                                className={`tab-button ${activeTab === "users" ? "active" : "inactive-users"}`}
-                                onClick={() => setActiveTab("users")}
-                            >
-                                Search Users
-                            </button>
-                            <button
-                                className={`tab-button ${activeTab === "friends" ? "active-friends" : "inactive"}`}
-                                onClick={() => setActiveTab("friends")}
-                            >
-                                Search Friends
-                            </button>
-                        </div>
-
-                        {/* --- Search Bar --- */}
-                        {/* This search bar is active for both tabs, based on your code */}
                         <div className="search-bar">
-                            <svg
-                                className="search-icon"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M11.7422 10.3439C12.5329 9.2673 13 7.9382 13 6.5C13 2.91015 10.0898 0 6.5 0C2.91015 0 0 2.91015 0 6.5C0 10.0898 2.91015 13 6.5 13C7.9382 13 9.2673 12.5329 10.3439 11.7422L10.343 11.7413L14.5858 16L16 14.5858L11.7413 10.343L11.7422 10.3439ZM11 6.5C11 8.98528 8.98528 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5Z"
-                                    fill="#888"
-                                />
-                            </svg>
-
                             <input
                                 type="text"
-                                placeholder="Find friends or users by name or username..."
+                                placeholder="Search username..."
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 onKeyDown={handleKeyDown}
                             />
                         </div>
 
-                        {/* --- Search Results --- */}
                         <div className="search-results-area">
-                            <h3>Search Results</h3>
-
-                            {/* Show loading state */}
-                            {isLoading && (
-                                <p className="loading-message">Searching...</p>
-                            )}
-
-                            {/* Show error if any */}
-                            {error && !isLoading && (
-                                <p className="error-message">{error}</p>
-                            )}
-
-                            {/* Show found user if 'friend' state is not null and no error */}
-                            {friend && !error && !isLoading && (
+                            {foundUser ? (
                                 <div className="user-card">
-                                    <div
-                                        className={`avatar ${friend.display_name ? getAvatarClass(friend.display_name[0]) : "avatar-default"}`}
-                                    >
-                                        {friend.avatar ? (
-                                            <img
-                                                src={friend.avatar}
-                                                alt={
-                                                    friend.display_name ||
-                                                    friend.username
-                                                }
-                                            />
-                                        ) : (
-                                            <span>
-                                                {friend.display_name
-                                                    ? friend.display_name[0].toUpperCase()
-                                                    : friend.username[0].toUpperCase()}
-                                            </span>
-                                        )}
-                                    </div>
                                     <div className="user-info">
                                         <strong>
-                                            {friend.display_name ||
-                                                friend.username}
+                                            {foundUser.display_name}
                                         </strong>
-                                        <span>@{friend.username}</span>
+                                        <span>@{foundUser.username}</span>
                                     </div>
-                                    <button className="add-button">Add</button>
+
+                                    {friendStatus === "none" && (
+                                        <button
+                                            className="add-button"
+                                            onClick={sendFriendRequest}
+                                        >
+                                            Add
+                                        </button>
+                                    )}
+
+                                    {friendStatus === "pending" && (
+                                        <button
+                                            className="pending-button"
+                                            disabled
+                                        >
+                                            Pending
+                                        </button>
+                                    )}
+
+                                    {friendStatus === "friend" && (
+                                        <button
+                                            className="friend-button"
+                                            disabled
+                                        >
+                                            Friend ✓
+                                        </button>
+                                    )}
                                 </div>
+                            ) : (
+                                <p>No user found</p>
                             )}
                         </div>
                     </div>
                 </div>
-                {/* 👆 END OF NEW CONTENT AREA CODE 👆 */}
             </div>
         </div>
     );

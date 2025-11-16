@@ -1,11 +1,9 @@
-import { useState } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import { get_user_data } from "~/services/user";
-import { getUser } from "~/utils/auth-me";
-import Cookies from "js-cookie";
+import { update_user } from "~/services/user";
 
 export default function EditProfileAccount() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<any | null>({
         username: "",
         email: "",
         first_name: "",
@@ -15,6 +13,35 @@ export default function EditProfileAccount() {
         gender: "",
         date_of_birth: "",
     });
+    const [updateStatus, setUpdateStatus] = useState("");
+
+    useEffect(() => {
+        page_reload();
+    }, []);
+
+    async function page_reload() {
+        const { result } = await get_user_data(); // Call service api function
+        setFormData({
+            username: result.username,
+            email: result.email,
+            first_name: result.first_name,
+            last_name: result.last_name,
+            display_name: result.display_name,
+            phone_number: result.phone_number,
+            gender: result.gender,
+            date_of_birth: result.date_of_birth,
+        });
+    }
+
+    const UpdateMessage = () => {
+        if (updateStatus == "") {
+            return <div></div>;
+        } else if (updateStatus == "update success") {
+            return <div className="text-success mt-3">update success</div>;
+        } else {
+            return <div className="text-danger mt-3">update failed</div>;
+        }
+    };
 
     const formChange = (event: any) => {
         const name = event.target.name;
@@ -25,14 +52,15 @@ export default function EditProfileAccount() {
         });
     };
 
-    const handleSubmit = async (res: any) => {
-        let token = Cookies.get("accessToken");
-        const userObj = getUser();
-        const response = await axios.put(
-            "http://localhost:8000/api/user/update_user/"+userObj?.id, formData,
-            {headers: { Authorization: "Bearer " + token }}
-        
-    )};
+    const handleSubmit = async (event: any) => {
+        event.preventDefault();
+        const { result, error } = await update_user(formData);
+        if (error) {
+            setUpdateStatus("update failed");
+        } else {
+            setUpdateStatus("update success");
+        }
+    };
 
     return (
         <>
@@ -54,6 +82,7 @@ export default function EditProfileAccount() {
                                 value={formData.username}
                                 className="settings-input form-control"
                                 onChange={formChange}
+                                required
                             />
                         </div>
                         <div className="col-6 mb-3">
@@ -64,6 +93,7 @@ export default function EditProfileAccount() {
                                 value={formData.email}
                                 className="settings-input form-control"
                                 onChange={formChange}
+                                required
                             />
                         </div>
                         <div className="col-6 mb-3">
@@ -74,6 +104,7 @@ export default function EditProfileAccount() {
                                 value={formData.first_name}
                                 className="settings-input form-control"
                                 onChange={formChange}
+                                required
                             />
                         </div>
                         <div className="col-6 mb-3">
@@ -84,6 +115,7 @@ export default function EditProfileAccount() {
                                 value={formData.last_name}
                                 className="settings-input form-control"
                                 onChange={formChange}
+                                required
                             />
                         </div>
                         <div className="col-6 mb-3">
@@ -94,6 +126,7 @@ export default function EditProfileAccount() {
                                 value={formData.display_name}
                                 className="settings-input form-control"
                                 onChange={formChange}
+                                required
                             />
                         </div>
                         <div className="col-6 mb-3">
@@ -104,6 +137,7 @@ export default function EditProfileAccount() {
                                 value={formData.phone_number}
                                 className="settings-input form-control"
                                 onChange={formChange}
+                                required
                             />
                         </div>
                         <div className="col-6 mb-3">
@@ -111,9 +145,10 @@ export default function EditProfileAccount() {
                                 type="text"
                                 name="gender"
                                 placeholder="Enter your gender"
-                                 value={formData.gender}
+                                value={formData.gender}
                                 className="settings-input form-control"
                                 onChange={formChange}
+                                required
                             />
                         </div>
                         <div className="col-6 mb-3">
@@ -124,6 +159,7 @@ export default function EditProfileAccount() {
                                 value={formData.date_of_birth}
                                 className="settings-input form-control"
                                 onChange={formChange}
+                                required
                             />
                         </div>
                     </div>
@@ -131,6 +167,7 @@ export default function EditProfileAccount() {
                     <button type="submit" className="submit-btn">
                         Submit
                     </button>
+                    <UpdateMessage />
                 </form>
             </div>
         </>
