@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import axios from "axios";
+import { getUser } from "~/utils/auth-me";
 
 export async function get_user_data() {
     let result = [];
@@ -19,5 +20,28 @@ export async function get_user_data() {
         console.error("ERROR /me:", err);
         error = err.response?.data || "Failed to load profile.";
     }
-    return {result, error};
+    return { result, error };
+}
+
+export async function update_user(formData: any) {
+    let result = {};
+    let error = undefined;
+    try{
+        let token = Cookies.get("accessToken");
+        const userObj = getUser();
+        const response = await axios.put(
+        "http://localhost:8000/api/user/update_user/" + userObj?.id,
+        formData,
+        { headers: { Authorization: "Bearer " + token } },
+    );
+    result = response.data
+    }
+    
+    catch (err: any){
+        console.error("ERROR /update_user", err);
+        error = err.response?.data || "fialed to update profile";
+
+    }
+    return {result, error}
+    
 }
