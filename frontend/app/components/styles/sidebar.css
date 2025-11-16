@@ -4,6 +4,7 @@
 .side-bar {
   width: 255px;
   height: auto;
+  min-height: calc(100vh - 60px);
   background-color: var(--body-dark);
   border-right: 1px solid var(--body-darker);
   overflow: visible; /* Remove all overflow */

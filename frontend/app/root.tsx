@@ -9,9 +9,8 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import "./app.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import "./app.css";
 import { CookiesProvider, useCookies } from "react-cookie";
 import { authMiddleware } from "app/middleware/authMiddleware";
 import { useEffect } from "react";
