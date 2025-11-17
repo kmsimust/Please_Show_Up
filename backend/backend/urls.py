@@ -47,7 +47,7 @@ urlpatterns = [
     #Friend table link
     path('api/friend/', get_friends),
     path('api/get_friend_by_user_id/<int:user_id>', get_friend_by_user_id),
-    path('api/get_user_by_friend_id/<int:friend_id>', get_user_by_friend_id),
+    path('api/get_user_by_friend_id/<int:friend_id>', get_user_by_friend_id), #this function is like above one but use for the other way round since friend isnt added 2 way so get must be 2 way
     path('api/create_friend', create_friend),
     path('api/update_friend/<int:pk>', update_friend),
     path('api/delete_friend/<int:pk>', delete_friend),

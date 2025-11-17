@@ -38,7 +38,7 @@ export function Test() {
             return (
                 <div className="col-6 mb-4" key={obj?.show?.id}>
                     <div className="card">
-                        <img className="card-img-top movie-cover" src = {showTextByKey(obj?.show?.image?.medium, "https://media-cache.cinematerial.com/p/500x/lc5nstq3/default-movie-poster.jpg?v=1456502005")} alt="..."/>
+                        <img className="card-img-top movie-cover" src = {showTextByKey(obj?.show?.image?.medium, "/default_user.png")} alt="..."/>
                         <div className="card-body">
                             <h5 className="card-title">{showTextByKey(obj?.show?.name, 'No title')}</h5>
                             <p className="mb-2">Rating: {showTextByKey(obj?.show?.rating?.average, '-')}</p>

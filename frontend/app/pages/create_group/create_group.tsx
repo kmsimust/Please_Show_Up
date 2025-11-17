@@ -17,7 +17,7 @@ interface CreateGroupFormProps {
 
 
 export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
-
+    const domain_link = "http://localhost:8000/"
     // Every page need this function.
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 

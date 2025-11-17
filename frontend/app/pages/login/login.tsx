@@ -9,6 +9,7 @@ import { setAccessToken } from "../../utils/auth-cookie";
 import { setUser } from "../../utils/auth-me";
 
 export function LoginPage() {
+    const domain_link = "http://localhost:8000/"
     const navigate = useNavigate();
 
     // Data Forms.
@@ -31,7 +32,7 @@ export function LoginPage() {
         res.preventDefault();
         try {
             const response = await axios.post(
-                "http://localhost:8000/api/user/login/",
+                "domain_linkapi/user/login/",
                 formData,
             );
 

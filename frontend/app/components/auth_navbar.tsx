@@ -16,6 +16,7 @@ function deleteCookie(name: string) {
 }
 
 export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
+    const domain_link = "http://localhost:8000/"
     const user = getUser();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [dropdownPosition, setDropdownPosition] = useState({
@@ -182,7 +183,7 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
                             src={
                                 userdata?.profile_image &&
                                 userdata.profile_image !== "default"
-                                    ? `http://localhost:8000/public/${userdata.profile_image}`
+                                    ? `${domain_link}public/${userdata.profile_image}`
                                     : "/default_user.png"
                             }
                             alt="User"
@@ -203,7 +204,7 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
                                     src={
                                         userdata?.profile_image &&
                                         userdata.profile_image !== "default"
-                                            ? `http://localhost:8000/public/${userdata.profile_image}`
+                                            ? `${domain_link}public/${userdata.profile_image}`
                                             : "/default_user.png"
                                     }
                                     alt="User"
