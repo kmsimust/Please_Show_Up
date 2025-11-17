@@ -32,7 +32,7 @@ export function LoginPage() {
         res.preventDefault();
         try {
             const response = await axios.post(
-                "domain_linkapi/user/login/",
+                    domain_link + "api/user/login/",
                 formData,
             );
 
