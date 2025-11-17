@@ -48,13 +48,14 @@ export function FriendPage() {
     const [myId, setMyId] = useState<number | null>(null);
 
     const token = Cookies.get("accessToken");
+    const domain_link = "http://localhost:8000/";
 
     // Load logged-in user info
     useEffect(() => {
         async function loadMe() {
             try {
                 const res = await axios.get(
-                    "http://localhost:8000/api/user/me/",
+                    domain_link + "api/user/me/",
                     {
                         headers: { Authorization: "Bearer " + token },
                     },
@@ -87,7 +88,7 @@ export function FriendPage() {
         try {
             // Check if we are friends - check BOTH user_id directions
             const myFriendsRes = await axios.get(
-                `http://localhost:8000/api/get_friend_by_user_id/${myId}`,
+                `${domain_link}api/get_friend_by_user_id/${myId}`,
                 { headers: { Authorization: "Bearer " + token } },
             );
 
@@ -110,7 +111,7 @@ export function FriendPage() {
 
             // Check if they have me as friend (where they are 'user')
             const theirFriendsRes = await axios.get(
-                `http://localhost:8000/api/get_friend_by_user_id/${targetId}`,
+                `${domain_link}api/get_friend_by_user_id/${targetId}`,
                 { headers: { Authorization: "Bearer " + token } },
             );
 
@@ -134,7 +135,7 @@ export function FriendPage() {
             // This checks if targetId has any Friend records where friend=myId
             try {
                 const reverseCheckRes = await axios.get(
-                    `http://localhost:8000/api/get_user_by_friend_id/${myId}`,
+                    `${domain_link}api/get_user_by_friend_id/${myId}`,
                     { headers: { Authorization: "Bearer " + token } },
                 );
 
@@ -160,7 +161,7 @@ export function FriendPage() {
             // Check if I sent them a pending request
             // API returns requests where friend = targetId
             const theirPendingRes = await axios.get(
-                `http://localhost:8000/api/get_user_friend_request/${targetId}`,
+                `${domain_link}api/get_user_friend_request/${targetId}`,
                 { headers: { Authorization: "Bearer " + token } },
             );
 
@@ -178,7 +179,7 @@ export function FriendPage() {
             // Check if they sent me a pending request
             // API returns requests where friend = myId
             const myPendingRes = await axios.get(
-                `http://localhost:8000/api/get_user_friend_request/${myId}`,
+                `${domain_link}api/get_user_friend_request/${myId}`,
                 { headers: { Authorization: "Bearer " + token } },
             );
 
@@ -211,7 +212,7 @@ export function FriendPage() {
 
             try {
                 const res = await axios.get(
-                    `http://localhost:8000/api/user/get_user_by_username/${username}`,
+                    `${domain_link}api/user/get_user_by_username/${username}`,
                     { headers: { Authorization: "Bearer " + token } },
                 );
 
@@ -235,7 +236,7 @@ export function FriendPage() {
             };
 
             const res = await axios.post(
-                "http://localhost:8000/api/create_friend_request/",
+                domain_link + "api/create_friend_request/",
                 body,
                 { headers: { Authorization: "Bearer " + token } },
             );

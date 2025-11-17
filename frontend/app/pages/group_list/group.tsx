@@ -9,6 +9,8 @@ import { showTextByKey } from "~/utils/text-util";
 
 export function GroupPage() {
 
+	const domain_for_href = "http://localhost:8000/"
+
 	// Every page need this variable.
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -30,6 +32,7 @@ export function GroupPage() {
 		for(const obj of result) {
 			const {result: members, error: members_error} = await get_group_member(obj.id);
 			obj.members = members;
+			console.log(obj.members);
 		};
 
 		setGroupData(result);
@@ -45,18 +48,35 @@ export function GroupPage() {
 		return <div className="error">{error}</div>;
 	}
 
+	function Member_picture_list() {
+		// loop this
+		return <img className="group-member-image bg-dark"></img>;
+	}
 
 	function GroupList() {
-		return groupData.map((obj) => {
+		return groupData.map((obj, index) => {
+			console.log(obj);
 			return (
-					<Link to="/Nothing" className="group-card" key={obj?.id}>
+					<Link   to={{
+							pathname: "/in_group",
+							search: "?group_id="+obj?.id
+  						}} className="group-card" key={index}>
+						<div className="group-banner-wrapper">
+							<img
+								className="group-banner-img"
+								src={showTextByKey(domain_for_href+"public/" + obj?.banner_image, "/fallback_banner.png")}
+								alt="Group Banner"
+							/>
+						</div>
 						<div className="group-info-case">
 							<div className="flex justify-end">
 								<label className="group-name">
 									{showTextByKey(obj?.group_name, "-")}
 								</label>
 							</div>
-							<div className="flex justify-end" key={obj?.id}>
+							<div className="flex justify-end">
+								<img className = "pic-fit" src={showTextByKey(domain_for_href + "public/" + obj?.owner?.profile_image,"no picture")}></img>
+								{/* this below thing here will be loop */}
 								<img className="group-member-image bg-dark"></img>
 							</div>
 						</div>

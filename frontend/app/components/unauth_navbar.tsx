@@ -6,7 +6,7 @@ export function UnAuthNavBar() {
 <body>
     <div className="top-nav-bar">
         <div className="links-container">
-            <a className="home-link active" href="/">Home</a>
+            <a className="home-link active" href="/group">Home</a>
             <a href="/">About Us</a>
             <a href="/signup">Sign UP</a>
             <a href="/login">Login</a>           

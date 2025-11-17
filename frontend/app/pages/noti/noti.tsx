@@ -35,6 +35,7 @@ interface AcceptedNotification {
 }
 
 export function Noti() {
+    const domain_link = "http://localhost:8000/"
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [requests, setRequests] = useState<FriendRequest[]>([]);
     const [acceptedNotifications, setAcceptedNotifications] = useState<
@@ -50,7 +51,7 @@ export function Noti() {
         async function loadMe() {
             try {
                 const res = await axios.get(
-                    "http://localhost:8000/api/user/me/",
+                    domain_link + "api/user/me/",
                     {
                         headers: { Authorization: "Bearer " + token },
                     },
@@ -73,7 +74,7 @@ export function Noti() {
 
                 // Load pending friend requests
                 const res = await axios.get(
-                    `http://localhost:8000/api/get_user_friend_request/${myId}`,
+                    `${domain_link}api/get_user_friend_request/${myId}`,
                     { headers: { Authorization: "Bearer " + token } },
                 );
 
@@ -82,7 +83,7 @@ export function Noti() {
                 // Check for recently accepted friend requests
                 // Get all friend requests I sent
                 const myRequestsRes = await axios.get(
-                    `http://localhost:8000/api/friend_request/`,
+                    `${domain_link}api/friend_request/`,
                     { headers: { Authorization: "Bearer " + token } },
                 );
 
@@ -114,7 +115,7 @@ export function Noti() {
     const acceptRequest = async (id: number) => {
         try {
             await axios.patch(
-                `http://localhost:8000/api/update_status_friend_request/${id}/approved`,
+                `${domain_link}api/update_status_friend_request/${id}/approved`,
                 {},
                 { headers: { Authorization: "Bearer " + token } },
             );
@@ -131,7 +132,7 @@ export function Noti() {
     const declineRequest = async (id: number) => {
         try {
             const response = await axios.patch(
-                `http://localhost:8000/api/update_status_friend_request/${id}/declined`,
+                `${domain_link}api/update_status_friend_request/${id}/declined`,
                 {},
                 { headers: { Authorization: "Bearer " + token } },
             );

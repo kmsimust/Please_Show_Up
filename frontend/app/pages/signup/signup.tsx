@@ -5,6 +5,7 @@ import axios from "axios";
 import { UnAuthNavBar } from "../../components/unauth_navbar";
 
 export function SignUpPage() {
+    const domain_link = "http://localhost:8000/"
     // Navigator
     const navigate = useNavigate();
 
@@ -29,7 +30,7 @@ export function SignUpPage() {
         res.preventDefault();
         try {
             const response = await axios.post(
-                "http://localhost:8000/api/user/create_user/",
+                domain_link + "api/user/create_user/",
                 formData,
             );
             console.log("Data sent successfully:", response.data);

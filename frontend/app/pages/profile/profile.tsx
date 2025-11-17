@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css"; // try to not use bootstrap
 
 export function ProfilePage() {
     // Every page need this function.
+    const domain_link = "http://localhost:8000/"
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const [userdata, setUserdata] = useState<any | null>(null);
@@ -83,7 +84,7 @@ export function ProfilePage() {
                         style={{
                             backgroundImage:
                                 userdata.banner !== "default"
-                                    ? `url(http://localhost:8000/public/${userdata.banner})`
+                                    ? `url(${domain_link}public/${userdata.banner})`
                                     : "url(/default_banner.jpg)",
                         }}
                     ></div>
@@ -94,7 +95,7 @@ export function ProfilePage() {
                                 className="profile-user-avatar"
                                 src={
                                     userdata.profile_image !== "default"
-                                        ? "http://localhost:8000/public/" +
+                                        ? domain_link + "public/" +
                                           userdata.profile_image
                                         : "/default_user.png"
                                 }

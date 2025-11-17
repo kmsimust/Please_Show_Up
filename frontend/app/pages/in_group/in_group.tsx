@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 import './in_group.css'
-
+import { useSearchParams } from 'react-router-dom';
 
 
 // User in invite people pop up modal
@@ -25,6 +25,13 @@ const InviteUser = () => {
 
 export function InGroup() {
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const group_id = searchParams.get('group_id')
+
+    if(!group_id) {
+        return <div>invalid request</div>
+    }
     // Every page need this function.
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -38,7 +45,7 @@ export function InGroup() {
             <div className="grow">
             <div className='ig-page'>
                 <div>
-                    Content here
+                    Content here GROUP ID: {group_id}
                 </div>
 
                 {/* Side content */}
