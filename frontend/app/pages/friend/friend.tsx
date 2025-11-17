@@ -7,8 +7,9 @@ import "./friend.css";
 
 interface Friend {
     id: number;
-    user: number;
-    friend: number;
+    user: UserObject; // Full user object, not just ID
+    friend: UserObject; // Full friend object, not just ID
+    created_at?: string;
 }
 
 interface UserData {
@@ -18,10 +19,18 @@ interface UserData {
     profile_image?: string;
 }
 
+interface UserObject {
+    id: number;
+    username: string;
+    display_name: string;
+    email?: string;
+    profile_image?: string;
+}
+
 interface FriendRequestData {
     id: number;
-    user: number;
-    friend: number;
+    user: UserObject; // Full user object, not just ID
+    friend: UserObject; // Full friend object, not just ID
     status: string;
 }
 
@@ -63,44 +72,93 @@ export function FriendPage() {
         if (myId && foundUser) {
             checkRelationship(foundUser.id);
         }
-    }, [myId, foundUser?.id]);
+    }, [myId, foundUser]);
 
     // Check relationship (friend / pending / none)
     async function checkRelationship(targetId: number) {
         if (!myId) return;
 
+        // Don't allow adding yourself as a friend
+        if (myId === targetId) {
+            setFriendStatus("none");
+            return;
+        }
+
         try {
-            // Check if we are friends (user -> friend relationship)
+            // Check if we are friends - check BOTH user_id directions
             const myFriendsRes = await axios.get(
                 `http://localhost:8000/api/get_friend_by_user_id/${myId}`,
                 { headers: { Authorization: "Bearer " + token } },
             );
 
+            console.log(
+                "My friends (user_id=" + myId + "):",
+                myFriendsRes.data,
+            );
+
+            // Check if target is in my friends list (where I am 'user')
             const isFriendOfMine = myFriendsRes.data.some(
-                (f: Friend) => f.friend === targetId,
+                (f: Friend) => f.friend.id === targetId,
             );
 
             if (isFriendOfMine) {
+                console.log("Found as friend (I am user, they are friend)");
                 setFriendStatus("friend");
+                setRequestId(null);
                 return;
             }
 
-            // Check if they are friends with me (friend -> user relationship)
+            // Check if they have me as friend (where they are 'user')
             const theirFriendsRes = await axios.get(
                 `http://localhost:8000/api/get_friend_by_user_id/${targetId}`,
                 { headers: { Authorization: "Bearer " + token } },
             );
 
+            console.log(
+                "Their friends (user_id=" + targetId + "):",
+                theirFriendsRes.data,
+            );
+
             const amFriendOfTheirs = theirFriendsRes.data.some(
-                (f: Friend) => f.friend === myId,
+                (f: Friend) => f.friend.id === myId,
             );
 
             if (amFriendOfTheirs) {
+                console.log("Found as friend (they are user, I am friend)");
                 setFriendStatus("friend");
+                setRequestId(null);
                 return;
             }
 
-            // Check if I sent them a pending request (I am user, they are friend)
+            // Use the reverse lookup API - get_user_by_friend_id
+            // This checks if targetId has any Friend records where friend=myId
+            try {
+                const reverseCheckRes = await axios.get(
+                    `http://localhost:8000/api/get_user_by_friend_id/${myId}`,
+                    { headers: { Authorization: "Bearer " + token } },
+                );
+
+                console.log(
+                    "Reverse check (friend_id=" + myId + "):",
+                    reverseCheckRes.data,
+                );
+
+                const targetIsMyUser = reverseCheckRes.data.some(
+                    (f: Friend) => f.user.id === targetId,
+                );
+
+                if (targetIsMyUser) {
+                    console.log("Found as friend via reverse lookup");
+                    setFriendStatus("friend");
+                    setRequestId(null);
+                    return;
+                }
+            } catch (err) {
+                console.log("Reverse check failed:", err);
+            }
+
+            // Check if I sent them a pending request
+            // API returns requests where friend = targetId
             const theirPendingRes = await axios.get(
                 `http://localhost:8000/api/get_user_friend_request/${targetId}`,
                 { headers: { Authorization: "Bearer " + token } },
@@ -108,7 +166,7 @@ export function FriendPage() {
 
             const iSentRequest = theirPendingRes.data.find(
                 (r: FriendRequestData) =>
-                    r.user === myId && r.status === "pending",
+                    r.user.id === myId && r.status === "pending",
             );
 
             if (iSentRequest) {
@@ -117,7 +175,8 @@ export function FriendPage() {
                 return;
             }
 
-            // Check if they sent me a pending request (they are user, I am friend)
+            // Check if they sent me a pending request
+            // API returns requests where friend = myId
             const myPendingRes = await axios.get(
                 `http://localhost:8000/api/get_user_friend_request/${myId}`,
                 { headers: { Authorization: "Bearer " + token } },
@@ -125,7 +184,7 @@ export function FriendPage() {
 
             const theySentRequest = myPendingRes.data.find(
                 (r: FriendRequestData) =>
-                    r.user === targetId && r.status === "pending",
+                    r.user.id === targetId && r.status === "pending",
             );
 
             if (theySentRequest) {
@@ -135,6 +194,7 @@ export function FriendPage() {
             }
 
             setFriendStatus("none");
+            setRequestId(null);
         } catch (error) {
             console.error("Error checking relationship:", error);
         }
@@ -147,6 +207,7 @@ export function FriendPage() {
 
             setFoundUser(null);
             setFriendStatus("none");
+            setRequestId(null);
 
             try {
                 const res = await axios.get(
@@ -212,41 +273,45 @@ export function FriendPage() {
 
                         <div className="search-results-area">
                             {foundUser ? (
-                                <div className="user-card">
-                                    <div className="user-info">
-                                        <strong>
-                                            {foundUser.display_name}
-                                        </strong>
-                                        <span>@{foundUser.username}</span>
+                                foundUser.id === myId ? (
+                                    <p>This is you!</p>
+                                ) : (
+                                    <div className="user-card">
+                                        <div className="user-info">
+                                            <strong>
+                                                {foundUser.display_name}
+                                            </strong>
+                                            <span>@{foundUser.username}</span>
+                                        </div>
+
+                                        {friendStatus === "none" && (
+                                            <button
+                                                className="add-button"
+                                                onClick={sendFriendRequest}
+                                            >
+                                                Add
+                                            </button>
+                                        )}
+
+                                        {friendStatus === "pending" && (
+                                            <button
+                                                className="pending-button"
+                                                disabled
+                                            >
+                                                Pending
+                                            </button>
+                                        )}
+
+                                        {friendStatus === "friend" && (
+                                            <button
+                                                className="friend-button"
+                                                disabled
+                                            >
+                                                Friend ✓
+                                            </button>
+                                        )}
                                     </div>
-
-                                    {friendStatus === "none" && (
-                                        <button
-                                            className="add-button"
-                                            onClick={sendFriendRequest}
-                                        >
-                                            Add
-                                        </button>
-                                    )}
-
-                                    {friendStatus === "pending" && (
-                                        <button
-                                            className="pending-button"
-                                            disabled
-                                        >
-                                            Pending
-                                        </button>
-                                    )}
-
-                                    {friendStatus === "friend" && (
-                                        <button
-                                            className="friend-button"
-                                            disabled
-                                        >
-                                            Friend ✓
-                                        </button>
-                                    )}
-                                </div>
+                                )
                             ) : (
                                 <p>No user found</p>
                             )}

@@ -21,9 +21,25 @@ interface FriendRequest {
     status: string;
 }
 
+interface Notification {
+    id: number;
+    type: "friend_request" | "friend_accepted";
+    data: FriendRequest | AcceptedNotification;
+    created_at: string;
+}
+
+interface AcceptedNotification {
+    accepter_name: string;
+    accepter_username: string;
+    accepter_id: number;
+}
+
 export function Noti() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [requests, setRequests] = useState<FriendRequest[]>([]);
+    const [acceptedNotifications, setAcceptedNotifications] = useState<
+        AcceptedNotification[]
+    >([]);
     const [myId, setMyId] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -47,28 +63,51 @@ export function Noti() {
         loadMe();
     }, [token]);
 
-    // Load pending friend requests for me
+    // Load pending friend requests and check for accepted friends
     useEffect(() => {
         if (!myId) return;
 
-        async function loadRequests() {
+        async function loadNotifications() {
             try {
                 setLoading(true);
+
+                // Load pending friend requests
                 const res = await axios.get(
                     `http://localhost:8000/api/get_user_friend_request/${myId}`,
                     { headers: { Authorization: "Bearer " + token } },
                 );
 
-                // The API already filters for pending requests and friend_id = myId
                 setRequests(res.data);
+
+                // Check for recently accepted friend requests
+                // Get all friend requests I sent
+                const myRequestsRes = await axios.get(
+                    `http://localhost:8000/api/friend_request/`,
+                    { headers: { Authorization: "Bearer " + token } },
+                );
+
+                // Filter for requests I sent that were accepted
+                const acceptedRequests = myRequestsRes.data.filter(
+                    (r: FriendRequest) =>
+                        r.user.id === myId && r.status === "approved",
+                );
+
+                // Create notifications for accepted requests
+                const accepted = acceptedRequests.map((r: FriendRequest) => ({
+                    accepter_name: r.friend.display_name,
+                    accepter_username: r.friend.username,
+                    accepter_id: r.friend.id,
+                }));
+
+                setAcceptedNotifications(accepted);
             } catch (error) {
-                console.error("Failed to load requests:", error);
+                console.error("Failed to load notifications:", error);
             } finally {
                 setLoading(false);
             }
         }
 
-        loadRequests();
+        loadNotifications();
     }, [myId, token]);
 
     // Accept request
@@ -91,18 +130,30 @@ export function Noti() {
     // Decline request
     const declineRequest = async (id: number) => {
         try {
-            await axios.patch(
+            const response = await axios.patch(
                 `http://localhost:8000/api/update_status_friend_request/${id}/declined`,
                 {},
                 { headers: { Authorization: "Bearer " + token } },
             );
 
+            console.log("Decline response:", response);
+
             // Remove from list after successful decline
             setRequests((prev) => prev.filter((r) => r.id !== id));
         } catch (error) {
             console.error("Failed to decline request:", error);
+            console.error("Error details:", error);
             alert("Failed to decline friend request. Please try again.");
         }
+    };
+
+    // Dismiss accepted notification
+    const dismissAccepted = async (accepterId: number) => {
+        // In a real app, you'd mark this as read in the backend
+        // For now, just remove from UI
+        setAcceptedNotifications((prev) =>
+            prev.filter((n) => n.accepter_id !== accepterId),
+        );
     };
 
     return (
@@ -124,10 +175,44 @@ export function Noti() {
                         <div className="noti-list">
                             {loading && <p>Loading notifications...</p>}
 
-                            {!loading && requests.length === 0 && (
-                                <p>No notifications</p>
-                            )}
+                            {!loading &&
+                                requests.length === 0 &&
+                                acceptedNotifications.length === 0 && (
+                                    <p>No notifications</p>
+                                )}
 
+                            {/* Accepted friend notifications */}
+                            {!loading &&
+                                acceptedNotifications.map((notif) => (
+                                    <div
+                                        key={notif.accepter_id}
+                                        className="noti-item noti-accepted"
+                                    >
+                                        <div className="noti-left">
+                                            <p className="noti-text">
+                                                <strong>
+                                                    {notif.accepter_name}
+                                                </strong>{" "}
+                                                (@{notif.accepter_username})
+                                                accepted your friend request! 🎉
+                                            </p>
+                                        </div>
+                                        <div className="noti-actions">
+                                            <button
+                                                className="noti-btn noti-btn-accept"
+                                                onClick={() =>
+                                                    dismissAccepted(
+                                                        notif.accepter_id,
+                                                    )
+                                                }
+                                            >
+                                                ✓
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+
+                            {/* Pending friend requests */}
                             {!loading &&
                                 requests.map((req) => (
                                     <div key={req.id} className="noti-item">

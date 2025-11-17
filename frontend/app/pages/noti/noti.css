@@ -3,6 +3,11 @@
    ============================== */
 
 /* main-content already has sidebar on the left */
+
+.noti-accepted {
+    background-color: #e8f5e9; /* Light green background */
+    border-left: 4px solid #4caf50;
+}
 .noti-page .main-content {
     display: flex;
     align-items: flex-start; /* content sticks to top */
