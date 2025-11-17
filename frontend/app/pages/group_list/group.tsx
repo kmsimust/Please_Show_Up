@@ -1,25 +1,32 @@
 import "./group.css";
+
 import { useState, useEffect } from 'react';
+import { Link } from "react-router";
+
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
-import { Link } from "react-router";
+
 import { get_group } from "~/services/group";
 import { get_group_member } from "~/services/group_member";
-import { showTextByKey } from "~/utils/text-util";
+import { showTextByKey, showPicture } from "~/utils/text-util";
+
+import type { GroupMember } from "~/types/group_member";
+import type { Group } from "~/types/group";
+
+
+
 
 export function GroupPage() {
-
-	const domain_for_href = "http://localhost:8000/"
+	const backend_public: string = "http://localhost:8000/public";
 
 	// Every page need this variable.
-	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean | null>(false);
 
 	// loading user and prevent fail fetch
-	const [groupData, setGroupData] = useState([]);
-	const [groupMember, setGroupMember] = useState([]);
+	const [groupData, setGroupData] = useState<Group[] | null>([]);
 
-	const [error, setError] = useState("");
-	const [isLoading, setIsLoading] = useState(true); // Add loading state
+	const [error, setError] = useState<string | null>("");
+	const [isLoading, setIsLoading] = useState<boolean | null>(true); // Add loading state
 
 	useEffect(() => {
 		page_load();
@@ -40,6 +47,38 @@ export function GroupPage() {
 		setIsLoading(false);
   	}
 
+	function MemberList({members}: {members: GroupMember[] | null}) {
+		// loop this
+		return members?.map((obj: any) => {
+			return (
+				<img className="pic-fit ms-3" src = {backend_public + showPicture(obj?.member?.profile_image, "default" ,"/default_user.png")}/>
+			)});
+	}
+
+	function GroupList() {
+		return groupData?.map((obj, index) => {
+			return (
+					<Link   to={{ pathname: "/in_group", search: "?group_id="+obj?.id }} 
+							className="group-card" 
+							style={{backgroundImage: 'url('+backend_public+showTextByKey(obj?.banner_image, "/default_user.png")+')'}}
+							key={index}
+					>
+						<div className="group-info-case">
+							<div className="flex justify-end">
+								<label className="group-name">
+									{showTextByKey(obj?.group_name, "-")}
+								</label>
+							</div>
+							<div className="flex justify-end">
+								<img className = "pic-fit" src={backend_public+showTextByKey(obj?.owner?.profile_image,"/default_user.png")}></img>
+								{/* this below thing here will be loop */}
+								<MemberList {...obj}/>
+							</div>
+						</div>
+					</Link>
+				)});
+	}
+
 	if (isLoading) {
 		return <div className="loading">Loading...</div>;
 	}
@@ -48,63 +87,24 @@ export function GroupPage() {
 		return <div className="error">{error}</div>;
 	}
 
-	function Member_picture_list() {
-		// loop this
-		return <img className="group-member-image bg-dark"></img>;
-	}
-
-	function GroupList() {
-		return groupData.map((obj, index) => {
-			console.log(obj);
-			return (
-					<Link   to={{
-							pathname: "/in_group",
-							search: "?group_id="+obj?.id
-  						}} className="group-card" key={index}>
-						<div className="group-banner-wrapper">
-							<img
-								className="group-banner-img"
-								src={showTextByKey(domain_for_href+"public/" + obj?.banner_image, "/fallback_banner.png")}
-								alt="Group Banner"
-							/>
-						</div>
-						<div className="group-info-case">
-							<div className="flex justify-end">
-								<label className="group-name">
-									{showTextByKey(obj?.group_name, "-")}
-								</label>
-							</div>
-							<div className="flex justify-end">
-								<img className = "pic-fit" src={showTextByKey(domain_for_href + "public/" + obj?.owner?.profile_image,"no picture")}></img>
-								{/* this below thing here will be loop */}
-								<img className="group-member-image bg-dark"></img>
-							</div>
-						</div>
-					</Link>
-				)});
-	}
-
 	return (
-	<div className="page-container">
-		<AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+		<div className="page-container">
+			<AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-		<div className="main-content">
-			{/* Sidebar */}
-			<Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+			<div className="main-content">
+				{/* Sidebar */}
+				<Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-			{/* Main content */}
-			<div className="content-area">
-				<div className="group-button-case mb-4">
-					<a href="/create_group" className="group-create-group-button">
-						Create group
-					</a>
-				</div>
-
-				<div className="group-list-case">
-					<GroupList/>
+				{/* Main content */}
+				<div className="content-area">
+					<div className="group-button-case mb-4">
+						<Link to={{ pathname: "/create_group"}} className="group-create-group-button">Create group</Link>
+					</div>
+					<div className="group-list-case">
+						<GroupList/>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 	);
 }

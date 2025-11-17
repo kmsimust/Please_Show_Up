@@ -13,7 +13,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./app.css";
 import { CookiesProvider, useCookies } from "react-cookie";
 import { authMiddleware } from "app/middleware/authMiddleware";
-import { useEffect } from "react";
 
 export const middleware: Route.MiddlewareFunction[] = [authMiddleware];
 

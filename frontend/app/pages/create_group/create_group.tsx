@@ -1,13 +1,11 @@
 import './create_group.css'
 import Cookies from "js-cookie";
-import axios from "axios";
 
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 
 import { useState, useEffect } from 'react';
 import { get_user_data } from "~/services/user";
-import { useNavigate } from "react-router";
 
 
 interface CreateGroupFormProps {
@@ -31,11 +29,11 @@ export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
     }, []);
 
     async function page_load() {
-    setIsLoading(true);
-    const { result, error } = await get_user_data();
-    setUserdata(result);
-    setError(error);
-    setIsLoading(false);
+        setIsLoading(true);
+        const { result, error } = await get_user_data();
+        setUserdata(result);
+        setError(error);
+        setIsLoading(false);
     }
 
     const [formData, setFormData] = useState({
@@ -169,29 +167,22 @@ export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
                     <form onSubmit={handleSubmit}>
                         {/* Group Name */}
                         <div className="form-group">
-                        <label htmlFor="name">Group Name *</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            required
-                            placeholder="Enter group name"
-                        />
+                            <label htmlFor="name">Group Name *</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                required
+                                placeholder="Enter group name"
+                            />
                         </div>
 
                         {/* Description */}
                         <div className="form-group">
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            value={formData.description}
-                            onChange={handleInputChange}
-                            rows={4}
-                            placeholder="Describe your group"
-                        />
+                            <label htmlFor="Max-member">Max-member</label>
+                            <input className='form-control' type="number"/>
                         </div>
 
                         {/* Banner Image */}
