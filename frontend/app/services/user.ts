@@ -45,3 +45,95 @@ export async function update_user(formData: any) {
     return {result, error}
     
 }
+
+export async function update_user_profile(userId: number | string, file: File) {
+    let result: any = null;
+    let error = undefined;
+    
+    try {
+        const token = Cookies.get("accessToken");
+        if (!token) {
+            throw new Error("No authentication token found");
+        }
+
+        const fd = new FormData();
+        fd.append("profile_image", file);
+
+        console.log("Uploading profile image:", {
+            userId,
+            fileName: file.name,
+            fileSize: file.size,
+            fileType: file.type,
+        });
+
+        const response = await axios.patch(
+            "http://localhost:8000/api/update_user_profile_image/" + userId,
+            fd,
+            {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            }
+        );
+
+        console.log("Profile image upload response:", response.data);
+        result = response.data;
+    } catch (err: any) {
+        console.error("ERROR /update_user_profile:", err);
+        console.error("Error details:", {
+            status: err.response?.status,
+            statusText: err.response?.statusText,
+            data: err.response?.data,
+            message: err.message,
+        });
+        error = err.response?.data || err.message || "failed to upload profile image";
+    }
+    
+    return { result, error };
+}
+
+export async function update_user_banner(userId: number | string, file: File) {
+    let result: any = null;
+    let error = undefined;
+    
+    try {
+        const token = Cookies.get("accessToken");
+        if (!token) {
+            throw new Error("No authentication token found");
+        }
+
+        const fd = new FormData();
+        fd.append("banner", file);
+
+        console.log("Uploading banner:", {
+            userId,
+            fileName: file.name,
+            fileSize: file.size,
+            fileType: file.type,
+        });
+
+        const response = await axios.patch(
+            "http://localhost:8000/api/update_user_banner_image/" + userId + "/",
+            fd,
+            {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            }
+        );
+
+        console.log("Banner upload response:", response.data);
+        result = response.data;
+    } catch (err: any) {
+        console.error("ERROR /update_user_banner:", err);
+        console.error("Error details:", {
+            status: err.response?.status,
+            statusText: err.response?.statusText,
+            data: err.response?.data,
+            message: err.message,
+        });
+        error = err.response?.data || err.message || "failed to upload banner image";
+    }
+    
+    return { result, error };
+}

@@ -6,10 +6,9 @@ import { AuthNavBar } from "../../components/auth_navbar";
 import "./edit.css";
 
 import EditProfileAccount from "~/components/editProfileAccount";
+import EditProfilePicture from "~/components/editProfilePicture";
 
 import "bootstrap/dist/css/bootstrap.min.css"; // try to not use bootstrap
-
-
 
 type TabKey = "profile" | "account" | "notifications" | "history";
 const VALID_TABS: TabKey[] = ["profile", "account", "notifications", "history"];
@@ -27,28 +26,9 @@ export function EditProfilePage() {
 
     const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
 
-    // image files handlers
-    const [avatarFile, setAvatarFile] = useState<File | null>(null);
-    const [headerFile, setHeaderFile] = useState<File | null>(null);
-    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-    const [headerPreview, setHeaderPreview] = useState<string | null>(null);
-
+    // other profile fields (unused now but kept)
     const [description, setDescription] = useState<string>("");
     const maxDescriptionLength = 5000;
-
-    // Limits (bytes)
-    const AVATAR_MAX = 0.6 * 1024 * 1024;
-    const HEADER_MAX = 1.5 * 1024 * 1024;
-    const ALLOWED_TYPES = useMemo(
-        () => [
-            "image/jpeg",
-            "image/png",
-            "image/gif",
-            "image/webp",
-            "video/webm",
-        ],
-        [],
-    );
 
     useEffect(() => {
         if (tabParam && VALID_TABS.includes(tabParam as TabKey)) {
@@ -61,62 +41,20 @@ export function EditProfilePage() {
         navigate(`/account/${newTab}`, { replace: true });
     };
 
-    const validateFile = (file: File, maxBytes: number) => {
-        if (!ALLOWED_TYPES.includes(file.type)) {
-            alert("Invalid file type.");
-            return false;
-        }
-        if (file.size > maxBytes) {
-            alert("File too large.");
-            return false;
-        }
-        return true;
-    };
-
-    const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file && validateFile(file, AVATAR_MAX)) setAvatarFile(file);
-    };
-
-    const handleHeaderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file && validateFile(file, HEADER_MAX)) setHeaderFile(file);
-    };
-
-    // Cleanup preview URLs on unmount
-    useEffect(() => {
-    return () => {
-        if (avatarPreview) URL.revokeObjectURL(avatarPreview);
-        if (headerPreview) URL.revokeObjectURL(headerPreview);
-        };
-    }, [avatarPreview, headerPreview]);
-
-    const handleSubmitAvatar = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!avatarFile) return;
-        console.log("Avatar uploaded:", avatarFile);
-    };
-
-    const handleSubmitHeader = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!headerFile) return;
-        console.log("Header uploaded:", headerFile);
-    };
-
-    //   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    //     const value = e.target.value.slice(0, maxDescriptionLength);
-    //     setDescription(value);
-    //   };
-
     return (
         <div className="page-container">
             {/* Same top bar as GroupPage */}
-            <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+            <AuthNavBar
+                onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            />
 
             {/* Same 2-column layout as GroupPage */}
             <div className="main-content">
                 {/* Sidebar */}
-                <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                <Sidebar
+                    isOpen={isSidebarOpen}
+                    onClose={() => setIsSidebarOpen(false)}
+                />
 
                 {/* Main content */}
                 <div className="content-area">
@@ -133,6 +71,7 @@ export function EditProfilePage() {
                                 onClick={() => handleTabChange("profile")}
                                 aria-selected={activeTab === "profile"}
                             >
+                                {/* svg omitted for brevity */}
                                 <svg
                                     className="settings-icon"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -200,150 +139,9 @@ export function EditProfilePage() {
 
                         {/* Settings Content */}
                         <div className="settings-content">
-                            {activeTab === "profile" && (
-                                <>
-                                    <h1 className="settings-title">
-                                        Profile picture settings
-                                    </h1>
+                            {activeTab === "profile" && <EditProfilePicture />}
 
-                                    {/* Avatar */}
-                                    <div className="settings-section">
-                                        <h2 className="section-title">
-                                            Avatar
-                                        </h2>
-                                        <p className="section-description">
-                                            File Size: &lt; 0.6MB, File Formats:
-                                            | .jpg | .png | .gif | .webp | .webm
-                                            |, Recommended resolution: 300×300
-                                        </p>
-
-                                        <form onSubmit={handleSubmitAvatar}>
-                                            <div className="upload-area">
-                                                <input
-                                                    type="file"
-                                                    id="avatar-upload"
-                                                    accept=".jpg,.jpeg,.png,.gif,.webp,.webm"
-                                                    onChange={
-                                                        handleAvatarUpload
-                                                    }
-                                                    hidden
-                                                />
-                                                <label
-                                                    htmlFor="avatar-upload"
-                                                    className="upload-label"
-                                                >
-                                                    <div className="upload-content">
-                                                        <p className="upload-title">
-                                                            Upload file(s)
-                                                        </p>
-                                                        <p className="upload-subtitle">
-                                                            Drop file(s) here,
-                                                            or click to select.
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                                {avatarFile && (
-                                                    <p className="file-selected">
-                                                        Selected:{" "}
-                                                        {avatarFile.name}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <button
-                                                type="submit"
-                                                className="submit-btn"
-                                                disabled={!avatarFile}
-                                            >
-                                                Submit
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                    {/* Header */}
-                                    <div className="settings-section">
-                                        <h2 className="section-title">
-                                            Banner
-                                        </h2>
-                                        <p className="section-description">
-                                            File Size: &lt; 1.5MB, File Formats:
-                                            | .jpg | .png | .gif | .webp | .webm
-                                            |, Recommended resolution: 1500×430
-                                        </p>
-
-                                        <form onSubmit={handleSubmitHeader}>
-                                            <div className="upload-area">
-                                                <input
-                                                    type="file"
-                                                    id="header-upload"
-                                                    accept=".jpg,.jpeg,.png,.gif,.webp,.webm"
-                                                    onChange={
-                                                        handleHeaderUpload
-                                                    }
-                                                    hidden
-                                                />
-                                                <label
-                                                    htmlFor="header-upload"
-                                                    className="upload-label"
-                                                >
-                                                    <div className="upload-content">
-                                                        <p className="upload-title">
-                                                            Upload file(s)
-                                                        </p>
-                                                        <p className="upload-subtitle">
-                                                            Drop file(s) here,
-                                                            or click to select.
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                                {headerFile && (
-                                                    <p className="file-selected">
-                                                        Selected:{" "}
-                                                        {headerFile.name}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <button
-                                                type="submit"
-                                                className="submit-btn"
-                                                disabled={!headerFile}
-                                            >
-                                                Submit
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                    {/* Description */}
-                                    {/* <div className="settings-section">
-                    <h2 className="section-title">Description</h2>
-                    <p className="section-description">Visible on your profile page. You can tell users about yourself.</p>
-
-                    <form onSubmit={(e) => e.preventDefault()}>
-                      <label htmlFor="profile-description" className="sr-only">
-                        Profile description
-                      </label>
-                      <textarea
-                        id="profile-description"
-                        className="settings-input textarea"
-                        maxLength={maxDescriptionLength}
-                        value={description}
-                        onChange={handleDescriptionChange}
-                        rows={6}
-                        placeholder="Say hi 👋, what you’re studying, interests, etc."
-                      />
-                      <div className="char-counter">
-                        {description.length}/{maxDescriptionLength}
-                      </div>
-                      <button type="submit" className="submit-btn">
-                        Submit
-                      </button>
-                    </form>
-                  </div> */}
-                                </>
-                            )}
-
-                            {activeTab === "account" && (
-								<EditProfileAccount/>
-                            )}
+                            {activeTab === "account" && <EditProfileAccount />}
 
                             {activeTab !== "profile" &&
                                 activeTab !== "account" && (
