@@ -59,8 +59,8 @@ jobs:
         python manage.py migrate
       env:
         MYSQL_NAME: test_db
-        MYSQL_USER: test_user
-        MYSQL_PASSWORD: test_password
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
         DB_HOST: 127.0.0.1
         DB_PORT: 3306
     
@@ -70,8 +70,8 @@ jobs:
         python manage.py test user.tests available_date.tests event.tests friend.tests friend_request.tests group.tests group_member.tests group_request.tests
       env:
         MYSQL_NAME: test_db
-        MYSQL_USER: test_user
-        MYSQL_PASSWORD: test_password
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
         DB_HOST: 127.0.0.1
         DB_PORT: 3306
     
@@ -83,8 +83,8 @@ jobs:
         coverage report
       env:
         MYSQL_NAME: test_db
-        MYSQL_USER: test_user
-        MYSQL_PASSWORD: test_password
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
         DB_HOST: 127.0.0.1
         DB_PORT: 3306
       continue-on-error: true
