@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop, feat/* ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        ports:
+          - 3306:3306
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        cd backend
+        pip install -r requirements.txt
+    
+    - name: Wait for MySQL
+      run: |
+        cd backend
+        python -c "import time; time.sleep(5)"
+    
+    - name: Run migrations
+      run: |
+        cd backend
+        python manage.py migrate
+      env:
+        MYSQL_NAME: test_db
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+    
+    - name: Run tests
+      run: |
+        cd backend
+        python manage.py test user.tests available_date.tests event.tests friend.tests friend_request.tests group.tests group_member.tests group_request.tests
+      env:
+        MYSQL_NAME: test_db
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+    
+    - name: Run tests with coverage
+      run: |
+        cd backend
+        pip install coverage
+        coverage run --source='.' manage.py test user.tests available_date.tests event.tests friend.tests friend_request.tests group.tests group_member.tests group_request.tests
+        coverage report
+      env:
+        MYSQL_NAME: test_db
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+      continue-on-error: true
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install linting tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 black
+    
+    - name: Lint with flake8
+      run: |
+        flake8 backend --count --select=E9,F63,F7,F82 --show-source --statistics
+      continue-on-error: true
+    
+    - name: Check code style with black
+      run: |
+        black --check backend --diff
+      continue-on-error: true
