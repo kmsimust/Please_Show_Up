@@ -56,37 +56,37 @@ jobs:
     - name: Run migrations
       run: |
         cd backend
-        python manage.py migrate --settings=backend.settings
+        python manage.py migrate
       env:
-        MYSQL_HOST: 127.0.0.1
-        MYSQL_PORT: 3306
+        MYSQL_NAME: test_db
         MYSQL_USER: test_user
         MYSQL_PASSWORD: test_password
-        MYSQL_DATABASE: test_db
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
     
     - name: Run tests
       run: |
         cd backend
-        python manage.py test --settings=backend.settings
+        python manage.py test
       env:
-        MYSQL_HOST: 127.0.0.1
-        MYSQL_PORT: 3306
+        MYSQL_NAME: test_db
         MYSQL_USER: test_user
         MYSQL_PASSWORD: test_password
-        MYSQL_DATABASE: test_db
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
     
     - name: Run tests with coverage
       run: |
         cd backend
         pip install coverage
-        coverage run --source='.' manage.py test --settings=backend.settings
+        coverage run --source='.' manage.py test
         coverage report
       env:
-        MYSQL_HOST: 127.0.0.1
-        MYSQL_PORT: 3306
+        MYSQL_NAME: test_db
         MYSQL_USER: test_user
         MYSQL_PASSWORD: test_password
-        MYSQL_DATABASE: test_db
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
       continue-on-error: true
 
   lint:
