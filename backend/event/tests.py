@@ -6,6 +6,7 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, force_authenticate
 
+from group.models import Group
 from .views import create_event
 
 
@@ -25,6 +26,13 @@ class CreateEventViewTests(TestCase):
             email="alice@example.com",
             password="pw",
         )
+        # Create a group for testing
+        self.group = Group.objects.create(
+            owner=self.user,
+            group_name="Test Group",
+            banner_image="/path/to/banner.jpg",
+            max_member=10
+        )
 
     def _base_body(self, start_date_str: str) -> dict:
         """
@@ -35,7 +43,7 @@ class CreateEventViewTests(TestCase):
             # TODO: change/extend fields to match your serializer
             "name": "Test Event",
             "description": "Some description",
-            # e.g. "group": 1 if required, etc.
+            "group": self.group.id,  # Add required group field
             "start_date": start_date_str,
             # DO NOT include end_date – view sets it
         }
