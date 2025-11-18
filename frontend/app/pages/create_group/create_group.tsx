@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { get_user_data } from "~/services/user";
 import { useNavigate } from 'react-router';
 
