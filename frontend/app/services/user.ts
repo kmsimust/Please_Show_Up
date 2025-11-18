@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
-import axios from "axios";
 import { getUser } from "~/utils/auth-me";
+import { api_instance } from "~/utils/axios";
 
 export async function get_user_data() {
     let result = [];
@@ -10,7 +10,7 @@ export async function get_user_data() {
         // ✅ use cookie token first
         let token = Cookies.get("accessToken");
         // ✅ API request
-        const resp = await axios.get("http://localhost:8000/api/user/me/", {
+        const resp = await api_instance.get("/api/user/me/", {
             headers: { Authorization: "Bearer " + token },
             // ❌ REMOVE withCredentials unless your backend requires cookies
             // withCredentials: true,
@@ -29,8 +29,8 @@ export async function update_user(formData: any) {
     try{
         let token = Cookies.get("accessToken");
         const userObj = getUser();
-        const response = await axios.put(
-        "http://localhost:8000/api/user/update_user/" + userObj?.id,
+        const response = await api_instance.put(
+        "/api/user/update_user/" + userObj?.id,
         formData,
         { headers: { Authorization: "Bearer " + token } },
     );
@@ -66,8 +66,8 @@ export async function update_user_profile(userId: number | string, file: File) {
             fileType: file.type,
         });
 
-        const response = await axios.patch(
-            "http://localhost:8000/api/update_user_profile_image/" + userId,
+        const response = await api_instance.patch(
+            "/api/update_user_profile_image/" + userId,
             fd,
             {
                 headers: {
@@ -112,8 +112,8 @@ export async function update_user_banner(userId: number | string, file: File) {
             fileType: file.type,
         });
 
-        const response = await axios.patch(
-            "http://localhost:8000/api/update_user_banner_image/" + userId + "/",
+        const response = await api_instance.patch(
+            "/api/update_user_banner_image/" + userId,
             fd,
             {
                 headers: {
@@ -136,4 +136,31 @@ export async function update_user_banner(userId: number | string, file: File) {
     }
     
     return { result, error };
+}
+
+export async function get_user_by_username(username: string) {
+    let result = [];
+    let error = undefined;
+
+    try{
+        const token = Cookies.get("accessToken");
+
+        if (!token) {
+            throw new Error("No authentication token found");
+        }
+        
+        const res = await api_instance.get(
+            "/api/user/get_users_by_username/"+username,
+            { headers: { Authorization: "Bearer " + token } },
+        );
+        result = res.data;
+        
+    }
+    catch (err: any) {
+        console.error("ERROR /get_user_by_username", err);
+        console.error("Error details:", { username });
+        error = err.response?.data || "failed to fetch user data";
+    } 
+
+    return {result, error};
 }

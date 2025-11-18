@@ -64,7 +64,7 @@ export default function EditProfilePicture() {
         return () => {
             mounted = false;
         };
-    }, []);
+    }, []); // empty dependency: run once on mount
 
     // preview from selected files (object URLs)
     useEffect(() => {
@@ -144,7 +144,9 @@ export default function EditProfilePicture() {
                         data.profile_image ??
                         data.profile_image_url ??
                         data.profile;
-                    const preview = buildPreviewFromServerPath(serverPath);
+                    const preview = buildPreviewFromServerPath(
+                        "/public" + serverPath,
+                    );
                     if (preview) {
                         setAvatarPreview(preview);
                     }
@@ -185,7 +187,9 @@ export default function EditProfilePicture() {
                 ) {
                     const serverPath =
                         data.banner ?? data.banner_url ?? data.banner_image;
-                    const preview = buildPreviewFromServerPath(serverPath);
+                    const preview = buildPreviewFromServerPath(
+                        "/public" + serverPath,
+                    );
                     if (preview) setHeaderPreview(preview);
                 }
                 setHeaderFile(null);

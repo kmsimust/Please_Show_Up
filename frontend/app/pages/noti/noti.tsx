@@ -35,7 +35,7 @@ interface AcceptedNotification {
 }
 
 export function Noti() {
-    const domain_link = "http://localhost:8000/"
+    const domain_link = "http://localhost:8000/";
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [requests, setRequests] = useState<FriendRequest[]>([]);
     const [acceptedNotifications, setAcceptedNotifications] = useState<
@@ -50,12 +50,9 @@ export function Noti() {
     useEffect(() => {
         async function loadMe() {
             try {
-                const res = await axios.get(
-                    domain_link + "api/user/me/",
-                    {
-                        headers: { Authorization: "Bearer " + token },
-                    },
-                );
+                const res = await axios.get(domain_link + "api/user/me/", {
+                    headers: { Authorization: "Bearer " + token },
+                });
                 setMyId(res.data.id);
             } catch (error) {
                 console.error("Failed to load user:", error);
@@ -129,7 +126,20 @@ export function Noti() {
     };
 
     // Decline request
+    // inside Noti() component in noti.tsx
+
+    // Decline request (improved)
     const declineRequest = async (id: number) => {
+        if (!token) {
+            console.error("No token available for declineRequest");
+            alert("Not authenticated");
+            return;
+        }
+
+        // optimistic update: remove from UI immediately
+        const prevRequests = [...requests];
+        setRequests((prev) => prev.filter((r) => r.id !== id));
+
         try {
             const response = await axios.patch(
                 `${domain_link}api/update_status_friend_request/${id}/declined`,
@@ -137,14 +147,27 @@ export function Noti() {
                 { headers: { Authorization: "Bearer " + token } },
             );
 
-            console.log("Decline response:", response);
+            console.log("Decline response:", response.data);
+            // success: nothing else to do, UI already updated
+        } catch (err: any) {
+            // rollback UI (put the item back)
+            console.error("Failed to decline request:", {
+                message: err.message,
+                status: err.response?.status,
+                data: err.response?.data,
+            });
 
-            // Remove from list after successful decline
-            setRequests((prev) => prev.filter((r) => r.id !== id));
-        } catch (error) {
-            console.error("Failed to decline request:", error);
-            console.error("Error details:", error);
-            alert("Failed to decline friend request. Please try again.");
+            // rollback state
+            setRequests((prev) => {
+                // if it was already restored by some other action, avoid duplication
+                const already = prev.some((r) => r.id === id);
+                return already ? prev : prevRequests;
+            });
+
+            alert(
+                "Failed to decline friend request. See console for details. " +
+                    (err.response?.data?.detail || ""),
+            );
         }
     };
 
