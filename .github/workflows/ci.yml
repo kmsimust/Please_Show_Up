@@ -67,7 +67,7 @@ jobs:
     - name: Run tests
       run: |
         cd backend
-        python manage.py test
+        python manage.py test user.tests available_date.tests event.tests friend.tests friend_request.tests group.tests group_member.tests group_request.tests
       env:
         MYSQL_NAME: test_db
         MYSQL_USER: test_user
@@ -79,7 +79,7 @@ jobs:
       run: |
         cd backend
         pip install coverage
-        coverage run --source='.' manage.py test
+        coverage run --source='.' manage.py test user.tests available_date.tests event.tests friend.tests friend_request.tests group.tests group_member.tests group_request.tests
         coverage report
       env:
         MYSQL_NAME: test_db
