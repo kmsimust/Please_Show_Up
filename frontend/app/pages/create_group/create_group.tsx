@@ -4,8 +4,9 @@ import Cookies from "js-cookie";
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { get_user_data } from "~/services/user";
+import { useNavigate } from 'react-router';
 
 
 interface CreateGroupFormProps {
@@ -16,6 +17,7 @@ interface CreateGroupFormProps {
 
 export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
     const domain_link = "http://localhost:8000/"
+    const navigate = useNavigate();
     // Every page need this function.
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -37,9 +39,9 @@ export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
     }
 
     const [formData, setFormData] = useState({
-        name: '',
-        description: '',
-        // Add other fields your serializer expects
+        owner: '',
+        group_name: '',
+        max_number: '',
     });
     const [bannerFile, setBannerFile] = useState<File | null>(null);
     const [bannerPreview, setBannerPreview] = useState<string | null>(null);
@@ -88,18 +90,10 @@ export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
         const formDataToSend = new FormData();
         
         // Append text fields
-        Object.entries(formData).forEach(([key, value]) => {
-            formDataToSend.append(key, value);
-        });
-        
-        // Append banner image
-        if (bannerFile) {
-            formDataToSend.append('banner_image', bannerFile);
-        }
-
-        for (let [key, value] of formDataToSend.entries()) {
-  console.log(`${key}:`, value);
-}
+        formDataToSend.append('owner', userdata?.id || '');
+        formDataToSend.append('group_name', formData.group_name);
+        if (bannerFile) formDataToSend.append('banner_image', bannerFile);
+        formDataToSend.append('max_member', formData.max_number);
 
         // Get auth token (adjust based on your auth setup)
         let token = Cookies.get("accessToken");
@@ -123,7 +117,7 @@ export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
         
         // Call success callback
         if (onSuccess) onSuccess();
-        
+        navigate('/group');
         } catch (err: any) {
         setError(err.message || 'An error occurred');
         console.error('Error creating group:', err);
@@ -171,8 +165,8 @@ export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
                             <input
                                 type="text"
                                 id="name"
-                                name="name"
-                                value={formData.name}
+                                name="group_name"
+                                value={formData.group_name}
                                 onChange={handleInputChange}
                                 required
                                 placeholder="Enter group name"
@@ -181,8 +175,16 @@ export function CreateGroup({ onSuccess, onCancel }: CreateGroupFormProps) {
 
                         {/* Description */}
                         <div className="form-group">
-                            <label htmlFor="Max-member">Max-member</label>
-                            <input className='form-control' type="number"/>
+                            <label htmlFor="max_number">Max-member</label>
+                            <input
+                            className="form-control"
+                            type="number"
+                            id="max_number"
+                            name="max_number"
+                            value={formData.max_number}
+                            onChange={handleInputChange}
+                            min = "0"
+                            />
                         </div>
 
                         {/* Banner Image */}
