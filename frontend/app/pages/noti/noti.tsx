@@ -1,3 +1,4 @@
+// noti.tsx
 import "./noti.css";
 import Sidebar from "../../components/sidebar";
 import { AuthNavBar } from "../../components/auth_navbar";
@@ -16,16 +17,9 @@ interface UserObject {
 
 interface FriendRequest {
     id: number;
-    user: UserObject; // ForeignKey returns full object
-    friend: UserObject; // ForeignKey returns full object
-    status: string;
-}
-
-interface Notification {
-    id: number;
-    type: "friend_request" | "friend_accepted";
-    data: FriendRequest | AcceptedNotification;
-    created_at: string;
+    user: UserObject; // sender (who made the request)
+    friend: UserObject; // recipient (who receives the request)
+    status: string; // "pending", "approved", "reject", etc.
 }
 
 interface AcceptedNotification {
@@ -35,7 +29,7 @@ interface AcceptedNotification {
 }
 
 export function Noti() {
-    const domain_link = "http://localhost:8000/"
+    const domain_link = "http://localhost:8000/";
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [requests, setRequests] = useState<FriendRequest[]>([]);
     const [acceptedNotifications, setAcceptedNotifications] = useState<
@@ -46,16 +40,40 @@ export function Noti() {
 
     const token = Cookies.get("accessToken");
 
-    // Load my profile
+    // localStorage key for dismissed accepted notifications
+    const DISMISSED_ACCEPTED_KEY = "dismissedAcceptedFriendNotifications_v1";
+    const [dismissedAcceptedIds, setDismissedAcceptedIds] = useState<number[]>(
+        [],
+    );
+
+    // Load dismissed IDs from localStorage once
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem(DISMISSED_ACCEPTED_KEY);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) setDismissedAcceptedIds(parsed);
+            }
+        } catch (err) {
+            console.warn(
+                "Failed to parse dismissedAcceptedIds from localStorage",
+                err,
+            );
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Load my profile (to get myId)
     useEffect(() => {
         async function loadMe() {
             try {
-                const res = await axios.get(
-                    domain_link + "api/user/me/",
-                    {
-                        headers: { Authorization: "Bearer " + token },
-                    },
-                );
+                if (!token) {
+                    console.warn("No token found when loading my profile");
+                    return;
+                }
+                const res = await axios.get(domain_link + "api/user/me/", {
+                    headers: { Authorization: "Bearer " + token },
+                });
                 setMyId(res.data.id);
             } catch (error) {
                 console.error("Failed to load user:", error);
@@ -64,7 +82,7 @@ export function Noti() {
         loadMe();
     }, [token]);
 
-    // Load pending friend requests and check for accepted friends
+    // Load pending friend requests and accepted friend notifications
     useEffect(() => {
         if (!myId) return;
 
@@ -72,33 +90,34 @@ export function Noti() {
             try {
                 setLoading(true);
 
-                // Load pending friend requests
+                // Incoming pending requests for me
                 const res = await axios.get(
                     `${domain_link}api/get_user_friend_request/${myId}`,
                     { headers: { Authorization: "Bearer " + token } },
                 );
+                setRequests(res.data || []);
 
-                setRequests(res.data);
-
-                // Check for recently accepted friend requests
-                // Get all friend requests I sent
+                // My sent requests (to detect accepted ones)
                 const myRequestsRes = await axios.get(
                     `${domain_link}api/friend_request/`,
                     { headers: { Authorization: "Bearer " + token } },
                 );
 
-                // Filter for requests I sent that were accepted
-                const acceptedRequests = myRequestsRes.data.filter(
+                const acceptedRequests = (myRequestsRes.data || []).filter(
                     (r: FriendRequest) =>
-                        r.user.id === myId && r.status === "approved",
+                        r.user?.id === myId && r.status === "approved",
                 );
 
-                // Create notifications for accepted requests
-                const accepted = acceptedRequests.map((r: FriendRequest) => ({
-                    accepter_name: r.friend.display_name,
-                    accepter_username: r.friend.username,
-                    accepter_id: r.friend.id,
-                }));
+                const accepted = acceptedRequests
+                    .map((r: FriendRequest) => ({
+                        accepter_name: r.friend.display_name,
+                        accepter_username: r.friend.username,
+                        accepter_id: r.friend.id,
+                    }))
+                    .filter(
+                        (a: AcceptedNotification) =>
+                            !dismissedAcceptedIds.includes(a.accepter_id),
+                    );
 
                 setAcceptedNotifications(accepted);
             } catch (error) {
@@ -109,52 +128,115 @@ export function Noti() {
         }
 
         loadNotifications();
-    }, [myId, token]);
+    }, [myId, token, dismissedAcceptedIds]);
 
     // Accept request
     const acceptRequest = async (id: number) => {
-        try {
-            await axios.patch(
-                `${domain_link}api/update_status_friend_request/${id}/approved`,
-                {},
-                { headers: { Authorization: "Bearer " + token } },
-            );
-
-            // Remove from list after successful accept
-            setRequests((prev) => prev.filter((r) => r.id !== id));
-        } catch (error) {
-            console.error("Failed to accept request:", error);
-            alert("Failed to accept friend request. Please try again.");
+        if (!token) {
+            alert("Not authenticated");
+            return;
         }
-    };
 
-    // Decline request
-    const declineRequest = async (id: number) => {
+        const prevRequests = [...requests];
+        setRequests((prev) => prev.filter((r) => r.id !== id));
+
         try {
+            // Keep using "approved" since backend and frontend expect that
             const response = await axios.patch(
-                `${domain_link}api/update_status_friend_request/${id}/declined`,
-                {},
+                `${domain_link}api/update_status_friend_request/${id}/approved`,
+                { status: "approved" },
                 { headers: { Authorization: "Bearer " + token } },
             );
 
-            console.log("Decline response:", response);
+            console.log("Accept response:", response.data);
+        } catch (err: any) {
+            console.error("Failed to accept request:", {
+                message: err.message,
+                status: err.response?.status,
+                data: err.response?.data,
+            });
 
-            // Remove from list after successful decline
-            setRequests((prev) => prev.filter((r) => r.id !== id));
-        } catch (error) {
-            console.error("Failed to decline request:", error);
-            console.error("Error details:", error);
-            alert("Failed to decline friend request. Please try again.");
+            setRequests((prev) => {
+                const already = prev.some((r) => r.id === id);
+                return already ? prev : prevRequests;
+            });
+
+            alert("Failed to accept friend request. See console for details.");
         }
     };
 
-    // Dismiss accepted notification
-    const dismissAccepted = async (accepterId: number) => {
-        // In a real app, you'd mark this as read in the backend
-        // For now, just remove from UI
-        setAcceptedNotifications((prev) =>
-            prev.filter((n) => n.accepter_id !== accepterId),
-        );
+    // Decline request — use the backend's expected 'reject' choice
+    const declineRequest = async (id: number) => {
+        if (!token) {
+            console.error("No token available for declineRequest");
+            alert("Not authenticated");
+            return;
+        }
+
+        const prevRequests = [...requests];
+        setRequests((prev) => prev.filter((r) => r.id !== id));
+
+        try {
+            // Use /reject in the path and send { status: "reject" } in body
+            const response = await axios.patch(
+                `${domain_link}api/update_status_friend_request/${id}/reject`,
+                { status: "reject" },
+                { headers: { Authorization: "Bearer " + token } },
+            );
+
+            console.log("Decline response:", response.data);
+        } catch (err: any) {
+            console.error("Failed to decline request:", {
+                message: err.message,
+                status: err.response?.status,
+                data: err.response?.data,
+            });
+
+            // rollback state - restore previous requests (avoid duplicates)
+            setRequests((prev) => {
+                const already = prev.some((r) => r.id === id);
+                return already ? prev : prevRequests;
+            });
+
+            // Friendly message extracting server validation errors if present
+            const serverError = err.response?.data;
+            let friendly = "Failed to decline friend request.";
+            if (serverError) {
+                try {
+                    if (typeof serverError === "object") {
+                        const parts: string[] = [];
+                        for (const k of Object.keys(serverError)) {
+                            const val = serverError[k];
+                            if (Array.isArray(val))
+                                parts.push(`${k}: ${val.join(", ")}`);
+                            else parts.push(`${k}: ${String(val)}`);
+                        }
+                        friendly += ` Server: ${parts.join(" | ")}`;
+                    } else {
+                        friendly += ` Server: ${String(serverError)}`;
+                    }
+                } catch (e) {
+                    friendly += " (see console)";
+                }
+            }
+            alert(friendly);
+        }
+    };
+
+    // Dismiss accepted notification and persist to localStorage
+    const dismissAccepted = (accepterId: number) => {
+        try {
+            const next = Array.from(
+                new Set([...dismissedAcceptedIds, accepterId]),
+            );
+            setDismissedAcceptedIds(next);
+            localStorage.setItem(DISMISSED_ACCEPTED_KEY, JSON.stringify(next));
+            setAcceptedNotifications((prev) =>
+                prev.filter((n) => n.accepter_id !== accepterId),
+            );
+        } catch (err) {
+            console.error("Failed to persist dismissed accepted id:", err);
+        }
     };
 
     return (
@@ -213,7 +295,7 @@ export function Noti() {
                                     </div>
                                 ))}
 
-                            {/* Pending friend requests */}
+                            {/* Pending friend requests (incoming) */}
                             {!loading &&
                                 requests.map((req) => (
                                     <div key={req.id} className="noti-item">

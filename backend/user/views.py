@@ -117,6 +117,13 @@ def get_user_by_username(request, username):
     serializer = UserSerializer(users)
     return Response(serializer.data)
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_users_by_username(request, username):
+    users = User.objects.filter(username__contains = username)
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
 
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
