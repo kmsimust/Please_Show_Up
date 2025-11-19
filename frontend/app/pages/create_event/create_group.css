@@ -1,0 +1,173 @@
+@import url(../../components/styles/layout.css);
+
+.cg-section {
+    padding: 0.5rem;
+}
+
+.cg-section-box {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--body-alt);
+}
+
+.cg-l {
+    font-size: 1.25rem;
+    color: var(--text);
+}
+
+.cg-p {
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+.cg-input {
+    margin: 0.5rem;
+    line-height: 2rem;
+    background-color: var(--body);
+    border: 2px solid var(--body-darker);
+    border-radius: 0.5rem;
+}
+
+.cg-back-button {
+    padding: 1rem;
+    color: var(--text);
+}
+
+.upload-area {
+  margin: 1rem;
+}
+
+.upload-label {
+  display: block;
+  border: 2px dashed var(--body-darker);
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: var(--body);
+}
+
+.upload-label:hover {
+  border-color: var(--primary);
+  background-color: var(--primary-faded);
+}
+
+.upload-content {
+  pointer-events: none;
+}
+
+.upload-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.upload-subtitle {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.create-group-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--body-alt);
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--body);
+  border: 1px solid var(--body-darker);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.9375rem;
+}
+
+.field-description {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.upload-label {
+  display: block;
+  border: 2px dashed var(--body-darker);
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-label:hover {
+  border-color: var(--primary);
+  background-color: var(--primary-faded);
+}
+
+.banner-preview {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.btn-submit,
+.btn-cancel {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-submit {
+  background-color: var(--primary);
+  color: var(--primary-text);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  background-color: var(--body-darker);
+  color: var(--text);
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: var(--danger);
+  color: var(--danger-text);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
