@@ -1,6 +1,7 @@
 :root {
 /* Light Theme mode */
-  --body: #f2f2f2;
+  --body-light: #ffffff;
+  --body: #f5f5f5;
   --body-alt: #ededed;
   --body-dark: #e8e8e8;
   --body-darker: #dedede;
@@ -36,6 +37,7 @@
 
 :root body .darkmode {
 /* Dark Theme mode */
+  --body-light: #31363e;
   --body: #282c34;
   --body-alt: #24272e;
   --body-dark: #1f2228;
@@ -82,7 +84,7 @@ body {
   height: 100vh; /* not 100% */
   width: 100%;
   margin: 0;
-  background-color: var(--body);
+  background-color: var(--body-light);
   color: var(--text);
 }
 

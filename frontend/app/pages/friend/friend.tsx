@@ -260,63 +260,84 @@ export function FriendPage() {
                     onClose={() => setIsSidebarOpen(false)}
                 />
 
-                <div className="content-area">
-                    <div className="friend-search-container">
-                        <div className="search-bar">
-                            <input
-                                type="text"
-                                placeholder="Search username..."
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                            />
-                        </div>
+                <div className="flex grow">
+                    <div className="friends-page">
 
-                        <div className="search-results-area">
-                            {foundUser ? (
-                                foundUser.id === myId ? (
-                                    <p>This is you!</p>
-                                ) : (
-                                    <div className="user-card">
-                                        <div className="user-info">
-                                            <strong>
-                                                {foundUser.display_name}
-                                            </strong>
-                                            <span>@{foundUser.username}</span>
+                    <div className="flex">
+                        <div className="friends-list-case">
+                            <label className="text-lg">
+                                Friends List
+                            </label>
+                            <div className="friends-list-list-case">
+                                test
+                                <div className="friends-list-user-case">
+                                    aaaaaa
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <div className="friend-search-container">
+                            <div className="search-bar">
+                                <input
+                                    type="text"
+                                    placeholder="Search username..."
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
+
+                            <div className="search-results-area">
+                                {foundUser ? (
+                                    foundUser.id === myId ? (
+                                        <p>This is you!</p>
+                                    ) : (
+                                        <div className="user-card">
+                                            <div className="user-info">
+                                                <strong>
+                                                    {foundUser.display_name}
+                                                </strong>
+                                                <span>@{foundUser.username}</span>
+                                            </div>
+
+                                            {friendStatus === "none" && (
+                                                <button
+                                                    className="add-button"
+                                                    onClick={sendFriendRequest}
+                                                >
+                                                    Add
+                                                </button>
+                                            )}
+
+                                            {friendStatus === "pending" && (
+                                                <button
+                                                    className="pending-button"
+                                                    disabled
+                                                >
+                                                    Pending
+                                                </button>
+                                            )}
+
+                                            {friendStatus === "friend" && (
+                                                <button
+                                                    className="friend-button"
+                                                    disabled
+                                                >
+                                                    Friend ✓
+                                                </button>
+                                            )}
                                         </div>
-
-                                        {friendStatus === "none" && (
-                                            <button
-                                                className="add-button"
-                                                onClick={sendFriendRequest}
-                                            >
-                                                Add
-                                            </button>
-                                        )}
-
-                                        {friendStatus === "pending" && (
-                                            <button
-                                                className="pending-button"
-                                                disabled
-                                            >
-                                                Pending
-                                            </button>
-                                        )}
-
-                                        {friendStatus === "friend" && (
-                                            <button
-                                                className="friend-button"
-                                                disabled
-                                            >
-                                                Friend ✓
-                                            </button>
-                                        )}
-                                    </div>
-                                )
-                            ) : (
-                                <p>No user found</p>
-                            )}
+                                    )
+                                ) : (
+                                    <p>No user found</p>
+                                )}
+                            </div>
                         </div>
+                    </div>
+
                     </div>
                 </div>
             </div>
