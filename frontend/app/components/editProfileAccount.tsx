@@ -155,7 +155,7 @@ export default function EditProfileAccount() {
                             <input
                                 type="text"
                                 name="date_of_birth"
-                                placeholder="Enter your date of birth"
+                                placeholder="Enter your date of birth example(2001-02-03) year-month-day"
                                 value={formData.date_of_birth}
                                 className="settings-input form-control"
                                 onChange={formChange}

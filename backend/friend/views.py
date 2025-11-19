@@ -5,6 +5,7 @@ from rest_framework import status
 from .serializers import FriendSerializer, FriendSerializerSave
 from .models import Friend
 from user.models import User
+from django.db.models import Q
 from user.serializers import UserSerializer
 
 # Create your views here.
@@ -20,19 +21,9 @@ def get_friends(request):
 @permission_classes([IsAuthenticated])
 def get_friend_by_user_id(request, user_id):
     try:
-        friends = Friend.objects.filter(user_id = user_id)
+        friends = Friend.objects.filter(Q(user_id = user_id) | Q(friend_id = user_id))
         serializer = FriendSerializer(friends, many = True)
     except Friend.DoesNotExist:
-        return Response([], status=status.HTTP_404_NOT_FOUND)
-    return Response(serializer.data)
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def get_user_by_friend_id(request, friend_id):
-    try:
-        user = User.objects.filter(user_id = friend_id)
-        serializer = UserSerializer(user, many = True)
-    except User.DoesNotExist:
         return Response([], status=status.HTTP_404_NOT_FOUND)
     return Response(serializer.data)
 

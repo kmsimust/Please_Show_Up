@@ -12,7 +12,7 @@ from user.views import get_user, get_me_user, create_user, update_user,\
     update_user_banner_image
 
 from friend.views import get_friends, create_friend, delete_friend,\
-    update_friend , get_friend_by_user_id , get_user_by_friend_id
+    update_friend , get_friend_by_user_id
 
 from group_request.views import get_group_request, create_group_request, update_group_request, delete_group_request , update_status_group_request,\
 get_invitation_by_user_id
@@ -47,7 +47,6 @@ urlpatterns = [
     #Friend table link
     path('api/friend/', get_friends),
     path('api/get_friend_by_user_id/<int:user_id>', get_friend_by_user_id),
-    path('api/get_user_by_friend_id/<int:friend_id>', get_user_by_friend_id), #this function is like above one but use for the other way round since friend isnt added 2 way so get must be 2 way
     path('api/create_friend', create_friend),
     path('api/update_friend/<int:pk>', update_friend),
     path('api/delete_friend/<int:pk>', delete_friend),
