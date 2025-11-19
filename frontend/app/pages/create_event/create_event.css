@@ -1,0 +1,76 @@
+/* main area to the right of the sidebar, under navbar */
+.event-main {
+	background-color: #f3f4f6;            /* light grey like other pages */
+	min-height: calc(100vh - 56px);       /* adjust if your navbar height differs */
+}
+
+/* white card – centered and not too wide */
+.event-card {
+	background-color: #ffffff;
+	border-radius: 12px;
+	border: 1px solid #e5e7eb;
+	padding: 24px 28px;
+	max-width: 600px;                      /* keeps form nicely sized */
+	width: 100%;
+}
+
+/* title */
+.event-title {
+	font-size: 22px;
+	font-weight: 600;
+	color: #111827;
+	margin-bottom: 24px;
+}
+
+/* each field block */
+.event-field {
+	margin-bottom: 20px;
+}
+
+/* label */
+.event-label {
+	display: block;
+	font-weight: 500;
+	color: #4b5563;
+	margin-bottom: 6px;
+}
+
+/* red star for required */
+.event-required {
+	color: #ef4444;
+}
+
+/* inputs / textarea styling */
+.event-input {
+	border-radius: 8px !important;
+	border: 1px solid #d1d5db !important;
+	font-size: 15px;
+}
+
+.event-input:focus {
+	border-color: #34d399 !important;
+	box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.25) !important;
+}
+
+/* button row */
+.event-btn-container {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 10px;
+}
+
+/* mint "Create Event" button */
+.event-submit-btn {
+	padding: 10px 30px;
+	min-width: 150px;
+	background-color: #6ee7b7;
+	color: #ffffff;
+	border-radius: 999px;
+	font-weight: 600;
+	border: none;
+}
+
+.event-submit-btn:hover {
+	background-color: #34d399;
+	color: #ffffff;
+}

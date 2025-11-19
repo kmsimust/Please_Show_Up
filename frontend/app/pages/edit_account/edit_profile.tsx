@@ -1,18 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router";
-import NavBar from "../../components/navbar";
 import Sidebar from "../../components/sidebar";
 import { AuthNavBar } from "../../components/auth_navbar";
 import "./edit.css";
 
 import EditProfileAccount from "~/components/editProfileAccount";
+import EditProfilePicture from "~/components/editProfilePicture";
 
 import "bootstrap/dist/css/bootstrap.min.css"; // try to not use bootstrap
 
-
-
-type TabKey = "profile" | "account" | "notifications" | "history";
-const VALID_TABS: TabKey[] = ["profile", "account", "notifications", "history"];
+type TabKey = "profile" | "account" ;
+const VALID_TABS: TabKey[] = ["profile", "account"];
 
 export function EditProfilePage() {
     // Every page need this function.
@@ -27,28 +25,6 @@ export function EditProfilePage() {
 
     const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
 
-    // image files handlers
-    const [avatarFile, setAvatarFile] = useState<File | null>(null);
-    const [headerFile, setHeaderFile] = useState<File | null>(null);
-    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-    const [headerPreview, setHeaderPreview] = useState<string | null>(null);
-
-    const [description, setDescription] = useState<string>("");
-    const maxDescriptionLength = 5000;
-
-    // Limits (bytes)
-    const AVATAR_MAX = 0.6 * 1024 * 1024;
-    const HEADER_MAX = 1.5 * 1024 * 1024;
-    const ALLOWED_TYPES = useMemo(
-        () => [
-            "image/jpeg",
-            "image/png",
-            "image/gif",
-            "image/webp",
-            "video/webm",
-        ],
-        [],
-    );
 
     useEffect(() => {
         if (tabParam && VALID_TABS.includes(tabParam as TabKey)) {
@@ -61,62 +37,20 @@ export function EditProfilePage() {
         navigate(`/account/${newTab}`, { replace: true });
     };
 
-    const validateFile = (file: File, maxBytes: number) => {
-        if (!ALLOWED_TYPES.includes(file.type)) {
-            alert("Invalid file type.");
-            return false;
-        }
-        if (file.size > maxBytes) {
-            alert("File too large.");
-            return false;
-        }
-        return true;
-    };
-
-    const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file && validateFile(file, AVATAR_MAX)) setAvatarFile(file);
-    };
-
-    const handleHeaderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file && validateFile(file, HEADER_MAX)) setHeaderFile(file);
-    };
-
-    // Cleanup preview URLs on unmount
-    useEffect(() => {
-    return () => {
-        if (avatarPreview) URL.revokeObjectURL(avatarPreview);
-        if (headerPreview) URL.revokeObjectURL(headerPreview);
-        };
-    }, [avatarPreview, headerPreview]);
-
-    const handleSubmitAvatar = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!avatarFile) return;
-        console.log("Avatar uploaded:", avatarFile);
-    };
-
-    const handleSubmitHeader = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!headerFile) return;
-        console.log("Header uploaded:", headerFile);
-    };
-
-    //   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    //     const value = e.target.value.slice(0, maxDescriptionLength);
-    //     setDescription(value);
-    //   };
-
     return (
         <div className="page-container">
             {/* Same top bar as GroupPage */}
-            <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+            <AuthNavBar
+                onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            />
 
             {/* Same 2-column layout as GroupPage */}
             <div className="main-content">
                 {/* Sidebar */}
-                <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+                <Sidebar
+                    isOpen={isSidebarOpen}
+                    onClose={() => setIsSidebarOpen(false)}
+                />
 
                 {/* Main content */}
                 <div className="content-area">
@@ -133,6 +67,7 @@ export function EditProfilePage() {
                                 onClick={() => handleTabChange("profile")}
                                 aria-selected={activeTab === "profile"}
                             >
+                                {/* svg omitted for brevity */}
                                 <svg
                                     className="settings-icon"
                                     xmlns="http://www.w3.org/2000/svg"
@@ -163,199 +98,14 @@ export function EditProfilePage() {
                                 <span>Account</span>
                             </button>
 
-                            <button
-                                type="button"
-                                className={`settings-nav-item ${activeTab === "notifications" ? "active" : ""}`}
-                                onClick={() => handleTabChange("notifications")}
-                                aria-selected={activeTab === "notifications"}
-                            >
-                                <svg
-                                    className="settings-icon"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    aria-hidden="true"
-                                >
-                                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
-                                </svg>
-                                <span>Notifications</span>
-                            </button>
-
-                            <button
-                                type="button"
-                                className={`settings-nav-item ${activeTab === "history" ? "active" : ""}`}
-                                onClick={() => handleTabChange("history")}
-                                aria-selected={activeTab === "history"}
-                            >
-                                <svg
-                                    className="settings-icon"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    aria-hidden="true"
-                                >
-                                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
-                                </svg>
-                                <span>History</span>
-                            </button>
+                        
                         </div>
 
                         {/* Settings Content */}
                         <div className="settings-content">
-                            {activeTab === "profile" && (
-                                <>
-                                    <h1 className="settings-title">
-                                        Profile picture settings
-                                    </h1>
+                            {activeTab === "profile" && <EditProfilePicture />}
 
-                                    {/* Avatar */}
-                                    <div className="settings-section">
-                                        <h2 className="section-title">
-                                            Avatar
-                                        </h2>
-                                        <p className="section-description">
-                                            File Size: &lt; 0.6MB, File Formats:
-                                            | .jpg | .png | .gif | .webp | .webm
-                                            |, Recommended resolution: 300×300
-                                        </p>
-
-                                        <form onSubmit={handleSubmitAvatar}>
-                                            <div className="upload-area">
-                                                <input
-                                                    type="file"
-                                                    id="avatar-upload"
-                                                    accept=".jpg,.jpeg,.png,.gif,.webp,.webm"
-                                                    onChange={
-                                                        handleAvatarUpload
-                                                    }
-                                                    hidden
-                                                />
-                                                <label
-                                                    htmlFor="avatar-upload"
-                                                    className="upload-label"
-                                                >
-                                                    <div className="upload-content">
-                                                        <p className="upload-title">
-                                                            Upload file(s)
-                                                        </p>
-                                                        <p className="upload-subtitle">
-                                                            Drop file(s) here,
-                                                            or click to select.
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                                {avatarFile && (
-                                                    <p className="file-selected">
-                                                        Selected:{" "}
-                                                        {avatarFile.name}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <button
-                                                type="submit"
-                                                className="submit-btn"
-                                                disabled={!avatarFile}
-                                            >
-                                                Submit
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                    {/* Header */}
-                                    <div className="settings-section">
-                                        <h2 className="section-title">
-                                            Banner
-                                        </h2>
-                                        <p className="section-description">
-                                            File Size: &lt; 1.5MB, File Formats:
-                                            | .jpg | .png | .gif | .webp | .webm
-                                            |, Recommended resolution: 1500×430
-                                        </p>
-
-                                        <form onSubmit={handleSubmitHeader}>
-                                            <div className="upload-area">
-                                                <input
-                                                    type="file"
-                                                    id="header-upload"
-                                                    accept=".jpg,.jpeg,.png,.gif,.webp,.webm"
-                                                    onChange={
-                                                        handleHeaderUpload
-                                                    }
-                                                    hidden
-                                                />
-                                                <label
-                                                    htmlFor="header-upload"
-                                                    className="upload-label"
-                                                >
-                                                    <div className="upload-content">
-                                                        <p className="upload-title">
-                                                            Upload file(s)
-                                                        </p>
-                                                        <p className="upload-subtitle">
-                                                            Drop file(s) here,
-                                                            or click to select.
-                                                        </p>
-                                                    </div>
-                                                </label>
-                                                {headerFile && (
-                                                    <p className="file-selected">
-                                                        Selected:{" "}
-                                                        {headerFile.name}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <button
-                                                type="submit"
-                                                className="submit-btn"
-                                                disabled={!headerFile}
-                                            >
-                                                Submit
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                    {/* Description */}
-                                    {/* <div className="settings-section">
-                    <h2 className="section-title">Description</h2>
-                    <p className="section-description">Visible on your profile page. You can tell users about yourself.</p>
-
-                    <form onSubmit={(e) => e.preventDefault()}>
-                      <label htmlFor="profile-description" className="sr-only">
-                        Profile description
-                      </label>
-                      <textarea
-                        id="profile-description"
-                        className="settings-input textarea"
-                        maxLength={maxDescriptionLength}
-                        value={description}
-                        onChange={handleDescriptionChange}
-                        rows={6}
-                        placeholder="Say hi 👋, what you’re studying, interests, etc."
-                      />
-                      <div className="char-counter">
-                        {description.length}/{maxDescriptionLength}
-                      </div>
-                      <button type="submit" className="submit-btn">
-                        Submit
-                      </button>
-                    </form>
-                  </div> */}
-                                </>
-                            )}
-
-                            {activeTab === "account" && (
-								<EditProfileAccount/>
-                            )}
-
-                            {activeTab !== "profile" &&
-                                activeTab !== "account" && (
-                                    <div className="coming-soon">
-                                        <h2>
-                                            {activeTab.charAt(0).toUpperCase() +
-                                                activeTab.slice(1)}{" "}
-                                            Settings
-                                        </h2>
-                                        <p>Coming soon...</p>
-                                    </div>
-                                )}
+                            {activeTab === "account" && <EditProfileAccount />}
                         </div>
                     </div>
                 </div>

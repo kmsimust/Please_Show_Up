@@ -4,7 +4,7 @@ import { useAccessTokenWatcher } from "./auth-cookie";
 import { useEffect } from "react";
 
 // If you prefer a module-level instance:
-export const api = axios.create({
+export const api_instance = axios.create({
   baseURL: "http://localhost:8000",
 });
 
