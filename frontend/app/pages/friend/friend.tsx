@@ -294,8 +294,8 @@ export function FriendPage() {
                 <div className="friends-page">
 
                     {/* Friends List */}
-                    <div className="flex">
-                        <div className="friends-list-case">
+                    <div className="flex grow-3 mr-8">
+                        <div className="friends-list-case grow">
                             <label className="text-lg">
                                 Friends List&nbsp;&nbsp;—&nbsp;&nbsp;{myFriends.length}
                             </label>
@@ -312,27 +312,36 @@ export function FriendPage() {
                                 ) : (
                                     /* Else */
                                     myFriends.map(user => (
-                                        <div key={user.id} className="friends-list-user-case">
-                                            <img
-                                                className="common-pfp-lg bg-blue-500 mr-4"
-                                                src={user.profile_image || "/default-profile.png"}
-                                            />
-                                            <div>
-                                                <label className="friends-list-user-display-name">{user.display_name}</label>
-                                                <p>@{user.username}</p>
+                                        <div className="friends-list-user-case">
+                                            <div key={user.id} className="flex items-center">
+                                                <img
+                                                    className="common-pfp-lg bg-blue-500 mr-4"
+                                                    src={user.profile_image || "/default-profile.png"}
+                                                />
+                                                <div>
+                                                    <label className="friends-list-user-display-name">{user.display_name}</label>
+                                                    <p>@{user.username}</p>
+                                                </div>
                                             </div>
+                                            {/* If you want a button next to each friend, uncomment below */}
+
+                                            {/*<button className="btn common-btn">button</button>*/}
                                         </div>
                                     ))
                                 )}
                                 {/* User in friends list template
                                 <div className="friends-list-user-case">
-                                    <img
-                                        className="common-pfp-lg bg-blue-500 mr-4"
-                                    />
-                                    <div>
-                                        <label className="friends-list-user-display-name"></label>
-                                        <p>@username</p>
+                                    <div className="flex items-center">
+                                        <img
+                                            className="common-pfp-lg bg-blue-500 mr-4"
+                                        />
+                                        <div>
+                                            <label className="friends-list-user-display-name"></label>
+                                            <p>@username</p>
+                                        </div>
                                     </div>
+
+                                    <button className="btn common-btn">button</button>
                                 </div>
                                 */}
                                 
@@ -341,8 +350,9 @@ export function FriendPage() {
                     </div>
 
                     {/* Search Friends */}
-                    <div>
+                    <div className="grow-1">
                         <div className="friend-search-container">
+                        <label className="text-lg">Add Friend</label>
                         <div className="search-bar">
                             <input
                                 type="text"

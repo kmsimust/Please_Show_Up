@@ -309,7 +309,6 @@
 }
 
 .friend-search-container {
-  width: 36rem;
   background-color: var(--body-alt);
   border-radius: 8px;
   padding: 20px 24px;
@@ -357,7 +356,7 @@
 /* --- Search Bar Styles --- */
 .search-bar {
   position: relative;
-  margin-bottom: 24px;
+  margin: 1rem 0;
 }
 
 .search-bar .search-icon {
@@ -485,7 +484,6 @@
 .friends-list-case {
   display: flex;
   flex-direction: column;
-  width: 42rem;
   background-color: var(--body-alt);
   border-radius: 1rem;
   padding: 1rem 2rem;
@@ -509,6 +507,7 @@
   border-color: var(--body-outline);
   border-width: 0 0 1px 0;
   align-items: center;
+  justify-content: space-between;
 }
 
 .friends-list-user-display-name {
