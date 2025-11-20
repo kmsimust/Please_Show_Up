@@ -324,6 +324,18 @@ export function FriendPage() {
                                         </div>
                                     ))
                                 )}
+                                {/* User in friends list template
+                                <div className="friends-list-user-case">
+                                    <img
+                                        className="common-pfp-lg bg-blue-500 mr-4"
+                                    />
+                                    <div>
+                                        <label className="friends-list-user-display-name"></label>
+                                        <p>@username</p>
+                                    </div>
+                                </div>
+                                */}
+                                
                             </div>
                         </div>
                     </div>

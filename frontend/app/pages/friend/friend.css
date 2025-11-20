@@ -497,8 +497,9 @@
   flex-grow: 1;
   background-color: var(--body);
   margin: 1rem 0;
-  padding: 1rem;
+  padding: 0 1rem;
   border-radius: 1rem;
+  overflow-y: scroll;
 }
 
 .friends-list-user-case {
