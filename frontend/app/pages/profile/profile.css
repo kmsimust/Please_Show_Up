@@ -3,7 +3,7 @@
 .profile-case {
 	width: 100%;
 	margin: 60px 80px 0px;
-	border-radius: 20px;
+	border-radius: 1rem 1rem 0 0;
 	background-color: #e6e6e6;
 }
 
@@ -51,6 +51,11 @@
 	padding: 0.5em 2em;
 	border-radius: 2em;
 	background-color: var(--app-green);
+}
+
+.profile-edit-profile-button {
+  border-radius: 2rem;
+  padding: 1rem 2rem;
 }
 
 .profile-user-edit-profile-button:hover {

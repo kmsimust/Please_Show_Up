@@ -1,3 +1,5 @@
+import "../../components/styles/styles.css";
+import "../../components/styles/common.css";
 import "./profile.css";
 import Sidebar from "../../components/sidebar";
 import { AuthNavBar } from "~/components/auth_navbar";
@@ -6,7 +8,7 @@ import React, { useEffect, useState } from "react";
 
 import { get_user_data } from "~/services/user";
 
-import "bootstrap/dist/css/bootstrap.min.css"; // try to not use bootstrap
+//import "bootstrap/dist/css/bootstrap.min.css"; // try to not use bootstrap
 
 
 export function ProfilePage() {
@@ -37,7 +39,7 @@ export function ProfilePage() {
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
                 
         <div className="content-area">
-        <div className="d-flex justify-content-center p-5">
+        <div className="flex justify-center p-5">
             Loading profile...
         </div>
         </div>
@@ -101,7 +103,7 @@ export function ProfilePage() {
                                 }
                             />
 
-                            <div className="profile-user-name-case">
+                            <div className="profile-user-name-case"> 
                                 <div className="profile-user-display-name">
                                     {userdata.display_name || userdata.username}
                                 </div>
@@ -111,7 +113,7 @@ export function ProfilePage() {
 
                         <div>
                             <a href="/account/:tab?">
-                                <button className="profile-user-edit-profile-button">
+                                <button className="btn common-btn profile-edit-profile-button">
                                     Edit profile
                                 </button>
                             </a>
