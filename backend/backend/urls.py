@@ -15,7 +15,7 @@ from friend.views import get_friends, create_friend, delete_friend,\
     update_friend , get_friend_by_user_id
 
 from group_request.views import get_group_request, create_group_request, update_group_request, delete_group_request , update_status_group_request,\
-get_invitation_by_user_id
+get_invitation_by_user_id , get_invitation_by_group_id
 
 from group.views import get_group, create_group, update_group_info, delete_group, get_group_by_user_id , \
 get_group_info_by_pk , update_group_banner
@@ -72,6 +72,7 @@ urlpatterns = [
 
     #group request table
     path('api/get_group_request', get_group_request),
+    path('api/get_invitation_by_group_id/<int:group_id>', get_invitation_by_group_id),
     path('api/create_group_request', create_group_request),
     path('api/update_group_request/<int:pk>', update_group_request),
     path('api/delete_group_request/<int:pk>', delete_group_request),

@@ -5,4 +5,5 @@ export interface Friend {
     user: User;
     friend: User;
     created_at: Date;
+    invite_status?: string; 
 }

@@ -142,7 +142,7 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
                     </svg>
                 </button>
                 <Link to="/group" className="nav-logo">
-                    Place? Holder
+                    About us
                 </Link>
             </div>
 
