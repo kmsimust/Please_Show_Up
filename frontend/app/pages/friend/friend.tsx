@@ -4,6 +4,7 @@ import Sidebar from "../../components/sidebar";
 import { useState, useEffect } from "react";
 import { AuthNavBar } from "../../components/auth_navbar";
 import Cookies from "js-cookie";
+import '../../components/styles/common.css';
 import "./friend.css";
 import { get_user_by_username } from "~/services/user";
 
@@ -46,11 +47,12 @@ export function FriendPage() {
     const [username, setUsername] = useState<string>("");
     const [foundUsers, setFoundUsers] = useState<UserWithStatus[]>([]);
     const [myId, setMyId] = useState<number | null>(null);
+    const [myFriends, setMyFriends] = useState<UserData[]>([]);
 
     const token = Cookies.get("accessToken");
     const domain_link = "http://localhost:8000/";
 
-    // Load logged-in user info
+    // Load logged-in user info (get myId)
     useEffect(() => {
         async function loadMe() {
             try {
@@ -65,6 +67,36 @@ export function FriendPage() {
         }
         loadMe();
     }, [token]);
+
+    // This was vibe coded except for the filterMyFriends function
+    // Fetch friends list after myId is set
+    useEffect(() => {
+        function filterMyFriends(friends: Friend) {
+            if (friends.user.id === myId) {
+                return friends.friend;
+            } else {
+                return friends.user;
+            }
+        }
+
+        async function fetchUserFriends() {
+            if (!token || !myId) return;
+            try {
+                const response = await fetch(`${domain_link}api/get_friends_from_user_id/${myId}`, {
+                    headers: { Authorization: "Bearer " + token },
+                });
+                if (!response.ok) throw new Error("Failed to fetch friends");
+                const data = await response.json();
+                const friendUsers = data.map(filterMyFriends);
+
+                setMyFriends(friendUsers);
+            } catch (error) {
+                console.error("Error fetching friends:", error);
+            }
+        }
+
+        fetchUserFriends();
+    }, [myId, token]);
 
     // Check relationship for a specific user
     async function checkRelationship(targetId: number): Promise<{
@@ -260,23 +292,44 @@ export function FriendPage() {
                 />
 
                 <div className="flex grow">
-                    <div className="friends-page">
+                <div className="friends-page">
 
+                    {/* Friends List */}
                     <div className="flex">
                         <div className="friends-list-case">
                             <label className="text-lg">
-                                Friends List
+                                Friends List&nbsp;&nbsp;—&nbsp;&nbsp;{myFriends.length}
                             </label>
+
                             <div className="friends-list-list-case">
-                                test
-                                <div className="friends-list-user-case">
-                                    aaaaaa
-                                </div>
+                                {myFriends.length === 0 ? (
+                                    /* If friends list empty */
+                                    <div className="flex grow flex-col">
+                                        <div className="grow justify-center flex items-center">
+                                            <p>You have no friends yet.</p>
+                                        </div>
+                                        <div className="grow"></div>
+                                    </div>
+                                ) : (
+                                    /* Else */
+                                    myFriends.map(user => (
+                                        <div key={user.id} className="friends-list-user-case">
+                                            <img
+                                                className="common-pfp-lg bg-blue-500 mr-4"
+                                                src={user.profile_image || "/default-profile.png"}
+                                            />
+                                            <div>
+                                                <label className="friends-list-user-display-name">{user.display_name}</label>
+                                                <p>@{user.username}</p>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>
 
-
+                    {/* Search Friends */}
                     <div>
                         <div className="friend-search-container">
                         <div className="search-bar">
@@ -342,7 +395,7 @@ export function FriendPage() {
                         </div>
 
                     </div>
-                    </div>
+                </div>
                 </div>
             </div>
         </div>

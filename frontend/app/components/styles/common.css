@@ -49,3 +49,8 @@ modify further with additional tags and classes for use
   height: 42px;
   border-radius: 50%;
 }
+.common-pfp-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}

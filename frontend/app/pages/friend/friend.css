@@ -501,9 +501,16 @@
   border-radius: 1rem;
 }
 
-.friend-list-user-case {
+.friends-list-user-case {
   display: flex;
   border-style: solid;
-  border-color: var(--body-darker);
-  border-width: 10px;
+  padding: 1rem 0;
+  border-color: var(--body-outline);
+  border-width: 0 0 1px 0;
+  align-items: center;
+}
+
+.friends-list-user-display-name {
+  color: var(--text);
+  font-size: 1.125rem;
 }

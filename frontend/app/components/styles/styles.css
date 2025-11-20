@@ -5,6 +5,7 @@
   --body-alt: #ededed;
   --body-dark: #e8e8e8;
   --body-darker: #dedede;
+  --body-outline: #d1d1d1;
   --text: #444;
   --muted: #848484;
   --primary: #1abc9c;
@@ -42,6 +43,7 @@
   --body-alt: #24272e;
   --body-dark: #1f2228;
   --body-darker: #16181d;
+  --body-outline: #3c424b;
   --text: #f8f8ff;
   --muted: #ddd;
   --primary: #61afef;
