@@ -82,12 +82,11 @@ export function FriendPage() {
         async function fetchUserFriends() {
             if (!token || !myId) return;
             try {
-                const response = await fetch(`${domain_link}api/get_friends_from_user_id/${myId}`, {
+                const response = await axios.get(`${domain_link}api/get_friends_from_user_id/${myId}`, {
                     headers: { Authorization: "Bearer " + token },
                 });
-                if (!response.ok) throw new Error("Failed to fetch friends");
-                const data = await response.json();
-                const friendUsers = data.map(filterMyFriends);
+
+                const friendUsers = (response.data as Friend[]).map(filterMyFriends);
 
                 setMyFriends(friendUsers);
             } catch (error) {
