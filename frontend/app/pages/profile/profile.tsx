@@ -118,6 +118,7 @@ export function ProfilePage() {
                                     <p>phone number: {userdata?.phone_number}</p>
                                     <p>Birthday: {userdata?.date_of_birth}</p>
                                     <p>Gender: {userdata?.gender}</p>
+                                    <p>{userdata.first_name} {userdata.last_name}</p>
                                 </div>
                             </div>
 
