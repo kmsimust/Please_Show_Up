@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import '../../components/styles/common.css';
 import "./friend.css";
 import { get_user_by_username } from "~/services/user";
+import { showPicture } from '../../utils/text-util';
 
 interface Friend {
     id: number;
