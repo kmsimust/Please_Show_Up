@@ -72,38 +72,23 @@ export function FriendPage() {
     // This was vibe coded except for the filterMyFriends function
     // Fetch friends list after myId is set
     useEffect(() => {
-        function filterMyFriends(friend: Friend): UserData {
-            console.log("Filtering friend:", friend, "myId:", myId);
-            if (friend.user.id === myId) {
-                console.log("Returning friend (other user):", friend.friend);
-                return friend.friend;
+        function filterMyFriends(friends: Friend) {
+            if (friends.user.id === myId) {
+                return friends.friend;
             } else {
-                console.log("Returning user (me):", friend.user);
-                return friend.user;
+                return friends.user;
             }
         }
 
         async function fetchUserFriends() {
-            if (!token || !myId) {
-                console.log("Skipping fetch: token=" + !!token + ", myId=" + myId);
-                return;
-            }
+            if (!token || !myId) return;
             try {
-                console.log("Fetching friends for user:", myId);
-                const response = await axios.get(`${domain_link}api/get_friend_by_user_id/${myId}`, {
+                const response = await axios.get(`${domain_link}api/get_friends_from_user_id/${myId}`, {
                     headers: { Authorization: "Bearer " + token },
                 });
 
-                console.log("Friends API response:", response.data);
-                if (!response.data || response.data.length === 0) {
-                    console.log("No friends returned from API");
-                    setMyFriends([]);
-                    return;
-                }
-
                 const friendUsers = (response.data as Friend[]).map(filterMyFriends);
 
-                console.log("Filtered friend users:", friendUsers);
                 setMyFriends(friendUsers);
             } catch (error) {
                 console.error("Error fetching friends:", error);
@@ -332,7 +317,7 @@ export function FriendPage() {
                                             <div key={user.id} className="flex items-center">
                                                 <img
                                                     className="common-pfp-lg bg-blue-500 mr-4"
-                                                    src={ domain_link + "public/" +  showPicture(user.profile_image, "default", "/default_user.png")}
+                                                    src={user.profile_image || "/default-profile.png"}
                                                 />
                                                 <div>
                                                     <label className="friends-list-user-display-name">{user.display_name}</label>
