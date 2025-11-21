@@ -54,3 +54,11 @@ modify further with additional tags and classes for use
   height: 64px;
   border-radius: 50%;
 }
+
+.common-muted {
+  color: var(--muted);
+}
+
+.common-faded {
+  color: var(--faded);
+}

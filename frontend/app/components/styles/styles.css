@@ -8,6 +8,7 @@
   --body-outline: #d1d1d1;
   --text: #444;
   --muted: #848484;
+  --faded: #b9b9b9;
   --primary: #1abc9c;
   --primary-text: #f8f8ff;
   --primary-dark: #1da68b;
@@ -46,6 +47,7 @@
   --body-outline: #3c424b;
   --text: #f8f8ff;
   --muted: #ddd;
+  --faded: #c8c8c8;
   --primary: #61afef;
   --primary-text: #f8f8ff;
   --primary-dark: #2993e9;
