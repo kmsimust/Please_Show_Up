@@ -165,7 +165,7 @@ export function InGroup() {
         })
     }
 
-    if(!group_id) {
+    if(group_id) {
         return <div>invalid request</div>
     }
     

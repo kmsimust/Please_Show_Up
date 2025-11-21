@@ -48,5 +48,17 @@ modify further with additional tags and classes for use
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  object-fit: cover;
-} 
+}
+.common-pfp-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.common-muted {
+  color: var(--muted);
+}
+
+.common-faded {
+  color: var(--faded);
+}

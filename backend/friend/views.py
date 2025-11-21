@@ -27,6 +27,26 @@ def get_friend_by_user_id(request, user_id):
         return Response([], status=status.HTTP_404_NOT_FOUND)
     return Response(serializer.data)
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_user_by_friend_id(request, friend_id):
+    try:
+        user = User.objects.filter(user_id = friend_id)
+        serializer = UserSerializer(user, many = True)
+    except User.DoesNotExist:
+        return Response([], status=status.HTTP_404_NOT_FOUND)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_friends_from_user_id(request, user_id):
+    try:
+        friends = Friend.objects.filter(user_id = user_id) | Friend.objects.filter(friend_id = user_id)
+        serializer = FriendSerializer(friends, many = True)
+    except Friend.DoesNotExist:
+        return Response([], status=status.HTTP_404_NOT_FOUND)
+    return Response(serializer.data)
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_friend(request):

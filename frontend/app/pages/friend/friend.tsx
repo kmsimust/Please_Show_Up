@@ -66,6 +66,35 @@ export function FriendPage() {
         loadMe();
     }, [token]);
 
+    // This was vibe coded except for the filterMyFriends function
+    // Fetch friends list after myId is set
+    useEffect(() => {
+        function filterMyFriends(friends: Friend) {
+            if (friends.user.id === myId) {
+                return friends.friend;
+            } else {
+                return friends.user;
+            }
+        }
+
+        async function fetchUserFriends() {
+            if (!token || !myId) return;
+            try {
+                const response = await axios.get(`${domain_link}api/get_friends_from_user_id/${myId}`, {
+                    headers: { Authorization: "Bearer " + token },
+                });
+
+                const friendUsers = (response.data as Friend[]).map(filterMyFriends);
+
+                setMyFriends(friendUsers);
+            } catch (error) {
+                console.error("Error fetching friends:", error);
+            }
+        }
+
+        fetchUserFriends();
+    }, [myId, token]);
+
     // Check relationship for a specific user
     async function checkRelationship(targetId: number): Promise<{
         status: "none" | "pending" | "friend";
@@ -259,8 +288,69 @@ export function FriendPage() {
                     onClose={() => setIsSidebarOpen(false)}
                 />
 
-                <div className="content-area">
-                    <div className="friend-search-container">
+                <div className="flex grow">
+                <div className="friends-page">
+
+                    {/* Friends List */}
+                    <div className="flex grow-3 mr-8">
+                        <div className="friends-list-case grow">
+                            <label className="text-lg">
+                                Friends List&nbsp;&nbsp;—&nbsp;&nbsp;{myFriends.length}
+                            </label>
+
+                            <div className="friends-list-list-case">
+                                {myFriends.length === 0 ? (
+                                    /* If friends list empty */
+                                    <div className="flex grow flex-col">
+                                        <div className="grow justify-center flex items-center">
+                                            <p>You have no friends yet.</p>
+                                        </div>
+                                        <div className="grow"></div>
+                                    </div>
+                                ) : (
+                                    /* Else */
+                                    myFriends.map(user => (
+                                        <div className="friends-list-user-case">
+                                            <div key={user.id} className="flex items-center">
+                                                <img
+                                                    className="common-pfp-lg bg-blue-500 mr-4"
+                                                    src={user.profile_image || "/default-profile.png"}
+                                                />
+                                                <div>
+                                                    <label className="friends-list-user-display-name">{user.display_name}</label>
+                                                    <p>@{user.username}</p>
+                                                </div>
+                                            </div>
+                                            {/* If you want a button next to each friend, uncomment below */}
+
+                                            {/*<button className="btn common-btn">button</button>*/}
+                                        </div>
+                                    ))
+                                )}
+                                {/* User in friends list template
+                                <div className="friends-list-user-case">
+                                    <div className="flex items-center">
+                                        <img
+                                            className="common-pfp-lg bg-blue-500 mr-4"
+                                        />
+                                        <div>
+                                            <label className="friends-list-user-display-name"></label>
+                                            <p>@username</p>
+                                        </div>
+                                    </div>
+
+                                    <button className="btn common-btn">button</button>
+                                </div>
+                                */}
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Search Friends */}
+                    <div className="grow-1">
+                        <div className="friend-search-container">
+                        <label className="text-lg">Add Friend</label>
                         <div className="search-bar">
                             <input
                                 type="text"
