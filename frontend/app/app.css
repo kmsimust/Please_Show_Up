@@ -1,7 +1,7 @@
-@import "tailwindcss";
-/*@plugin "daisyui" {
+@import "tailwindcss" prefix(tw);
+@plugin "daisyui" {
   themes: light --default, dark;
-}*/
+}
 @import "./components/styles/styles.css";
 
 @theme {
@@ -11,7 +11,7 @@
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply tw:bg-white tw:dark:bg-gray-950;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;

@@ -173,10 +173,10 @@ export function InGroup() {
         <div>
             <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
-            <div className="flex">
+            <div className="tw:flex">
                 <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-                <div className="grow">
+                <div className="tw:grow">
                 <div className='ig-page'>
                     <div>
                         Content here GROUP ID: {group_id}
@@ -185,7 +185,7 @@ export function InGroup() {
                     {/* Side content */}
                     <div>
                         <Link to = {{ pathname: "/create_event", search: "?group_id="+group_id }}>
-                            <button className="btn common-btn w-100 d-flex justify-content-between">
+                            <button className="tw:btn common-btn w-100 d-flex justify-content-between">
                                 Create an Event
                                 <i className="bi bi-plus-lg"></i>
                             </button>
@@ -222,7 +222,7 @@ export function InGroup() {
                         
                         <div>
                             <button 
-                                className="btn common-btn w-100 d-flex justify-content-between"
+                                className="rw:btn common-btn w-100 d-flex justify-content-between"
                                 onClick={openInviteModal}
                             >
                                 Invite People
