@@ -304,12 +304,14 @@
 .content-area {
   flex-grow: 1;
   padding: 24px;
-  /*background-color: #f4f7f6; /* Light gray background like image */
+  background-color: #f4f7f6; /* Light gray background like image */
   overflow-y: auto; /* Allows scrolling if content is long */
 }
 
 .friend-search-container {
-  background-color: var(--body-alt);
+  max-width: 700px;
+  margin: 0 auto; /* Center the container */
+  background-color: #ffffff;
   border-radius: 8px;
   padding: 20px 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -356,7 +358,7 @@
 /* --- Search Bar Styles --- */
 .search-bar {
   position: relative;
-  margin: 1rem 0;
+  margin-bottom: 24px;
 }
 
 .search-bar .search-icon {
@@ -472,45 +474,4 @@
   background-color: #fcf2f2;
   border: 1px solid #f0c7c5;
   border-radius: 8px;
-}
-
-.friends-page {
-  display: flex;
-  flex-grow: 1;
-  justify-content: space-between;
-  padding: 2rem 8rem;
-}
-
-.friends-list-case {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--body-alt);
-  border-radius: 1rem;
-  padding: 1rem 2rem;
-}
-
-.friends-list-list-case {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  background-color: var(--body);
-  margin: 1rem 0;
-  padding: 0 1rem;
-  border-radius: 1rem;
-  overflow-y: scroll;
-}
-
-.friends-list-user-case {
-  display: flex;
-  border-style: solid;
-  padding: 1rem 0;
-  border-color: var(--body-outline);
-  border-width: 0 0 1px 0;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.friends-list-user-display-name {
-  color: var(--text);
-  font-size: 1.125rem;
 }
