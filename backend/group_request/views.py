@@ -27,6 +27,13 @@ def get_invitation_by_user_id(request, invited_id):
     serializer = GroupRequestSerializers(group_request, many = True)
     return Response(serializer.data)
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_invitation_by_group_id(request, group_id):
+    group_request = GroupRequest.objects.filter(group = group_id)
+    serializer = GroupRequestSerializers(group_request, many = True)
+    return Response(serializer.data)
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_group_request(request):

@@ -1,7 +1,9 @@
 import Cookies from "js-cookie";
 import axios from "axios";
+import type { GroupRequestCreate } from "~/types/group_request";
+import { api_instance } from "~/utils/axios";
 
-export async function get_group_member(group_id: number) {
+export async function get_invitation_by_group_id(group_id: number) {
     let result = [];
     let error = undefined;
 
@@ -9,7 +11,7 @@ export async function get_group_member(group_id: number) {
         // ✅ use cookie token first
         let token = Cookies.get("accessToken");
         // ✅ API request
-        const resp = await axios.get("http://localhost:8000/api/get_all_member_by_group_id/" + group_id, {
+        const resp = await api_instance.get("/api/get_invitation_by_group_id/" + group_id, {
             headers: { Authorization: "Bearer " + token },
             // ❌ REMOVE withCredentials unless your backend requires cookies
             // withCredentials: true,
@@ -22,23 +24,23 @@ export async function get_group_member(group_id: number) {
     return {result, error};
 }
 
-export async function get_all_group_by_member_id(member_id: number) {
-    let result = [];
+export async function create_group_request(body: GroupRequestCreate) {
+    let result = {};
     let error = undefined;
 
     try {
         // ✅ use cookie token first
         let token = Cookies.get("accessToken");
         // ✅ API request
-        const resp = await axios.get("http://localhost:8000/api/get_all_group_by_member_id/" + member_id, {
+        const resp = await api_instance.post("/api/create_group_request", body, {
             headers: { Authorization: "Bearer " + token },
             // ❌ REMOVE withCredentials unless your backend requires cookies
             // withCredentials: true,
         });
         result = resp.data;
     } catch (err: any) {
-        console.error("ERROR at get_group:", err);
-        error = err.response?.data || "Failed to load profile.";
+        console.error("ERROR at create_group_request:", err);
+        error = err.response?.data || "Failed to load create_group_request.";
     }
     return {result, error};
 }

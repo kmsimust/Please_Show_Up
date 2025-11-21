@@ -15,7 +15,7 @@ from friend.views import get_friends, create_friend, delete_friend,\
     update_friend , get_friend_by_user_id , get_user_by_friend_id , get_friends_from_user_id
 
 from group_request.views import get_group_request, create_group_request, update_group_request, delete_group_request , update_status_group_request,\
-get_invitation_by_user_id
+get_invitation_by_user_id , get_invitation_by_group_id
 
 from group.views import get_group, create_group, update_group_info, delete_group, get_group_by_user_id , \
 get_group_info_by_pk , update_group_banner
@@ -47,7 +47,6 @@ urlpatterns = [
     #Friend table link
     path('api/friend/', get_friends),
     path('api/get_friend_by_user_id/<int:user_id>', get_friend_by_user_id),
-    path('api/get_user_by_friend_id/<int:friend_id>', get_user_by_friend_id), #this function is like above one but use for the other way round since friend isnt added 2 way so get must be 2 way
     path('api/create_friend', create_friend),
     path('api/update_friend/<int:pk>', update_friend),
     path('api/delete_friend/<int:pk>', delete_friend),
@@ -74,6 +73,7 @@ urlpatterns = [
 
     #group request table
     path('api/get_group_request', get_group_request),
+    path('api/get_invitation_by_group_id/<int:group_id>', get_invitation_by_group_id),
     path('api/create_group_request', create_group_request),
     path('api/update_group_request/<int:pk>', update_group_request),
     path('api/delete_group_request/<int:pk>', delete_group_request),

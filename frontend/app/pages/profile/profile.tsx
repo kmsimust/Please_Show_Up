@@ -114,6 +114,10 @@ export function ProfilePage() {
                                         @{userdata?.username || "user"}
                                     </span>
                                     <div className="m-[0.5rem]"></div>
+                                    <p>Firstname: {userdata.first_name} Lastname: {userdata.last_name}</p>
+                                    <p>phone number: {userdata?.phone_number}</p>
+                                    <p>Birthday: {userdata?.date_of_birth}</p>
+                                    <p>Gender: {userdata?.gender}</p>
                                     <p>{userdata.first_name} {userdata.last_name}</p>
                                 </div>
                             </div>
