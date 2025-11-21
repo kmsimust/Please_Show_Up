@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import type { Group } from '~/types/group';
+
 
 import type { Friend } from '~/types/friend';
 import { get_friend_data } from "~/services/friend";
@@ -16,6 +19,7 @@ import '../../components/styles/common.css'
 import './in_group.css'
 import type { GroupMember } from '~/types/group_member';
 import type { GroupRequestCreate } from '~/types/group_request';
+import { get_group_info_by_pk } from '~/services/group';
 import { get_group_member } from '~/services/group_member';
 import { api_instance } from '~/utils/axios';
 
@@ -30,11 +34,12 @@ export function InGroup() {
     const [showInvite, setShowInvite] = useState<boolean>(false);
     const [friendList, setFriendList] = useState<Friend[] | null>([]);
     const [groupMemberList, setGroupMemberList] = useState<GroupMember[] | null>([]);
+    const [group_info, setGroupInfo] = useState<Group | null>(null);
     const [error, setError] = useState<string | null>("");
     const [groupRequests, setGroupRequests] = useState([]);
 
 
-    const group_id = Number(searchParams.get('group_id'))
+    const group_id = Number(searchParams.get('group_id'));
 	const [isLoading, setIsLoading] = useState<boolean | null>(true); // Add loading state
 
     useEffect(() => {
@@ -44,7 +49,8 @@ export function InGroup() {
     async function page_load() {
             setIsLoading(true);
             const { result, error } = await get_group_member(group_id);
-    
+            const { result: groupIf, error: info_error } = await get_group_info_by_pk(group_id);
+            setGroupInfo(groupIf);
             for(const obj of result) {
                 const {result: members, error: members_error} = await get_group_member(obj.id);
                 obj.members = members;
@@ -178,10 +184,12 @@ export function InGroup() {
 
                     {/* Side content */}
                     <div>
-                        <button className="btn common-btn w-100 d-flex justify-content-between">
-                            Create an Event
-                            <i className="bi bi-plus-lg"></i>
-                        </button>
+                        <Link to = {{ pathname: "/create_event", search: "?group_id="+group_id }}>
+                            <button className="btn common-btn w-100 d-flex justify-content-between">
+                                Create an Event
+                                <i className="bi bi-plus-lg"></i>
+                            </button>
+                        </Link>
 
                         <div className='ig-side-section'>
                             <div className='ig-group-member-button'>
@@ -195,13 +203,14 @@ export function InGroup() {
                                 {user && (
                                     <div className='ig-side-member-case'>
                                         <img
-                                            src={BACKEND_PUBLIC_URL + showPicture(user?.profile_image, "default", "/default_user.png")}
+                                            src={BACKEND_PUBLIC_URL + showPicture(group_info?.owner?.profile_image, "default", "/default_user.png")}
                                             className='ig-side-member-avatar'
                                         />
                                         <p className='ig-side-member-name'>
-                                            {user?.username}
+                                            {group_info?.owner?.username} <span>(owner)</span>
                                         </p>
-                                    </div>
+                                        </div>
+
                                 )}
 
                                 {/* other members */}

@@ -24,7 +24,7 @@ def get_all_member_by_group_id(request, group_id):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_all_group_by_member_id(request, member_id):
-    group_member = GroupMember.objects.filter(group = member_id)
+    group_member = GroupMember.objects.filter(member = member_id)
     serializer = GroupMemberSerializer(group_member, many = True)
     return Response(serializer.data)
 
