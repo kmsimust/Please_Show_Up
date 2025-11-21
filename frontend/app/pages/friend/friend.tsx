@@ -4,6 +4,7 @@ import Sidebar from "../../components/sidebar";
 import { useState, useEffect } from "react";
 import { AuthNavBar } from "../../components/auth_navbar";
 import Cookies from "js-cookie";
+import "../../components/styles/common.css";
 import "./friend.css";
 import { get_user_by_username } from "~/services/user";
 
@@ -46,11 +47,12 @@ export function FriendPage() {
     const [username, setUsername] = useState<string>("");
     const [foundUsers, setFoundUsers] = useState<UserWithStatus[]>([]);
     const [myId, setMyId] = useState<number | null>(null);
+    const [myFriends, setMyFriends] = useState<UserData[]>([]);
 
     const token = Cookies.get("accessToken");
     const domain_link = "http://localhost:8000/";
 
-    // Load logged-in user info
+    // Load logged-in user info (get myId)
     useEffect(() => {
         async function loadMe() {
             try {
@@ -80,11 +82,16 @@ export function FriendPage() {
         async function fetchUserFriends() {
             if (!token || !myId) return;
             try {
-                const response = await axios.get(`${domain_link}api/get_friends_from_user_id/${myId}`, {
-                    headers: { Authorization: "Bearer " + token },
-                });
+                const response = await axios.get(
+                    `${domain_link}api/get_friends_from_user_id/${myId}`,
+                    {
+                        headers: { Authorization: "Bearer " + token },
+                    },
+                );
 
-                const friendUsers = (response.data as Friend[]).map(filterMyFriends);
+                const friendUsers = (response.data as Friend[]).map(
+                    filterMyFriends,
+                );
 
                 setMyFriends(friendUsers);
             } catch (error) {
@@ -289,45 +296,53 @@ export function FriendPage() {
                 />
 
                 <div className="flex grow">
-                <div className="friends-page">
+                    <div className="friends-page">
+                        {/* Friends List */}
+                        <div className="flex grow-3 mr-8">
+                            <div className="friends-list-case grow">
+                                <label className="text-lg">
+                                    Friends List&nbsp;&nbsp;—&nbsp;&nbsp;
+                                    {myFriends.length}
+                                </label>
 
-                    {/* Friends List */}
-                    <div className="flex grow-3 mr-8">
-                        <div className="friends-list-case grow">
-                            <label className="text-lg">
-                                Friends List&nbsp;&nbsp;—&nbsp;&nbsp;{myFriends.length}
-                            </label>
-
-                            <div className="friends-list-list-case">
-                                {myFriends.length === 0 ? (
-                                    /* If friends list empty */
-                                    <div className="flex grow flex-col">
-                                        <div className="grow justify-center flex items-center">
-                                            <p>You have no friends yet.</p>
-                                        </div>
-                                        <div className="grow"></div>
-                                    </div>
-                                ) : (
-                                    /* Else */
-                                    myFriends.map(user => (
-                                        <div className="friends-list-user-case">
-                                            <div key={user.id} className="flex items-center">
-                                                <img
-                                                    className="common-pfp-lg bg-blue-500 mr-4"
-                                                    src={user.profile_image || "/default-profile.png"}
-                                                />
-                                                <div>
-                                                    <label className="friends-list-user-display-name">{user.display_name}</label>
-                                                    <p>@{user.username}</p>
-                                                </div>
+                                <div className="friends-list-list-case">
+                                    {myFriends.length === 0 ? (
+                                        /* If friends list empty */
+                                        <div className="flex grow flex-col">
+                                            <div className="grow justify-center flex items-center">
+                                                <p>You have no friends yet.</p>
                                             </div>
-                                            {/* If you want a button next to each friend, uncomment below */}
-
-                                            {/*<button className="btn common-btn">button</button>*/}
+                                            <div className="grow"></div>
                                         </div>
-                                    ))
-                                )}
-                                {/* User in friends list template
+                                    ) : (
+                                        /* Else */
+                                        myFriends.map((user) => (
+                                            <div className="friends-list-user-case">
+                                                <div
+                                                    key={user.id}
+                                                    className="flex items-center"
+                                                >
+                                                    <img
+                                                        className="common-pfp-lg bg-blue-500 mr-4"
+                                                        src={
+                                                            user.profile_image ||
+                                                            "/default-profile.png"
+                                                        }
+                                                    />
+                                                    <div>
+                                                        <label className="friends-list-user-display-name">
+                                                            {user.display_name}
+                                                        </label>
+                                                        <p>@{user.username}</p>
+                                                    </div>
+                                                </div>
+                                                {/* If you want a button next to each friend, uncomment below */}
+
+                                                {/*<button className="btn common-btn">button</button>*/}
+                                            </div>
+                                        ))
+                                    )}
+                                    {/* User in friends list template
                                 <div className="friends-list-user-case">
                                     <div className="flex items-center">
                                         <img
@@ -342,74 +357,81 @@ export function FriendPage() {
                                     <button className="btn common-btn">button</button>
                                 </div>
                                 */}
-                                
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Search Friends */}
-                    <div className="grow-1">
-                        <div className="friend-search-container">
-                        <label className="text-lg">Add Friend</label>
-                        <div className="search-bar">
-                            <input
-                                type="text"
-                                placeholder="Search username..."
-                                name="username"
-                                value={username}
-                                onChange={searchFriend}
-                            />
-                        </div>
-
-                        <div className="search-results-area">
-                            {foundUsers.length === 0 && username && (
-                                <p>No users found</p>
-                            )}
-
-                            {foundUsers.map((user, index) => (
-                                <div key={user.id} className="user-card">
-                                    <div className="user-info">
-                                        <strong>{user.display_name}</strong>
-                                        <span>@{user.username}</span>
-                                    </div>
-
-                                    {/* Show "You" when the search result is the logged-in user */}
-                                    {user.id === myId ? (
-                                        <button
-                                            className="friend-button"
-                                            disabled
-                                        >
-                                            You
-                                        </button>
-                                    ) : user.friendStatus === "none" ? (
-                                        <button
-                                            className="add-button"
-                                            onClick={() =>
-                                                sendFriendRequest(
-                                                    user.id,
-                                                    index,
-                                                )
-                                            }
-                                        >
-                                            Add
-                                        </button>
-                                    ) : user.friendStatus === "pending" ? (
-                                        <button
-                                            className="pending-button"
-                                            disabled
-                                        >
-                                            Pending
-                                        </button>
-                                    ) : (
-                                        <button
-                                            className="friend-button"
-                                            disabled
-                                        >
-                                            Friend ✓
-                                        </button>
-                                    )}
+                        {/* Search Friends */}
+                        <div className="grow-1">
+                            <div className="friend-search-container">
+                                <label className="text-lg">Add Friend</label>
+                                <div className="search-bar">
+                                    <input
+                                        type="text"
+                                        placeholder="Search username..."
+                                        name="username"
+                                        value={username}
+                                        onChange={searchFriend}
+                                    />
                                 </div>
-                            ))}
+
+                                <div className="search-results-area">
+                                    {foundUsers.length === 0 && username && (
+                                        <p>No users found</p>
+                                    )}
+
+                                    {foundUsers.map((user, index) => (
+                                        <div
+                                            key={user.id}
+                                            className="user-card"
+                                        >
+                                            <div className="user-info">
+                                                <strong>
+                                                    {user.display_name}
+                                                </strong>
+                                                <span>@{user.username}</span>
+                                            </div>
+
+                                            {/* Show "You" when the search result is the logged-in user */}
+                                            {user.id === myId ? (
+                                                <button
+                                                    className="friend-button"
+                                                    disabled
+                                                >
+                                                    You
+                                                </button>
+                                            ) : user.friendStatus === "none" ? (
+                                                <button
+                                                    className="add-button"
+                                                    onClick={() =>
+                                                        sendFriendRequest(
+                                                            user.id,
+                                                            index,
+                                                        )
+                                                    }
+                                                >
+                                                    Add
+                                                </button>
+                                            ) : user.friendStatus ===
+                                              "pending" ? (
+                                                <button
+                                                    className="pending-button"
+                                                    disabled
+                                                >
+                                                    Pending
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    className="friend-button"
+                                                    disabled
+                                                >
+                                                    Friend ✓
+                                                </button>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
