@@ -64,12 +64,12 @@ export function GroupPage() {
 							key={index}
 					>
 						<div className="group-info-case">
-							<div className="flex justify-end">
+							<div className="tw:flex tw:justify-end">
 								<label className="group-name">
 									{showTextByKey(obj?.group_name, "-")}
 								</label>
 							</div>
-							<div className="flex justify-end">
+							<div className="tw:flex tw:justify-end">
 								<img className = "pic-fit" src={backend_public+showTextByKey(obj?.owner?.profile_image,"/default_user.png")}></img>
 								{/* this below thing here will be loop */}
 								<MemberList {...obj}/>
@@ -97,7 +97,7 @@ export function GroupPage() {
 
 				{/* Main content */}
 				<div className="content-area">
-					<div className="group-button-case mb-4">
+					<div className="group-button-case tw:mb-4">
 						<Link to={{ pathname: "/create_group"}} className="group-create-group-button">Create group</Link>
 					</div>
 					<div className="group-list-case">

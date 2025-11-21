@@ -290,32 +290,32 @@ export function FriendPage() {
                     onClose={() => setIsSidebarOpen(false)}
                 />
 
-                <div className="flex grow">
+                <div className="tw:flex tw:grow">
                 <div className="friends-page">
 
                     {/* Friends List */}
-                    <div className="flex grow-3 mr-8">
-                        <div className="friends-list-case grow">
-                            <label className="text-lg">
+                    <div className="tw:flex tw:grow-3 tw:mr-8">
+                        <div className="friends-list-case tw:grow">
+                            <label className="tw:text-lg">
                                 Friends List&nbsp;&nbsp;—&nbsp;&nbsp;{myFriends.length}
                             </label>
 
                             <div className="friends-list-list-case">
                                 {myFriends.length === 0 ? (
                                     /* If friends list empty */
-                                    <div className="flex grow flex-col">
-                                        <div className="grow justify-center flex items-center">
+                                    <div className="tw:flex tw:grow tw:flex-col">
+                                        <div className="tw:grow tw:justify-center tw:flex tw:items-center">
                                             <p>You have no friends yet.</p>
                                         </div>
-                                        <div className="grow"></div>
+                                        <div className="tw:grow"></div>
                                     </div>
                                 ) : (
                                     /* Else */
                                     myFriends.map(user => (
                                         <div className="friends-list-user-case">
-                                            <div key={user.id} className="flex items-center">
+                                            <div key={user.id} className="tw:flex tw:items-center">
                                                 <img
-                                                    className="common-pfp-lg bg-blue-500 mr-4"
+                                                    className="common-pfp-lg tw:bg-blue-500 tw:mr-4"
                                                     src={user.profile_image || "/default-profile.png"}
                                                 />
                                                 <div>
@@ -350,9 +350,9 @@ export function FriendPage() {
                     </div>
 
                     {/* Search Friends */}
-                    <div className="grow-1">
+                    <div className="tw:grow-1">
                         <div className="friend-search-container">
-                        <label className="text-lg">Add Friend</label>
+                        <label className="tw:text-lg">Add Friend</label>
                         <div className="search-bar">
                             <input
                                 type="text"

@@ -106,21 +106,21 @@ export function ProfilePage() {
                         <div className="profile-user-case">
                             <div className="profile-user-case2">
 
-                                <div className="ml-[1rem] mt-[2rem]"> 
+                                <div className="tw:ml-[1rem] tw:mt-[2rem]"> 
                                     <div className="profile-user-display-name">
                                         {userdata.display_name || userdata.username}
                                     </div>
                                     <span className="common-muted">
                                         @{userdata?.username || "user"}
                                     </span>
-                                    <div className="m-[0.5rem]"></div>
+                                    <div className="tw:m-[0.5rem]"></div>
                                     <p>{userdata.first_name} {userdata.last_name}</p>
                                 </div>
                             </div>
 
                             <div>
                                 <a href="/account/:tab?">
-                                    <button className="btn common-btn profile-edit-profile-button">
+                                    <button className="tw:btn common-btn profile-edit-profile-button">
                                         Edit profile
                                     </button>
                                 </a>
@@ -130,21 +130,21 @@ export function ProfilePage() {
 
                     <div className="profile-section-case">
                         <div className="profile-info-section">
-                            <label className="text-lg">Info</label>
+                            <label className="tw:text-lg">Info</label>
                         </div>
                     </div>
 
                     <div className="profile-info-case">
                         <div className="profile-info-section">
-                            <div className="flex items-center mb-3 mt-1">
+                            <div className="tw:flex tw:items-center tw:mb-3 tw:mt-1">
                                 {userdata.gender ? (
                                     <p>{userdata.gender}</p>
                                 ) : (
                                     <p className="common-faded">gender not set</p>
                                 )}
                             </div>
-                            <div className="flex items-center mb-2">
-                                <svg className="mr-4"
+                            <div className="tw:flex tw:items-center tw:mb-2">
+                                <svg className="tw:mr-4"
                                 xmlns="http://www.w3.org/2000/svg" width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                                 {userdata.email ? (
                                     <p>{userdata.email}</p>
@@ -152,8 +152,8 @@ export function ProfilePage() {
                                     <p className="common-faded">email not set</p>
                                 )}
                             </div>
-                            <div className="flex items-center mb-2">
-                                <svg className="mr-4"
+                            <div className="tw:flex tw:items-center tw:mb-2">
+                                <svg className="tw:mr-4"
                                 xmlns="http://www.w3.org/2000/svg" width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                                 {userdata.phone_number ? (
                                     <p>{userdata.phone_number}</p>
