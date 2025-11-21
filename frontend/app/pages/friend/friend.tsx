@@ -4,10 +4,8 @@ import Sidebar from "../../components/sidebar";
 import { useState, useEffect } from "react";
 import { AuthNavBar } from "../../components/auth_navbar";
 import Cookies from "js-cookie";
-import '../../components/styles/common.css';
 import "./friend.css";
 import { get_user_by_username } from "~/services/user";
-import { showPicture } from '../../utils/text-util';
 
 interface Friend {
     id: number;
@@ -48,12 +46,11 @@ export function FriendPage() {
     const [username, setUsername] = useState<string>("");
     const [foundUsers, setFoundUsers] = useState<UserWithStatus[]>([]);
     const [myId, setMyId] = useState<number | null>(null);
-    const [myFriends, setMyFriends] = useState<UserData[]>([]);
 
     const token = Cookies.get("accessToken");
     const domain_link = "http://localhost:8000/";
 
-    // Load logged-in user info (get myId)
+    // Load logged-in user info
     useEffect(() => {
         async function loadMe() {
             try {
@@ -414,10 +411,7 @@ export function FriendPage() {
                                 </div>
                             ))}
                         </div>
-                        </div>
-
                     </div>
-                </div>
                 </div>
             </div>
         </div>
