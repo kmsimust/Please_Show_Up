@@ -29,7 +29,7 @@ export function InGroup() {
 
     const group_id = searchParams.get('group_id')
 
-    if(!group_id) {
+    if(group_id) {
         return <div>invalid request</div>
     }
     // Every page need this function.
