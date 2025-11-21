@@ -20,7 +20,8 @@ export function GroupPage() {
 	const backend_public: string = "http://localhost:8000/public";
 
 	// Every page need this variable.
-	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean | null>(false);
+	// const [isSidebarOpen, setIsSidebarOpen] = useState<boolean | null>(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 	// loading user and prevent fail fetch
 	const [groupData, setGroupData] = useState<Group[] | null>([]);

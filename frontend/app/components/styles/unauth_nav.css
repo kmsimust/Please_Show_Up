@@ -66,3 +66,29 @@
   height: auto;
   display: inherit;
 }
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  padding-right: 15px;
+  padding-left: 5px;
+}
+
+.button-container .custom-button {
+  height: 40px;
+  padding: 6px 12px;
+  border-radius: 999px; /* Fully rounded */
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  transition: transform 0.2s ease;
+  background-color: var(--primary);
+}
+
+.button-container .custom-button:hover {
+  background-color: var(--primary);
+  color: white;
+  transform: scale(1.05);
+}

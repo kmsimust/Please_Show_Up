@@ -1,9 +1,18 @@
 import '../../components/styles/common.css'
-import { useState, useEffect } from 'react';
+import './in_group.css'
+
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
-import './in_group.css'
+
+import { useState, useEffect } from 'react';
+import { Link } from "react-router";
 import { useSearchParams } from 'react-router-dom';
+
+import { get_event } from "~/services/event";
+import { showTextByKey, showPicture } from "~/utils/text-util";
+
+import type { GroupMember } from "~/types/group_member";
+import type { Group } from "~/types/group";
 
 
 // User in invite people pop up modal
@@ -25,6 +34,12 @@ const InviteUser = () => {
 
 export function InGroup() {
 
+    const backend_public: string = "http://localhost:8000/public";
+    const [groupData, setGroupData] = useState<Group[] | null>([]);
+
+	const [error, setError] = useState<string | null>("");
+	const [isLoading, setIsLoading] = useState<boolean | null>(true); // Add loading state
+
     const [searchParams, setSearchParams] = useSearchParams();
 
     const group_id = searchParams.get('group_id')
@@ -32,11 +47,12 @@ export function InGroup() {
     if(!group_id) {
         return <div>invalid request</div>
     }
+
     // Every page need this function.
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-    <div>
+    <div className="page-container">
         <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
         <div className="flex">
@@ -46,6 +62,9 @@ export function InGroup() {
             <div className='ig-page'>
                 <div>
                     Content here GROUP ID: {group_id}
+                    
+                    <div className='event-list-case'></div>
+
                 </div>
 
                 {/* Side content */}

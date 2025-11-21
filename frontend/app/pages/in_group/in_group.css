@@ -85,3 +85,10 @@
     font-size: 0.875rem;
     padding: 0.5rem 0.75rem !important;
 }
+
+/* event */
+.event-list-case {
+  margin-left: 80px;
+  height: 300px;
+  padding-right: 100px;
+}
