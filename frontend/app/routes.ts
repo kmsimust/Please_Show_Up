@@ -20,6 +20,8 @@ export default [
         route("/in_group", "routes/in_group.tsx"),
         route("/test", "routes/test.tsx"),
         route("/notifications", "routes/noti.tsx"),
-        route("/create_event", "routes/create_event.tsx")
+        route("/create_event", "routes/create_event.tsx"),
+
+        route("/event", "routes/event.tsx"),
         // route("/channel/:channelId", "routes/201_channel.tsx"),
 ] satisfies RouteConfig;
