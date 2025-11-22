@@ -12,7 +12,7 @@ export function AboutUsPage() {
         { name: "Jirakorn", file: "sandee" },
         { name: "Phubet", file: "chuan" },
         { name: "Adithep", file: "adithep" },
-        { name: "Tat", file: "sandee" },
+        { name: "Tat", file: "tat" },
     ];
 
     // Use root public path - React serves public/ at /
