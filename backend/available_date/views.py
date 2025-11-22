@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,8 +9,11 @@ from datetime import datetime
 from event.models import Event
 from event.serializers import EventSerializer, EventSerializerSave
 
+from rest_framework.throttling import UserRateThrottle
+
 # Create your views here.
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_available_date(request):
     available_date = AvailableDate.objects.all()
@@ -18,6 +21,7 @@ def get_available_date(request):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_available_date_info_by_pk(request, pk):
     available_date = AvailableDate.objects.get(pk=pk)
@@ -25,6 +29,7 @@ def get_available_date_info_by_pk(request, pk):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_available_date_by_event_id(request, event_id):
     available_date = AvailableDate.objects.filter(event = event_id)
@@ -32,6 +37,7 @@ def get_available_date_by_event_id(request, event_id):
     return Response(serializer.data)
 
 @api_view(["POST"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def create_available_date(request):
     body = request.data
@@ -44,6 +50,7 @@ def create_available_date(request):
 
 
 @api_view(["PUT"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_available_date(request, pk):
     try:
@@ -61,6 +68,7 @@ def update_available_date(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_status(request, pk):
     try:
@@ -89,6 +97,7 @@ def update_status(request, pk):
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def delete_available_date(request, pk):
     try:

@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,7 +12,11 @@ from group_member.serializers import GroupMemberSerializer
 from .serializers import EventSerializer, EventSerializerSave
 from util.create_date import create_date
 
+from rest_framework.throttling import UserRateThrottle
+
+
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_event(request):
     event = Event.objects.all() # get all data from DB
@@ -20,6 +24,7 @@ def get_event(request):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_event_info(request, pk):
     event = Event.objects.get(pk = pk) # get all data from DB
@@ -27,6 +32,7 @@ def get_event_info(request, pk):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_event_by_group_id(request, group_id):
     event = Event.objects.filter(group = group_id) # get all data from DB
@@ -34,6 +40,7 @@ def get_event_by_group_id(request, group_id):
     return Response(serializer.data)
 
 @api_view(["POST"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def create_event(request):
     body = request.data
@@ -53,6 +60,7 @@ def create_event(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PUT"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_event(request, pk):
     body = request.data
@@ -77,6 +85,7 @@ def update_event(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_name_and_description(request, pk):
     try:
@@ -97,6 +106,7 @@ def update_name_and_description(request, pk):
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_start_and_end_date(request, pk):
     try:
@@ -132,6 +142,7 @@ def update_start_and_end_date(request, pk):
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_event_date(request, pk):
     try:
@@ -162,6 +173,7 @@ def update_event_date(request, pk):
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def delete_event(request, pk):
     try:

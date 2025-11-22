@@ -1,5 +1,5 @@
 # user/views.py
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,8 +11,11 @@ from .serializers import UserSerializer
 from .models import User
 from util.upload import upload_file
 
+from rest_framework.throttling import UserRateThrottle
+
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_user(request):
     users = User.objects.all()
@@ -20,6 +23,7 @@ def get_user(request):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_me_user(request):
     # DRF's authentication system already set request.user
@@ -33,6 +37,7 @@ def get_me_user(request):
 
 
 @api_view(["POST"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([AllowAny])
 def create_user(request):
     body = request.data
@@ -54,6 +59,7 @@ def create_user(request):
 
 
 @api_view(["POST"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([AllowAny])
 def login_user(request):
     username = request.data.get("username")
@@ -99,6 +105,7 @@ def update_user(request, pk):
 
 
 @api_view(["DELETE"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def delete_user(request, pk):
     try:
@@ -111,6 +118,7 @@ def delete_user(request, pk):
 
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_user_by_username(request, username):
     users = User.objects.get(username = username)
@@ -118,6 +126,7 @@ def get_user_by_username(request, username):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_users_by_username(request, username):
     users = User.objects.filter(username__contains = username)
@@ -126,6 +135,7 @@ def get_users_by_username(request, username):
 
 
 @api_view(["PATCH"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_user_profile_image(request, pk):
     try:
@@ -146,6 +156,7 @@ def update_user_profile_image(request, pk):
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_user_banner_image(request, pk):
     try:
