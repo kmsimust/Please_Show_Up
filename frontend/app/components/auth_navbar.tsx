@@ -141,7 +141,7 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
                         <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
                     </svg>
                 </button>
-                <Link to="/group" className="nav-logo">
+                <Link to="/" className="nav-logo top-nav-item">
                     About us
                 </Link>
             </div>
@@ -230,6 +230,11 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
                             <a href="/friend" className="dropdown-option">
                                 <span>Friends</span>
                                 <i className="bi bi-people"></i>
+                            </a>
+
+                            <a href="/notifications" className="dropdown-option">
+                                <span>Notifications</span>
+                                <i className="bi bi-bell"></i>
                             </a>
 
                             <div className="dropdown-divider"></div>

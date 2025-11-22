@@ -58,7 +58,7 @@
 .group-name {
   font-size: 2rem;
   font-weight: bold;
-  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+  text-shadow: 0px 0px 3px rgba(0,0,50,1), 2px 2px 0px rgba(0,0,50,0.8);
   color: var(--primary-text);
 }
 

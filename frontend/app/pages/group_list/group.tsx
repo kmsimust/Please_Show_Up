@@ -1,4 +1,5 @@
 import "./group.css";
+import "../../components/styles/common.css"
 
 import { useState, useEffect } from 'react';
 import { Link } from "react-router";
@@ -62,7 +63,7 @@ export function GroupPage() {
 		return groupData?.map((obj, index) => {
 			return (
 					<Link   to={{ pathname: "/in_group", search: "?group_id="+obj?.id }} 
-							className="group-card" 
+							className="group-card common-text-none" 
 							style={{backgroundImage: 'url('+backend_public+showTextByKey(obj?.banner_image, "/default_user.png")+')'}}
 							key={index}
 					>
@@ -86,7 +87,7 @@ export function GroupPage() {
 		return groupMemberTable?.map((obj, index) => {
 			return (
 					<Link   to={{ pathname: "/in_group", search: "?group_id="+obj?.group?.id }} 
-							className="group-card" 
+							className="group-card " 
 							style={{backgroundImage: 'url('+backend_public+showTextByKey(obj?.group?.banner_image, "/default_user.png")+')'}}
 							key={index}
 					>

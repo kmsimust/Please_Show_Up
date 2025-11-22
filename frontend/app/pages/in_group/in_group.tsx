@@ -85,7 +85,7 @@ export function InGroup() {
                             pathname: "/event",
                             search: "?event_id=" + obj?.id,
                         }}
-                        className="ig-event-card"
+                        className="ig-event-card common-text-none"
                         key={obj.id}
                     >
                         <div className="ig-event-info">
@@ -326,7 +326,7 @@ export function InGroup() {
                             </div>
 
                             {/* ADD THIS: Edit Group button (placed under Invite People) */}
-                            <div style={{ marginTop: "0.75rem" }}>
+                            <div style={{ marginTop: "1rem" }}>
                                 <Link
                                     to={{
                                         pathname: "/edit_group",
