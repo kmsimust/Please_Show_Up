@@ -24,7 +24,7 @@ import { get_event_by_group_id } from "~/services/event";
 import { api_instance } from "~/utils/axios";
 
 export function InGroup() {
-    const BACKEND_PUBLIC_URL = import.meta.env.VITE_BACKEND_PUBLIC_URL;
+    const BACKEND_PUBLIC_URL = "http://localhost:8000/public";
     const user = getUser();
     const user_id = user?.id;
 
