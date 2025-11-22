@@ -20,6 +20,7 @@ modify further with additional tags and classes for use
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s;
+    text-decoration: none;
 }
 
 .common-btn:hover {
@@ -61,4 +62,8 @@ modify further with additional tags and classes for use
 
 .common-faded {
   color: var(--faded);
+}
+
+.common-text-none {
+  text-decoration: none;
 }
