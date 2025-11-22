@@ -156,7 +156,7 @@ export function LoginPage() {
                         href="/signup"
                         style={{ color: "#00a843", textDecoration: "none" }}
                     >
-                        sign up
+                        Sign Up
                     </a>
                 </div>
             </div>
