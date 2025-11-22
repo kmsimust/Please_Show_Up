@@ -56,8 +56,8 @@
   font-weight: 600;
 }
 .hero-media{
-  width: 140px;
-  height: 140px;
+  width: 240px;  /* Changed from 140px to 240px */
+  height: 240px; /* Changed from 140px to 240px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -216,5 +216,5 @@
 @media (max-width: 520px){
   .team-grid{ grid-template-columns: 1fr; }
   .hero-title{ font-size: 36px; }
-  .hero-media{ width: 100px; height: 100px; }
+  .hero-media{ width: 180px; height: 180px; } /* Also updated for mobile */
 }

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getUser } from "../utils/auth-me";
 import "../components/styles/auth_navbar.css";
 import { get_user_data } from "~/services/user";
+import logo from "../assets/images/logo.png";
 
 interface AuthNavBarProps {
     onToggleSidebar?: () => void;
@@ -16,7 +17,7 @@ function deleteCookie(name: string) {
 }
 
 export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
-    const domain_link = "http://localhost:8000/"
+    const domain_link = "http://localhost:8000/";
     const user = getUser();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [dropdownPosition, setDropdownPosition] = useState({
@@ -141,8 +142,8 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
                         <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
                     </svg>
                 </button>
-                <Link to="/" className="nav-logo top-nav-item">
-                    About us
+                <Link to="/group" className="nav-logo top-nav-item">
+                    <img src={logo} alt="Logo" style={{ height: "56px" }} />
                 </Link>
             </div>
 
@@ -160,12 +161,20 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
                 </Link>
 
                 <Link to="/notifications" className="top-nav-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" 
-                    width="24" 
-                    height="24" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    fillOpacity="0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path></svg>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        fillOpacity="0"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path>
+                    </svg>
                 </Link>
 
                 {/* User dropdown */}
@@ -232,7 +241,10 @@ export function AuthNavBar({ onToggleSidebar }: AuthNavBarProps) {
                                 <i className="bi bi-people"></i>
                             </a>
 
-                            <a href="/notifications" className="dropdown-option">
+                            <a
+                                href="/notifications"
+                                className="dropdown-option"
+                            >
                                 <span>Notifications</span>
                                 <i className="bi bi-bell"></i>
                             </a>
