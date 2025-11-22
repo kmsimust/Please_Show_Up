@@ -72,3 +72,27 @@ export async function get_event_by_group_id(group_id: number) {
 
   return { result, error };
 }
+
+export async function update_event_date(event_id: number, event_date: string) {
+  let result = null;
+  let error = undefined;
+
+  try {
+    let token = Cookies.get("accessToken");
+
+    const resp = await axios.patch(
+      "http://localhost:8000/api/update_event_date/" + event_id,
+      { event_date },
+      {
+        headers: { Authorization: "Bearer " + token },
+      }
+    );
+
+    result = resp.data;
+  } catch (err: any) {
+    console.error("ERROR at update_event_date:", err);
+    error = err.response?.data || "Failed to update event date.";
+  }
+
+  return { result, error };
+}
