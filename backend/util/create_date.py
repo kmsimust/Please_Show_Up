@@ -13,6 +13,8 @@ def create_date(serializer):
 
         start_date = datetime.strptime(serializer_dict["start_date"], '%Y-%m-%d').date() # type date
 
+
+        #for group member
         for group_member_serializer_dict in group_member_serializer_list: #add 7 days in available date table
             for i in range(7):
                 current_date = start_date + timedelta(days=i)

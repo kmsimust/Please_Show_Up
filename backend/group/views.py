@@ -5,6 +5,7 @@ from rest_framework import status
 # from group_member.models import GroupMember
 # from group_member.serializers import GroupMemberSerializer
 from .serializers import GroupSerializer, GroupSerializerSave
+from group_member.serializers import GroupMemberSerializerSave
 from .models import Group
 
 from rest_framework.throttling import UserRateThrottle
@@ -58,8 +59,14 @@ def create_group(request):
             return Response(status=status.HTTP_404_NOT_FOUND)
         
         serializer = GroupSerializerSave(group, data={"banner_image": f"/upload/group/{new_group_id}/{uploaded_name}"}, partial=True)
+    
         if serializer.is_valid():
             serializer.save() # UPDATE
+
+            serializer_group_member = GroupMemberSerializerSave(data = {"group":new_group_id, "member": body["owner"]})
+            if serializer_group_member.is_valid():
+                serializer_group_member.save()
+        
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

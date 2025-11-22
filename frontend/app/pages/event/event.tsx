@@ -7,145 +7,183 @@ import { get_event_info } from "~/services/event";
 import { get_group_member } from "~/services/group_member";
 import { showPicture } from "~/utils/text-util";
 import type { Event } from "~/types/event";
+import { update_status } from "~/services/available_date";
 import type { GroupMember } from "~/types/group_member";
+import type { AvailableDate } from '~/types/available_date';
 
 import "./event.css";
 
+
+import { get_available_date_by_event_id } from "~/services/available_date";
+
 export function EventPage() {
-  const BACKEND_PUBLIC_URL = "http://localhost:8000/public";
+	const BACKEND_PUBLIC_URL = "http://localhost:8000/public";
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [event, setEvent] = useState<Event | null>(null);
-  const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+	const [event, setEvent] = useState<Event | null>(null);
+	const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [availableDateEvent, setAvailableDateEvent] = useState<AvailableDate[]>([]);
 
-  const [searchParams] = useSearchParams();
-  const event_id = Number(searchParams.get("event_id"));
+	const [searchParams] = useSearchParams();
+	const event_id = Number(searchParams.get("event_id"));
 
-  useEffect(() => {
-    async function loadEventData() {
-      try {
-        setIsLoading(true);
+	async function loadEventData() {
 
-        // Fetch event info
-        const { result: eventData, error: eventError } = await get_event_info(event_id);
-        if (eventError) {
-          setError(eventError);
-          return;
-        }
-        setEvent(eventData);
+		setIsLoading(true);
 
-        // Fetch group members
-        if (eventData?.group?.id) {
-          const { result: members, error: membersError } = await get_group_member(eventData.group.id);
-          if (membersError) {
-            console.error("Failed to load group members:", membersError);
-          } else {
-            setGroupMembers(members || []);
-          }
-        }
-      } catch (err) {
-        setError("Failed to load event.");
-      } finally {
-        setIsLoading(false);
-      }
-    }
+		// Fetch event info
+		const { result: eventData, error: eventError } = await get_event_info(event_id);
+		if (eventError) {
+			setError(eventError);
+			return;
+		}
+		setEvent(eventData);
 
-    if (event_id) {
-      loadEventData();
-    }
-  }, [event_id]);
+		// Fetch group members
 
-  if (isLoading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{error}</div>;
-  if (!event) return <div className="error">Event not found</div>;
 
-  return (
-    <div className="page-container">
-      <AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+		const { result: available_date, error: available_date_error } = await get_available_date_by_event_id(event_id);
+		if (available_date_error) {
+			setError(available_date_error);
+			return;
+		} else {
+			setAvailableDateEvent(available_date);
+			console.log(available_date);
 
-      <div className="main-content">
-        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+		}
 
-        <div className="content-area event-content-area">
-          <div className="event-wrapper">
+		if (eventData?.group?.id) {
+			const { result: members, error: membersError } = await get_group_member(eventData.group.id);
+			if (membersError) {
+				setError(membersError);
+				return;
+			} else {
+				for (const m of members) {
+					const avDateList = available_date.filter((obj: AvailableDate) => {
+						return obj?.group_member?.id == m?.id
+					})
+					m.available_date = avDateList;
 
-            <div className="event-header">
-              <h1 className="event-title">{event.name || "Event Name"}</h1>
-              <p className="event-subtitle">
-                Description: {event.description || "No description"}
-              </p>
-              <p className="event-subtitle">
-                Date: {event.start_date?.toString()} to {event.end_date?.toString()}
-              </p>
-            </div>
+				}
 
-            <div className="event-calendar">
-              <div className="ec-header-row">
-                <div className="ec-cell ec-header-cell ec-name-header">Member</div>
-                <div className="ec-cell ec-header-cell">Mon</div>
-                <div className="ec-cell ec-header-cell">Tue</div>
-                <div className="ec-cell ec-header-cell">Wed</div>
-                <div className="ec-cell ec-header-cell">Thu</div>
-                <div className="ec-cell ec-header-cell">Fri</div>
-                <div className="ec-cell ec-header-cell">Sat</div>
-                <div className="ec-cell ec-header-cell">Sun</div>
-              </div>
+				setGroupMembers(members || []);
+				console.log(members);
+			}
+		}
+		setIsLoading(false);
 
-              {/* Group Owner Row */}
-              {event.group?.owner && (
-                <div className="ec-row">
-                  <div className="ec-cell ec-name-cell">
-                    <img
-                      src={BACKEND_PUBLIC_URL + showPicture(event.group.owner.profile_image, "default", "/default_user.png")}
-                      alt={event.group.owner.username}
-                      className="pic-fit"
-                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
-                    />
-                    {event.group.owner.username} (owner)
-                  </div>
+	}
 
-                  {Array(7).fill(0).map((_, i) => (
-                    <button
-                      key={i}
-                      className="ec-cell ec-slot"
-                      data-state="none"
-                    >
-                      ?
-                    </button>
-                  ))}
-                </div>
-              )}
+	const update_user_status = async (event: React.ChangeEvent<HTMLSelectElement>, id: number) => {
+		const newStatus = event.target.value as "yes" | "no" | "maybe";
+		console.log("Updating status to:", newStatus);
 
-              {/* Group Members Rows */}
-              {groupMembers.map((memberObj) => (
-                <div className="ec-row" key={memberObj.id}>
-                  <div className="ec-cell ec-name-cell">
-                    <img
-                      src={BACKEND_PUBLIC_URL + showPicture(memberObj.member?.profile_image, "default", "/default_user.png")}
-                      alt={memberObj.member?.username}
-                      className="pic-fit"
-                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
-                    />
-                    {memberObj.member?.username}
-                  </div>
+		// Call backend API to update status
+		const { result: status_result, error: status_error } = await update_status(id, { status: newStatus });
 
-                  {Array(7).fill(0).map((_, i) => (
-                    <button
-                      key={i}
-                      className="ec-cell ec-slot"
-                      data-state="none"
-                    >
-                      ?
-                    </button>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+		if (status_error) {
+			console.error("Failed to update status:", status_error);
+			alert("Failed to update status. Please try again.");
+			return;
+		}
+
+		// Update local state to reflect the change immediately
+		setGroupMembers(prevMembers =>
+			prevMembers.map(member => ({
+				...member,
+				available_date: member.available_date?.map(avDate =>
+					avDate.id === id
+						? { ...avDate, status: newStatus }
+						: avDate
+				)
+			}))
+		);
+
+		console.log("Status updated successfully:", status_result);
+	}
+
+	useEffect(() => {
+		if (event_id) {
+			loadEventData();
+		}
+	}, [event_id]);
+
+	if (isLoading) return <div className="loading">Loading...</div>;
+	if (error) return <div className="error">{error}</div>;
+	if (!event) return <div className="error">Event not found</div>;
+
+	const Day = () => {
+		return groupMembers?.[0]?.available_date?.map((obj: AvailableDate) => {
+			return (
+				<div className="ec-cell ec-header-cell" key={obj?.id}>{obj?.date}</div>
+			);
+		});
+	}
+
+	return (
+		<div className="page-container">
+			<AuthNavBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+
+			<div className="main-content">
+				<Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
+				<div className="content-area event-content-area">
+					<div className="event-wrapper">
+
+						<div className="event-header">
+							<h1 className="event-title">{event.name || "Event Name"}</h1>
+							<p className="event-subtitle">
+								Description: {event.description || "No description"}
+							</p>
+							<p className="event-subtitle">
+								Event Date: {event.event_date?.toString() || "Not set"}
+							</p>
+						</div>
+
+
+						{/* this will be use to loop from available date table */}
+						<div className="event-calendar">
+							<div className="ec-header-row">
+								<div className="ec-cell ec-header-cell ec-name-header">Member</div>
+								<Day />
+
+							</div>
+
+
+							{/* Group Members Rows */}
+							{groupMembers.map((memberObj) => (
+								<div className="ec-row" key={memberObj.id}>
+									<div className="ec-cell ec-name-cell">
+										<img
+											src={BACKEND_PUBLIC_URL + showPicture(memberObj.member?.profile_image, "default", "/default_user.png")}
+											alt={memberObj.member?.username}
+											className="pic-fit"
+											style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
+										/>
+										{memberObj.member?.username}
+									</div>
+
+									{memberObj?.available_date?.map((available_date_obj) => (
+										<div
+											key={available_date_obj.id}
+											className="ec-cell"
+											data-state="none"
+										>
+											<select className="form-select" value={available_date_obj.status} onChange={(event) => update_user_status(event, available_date_obj.id)}>
+												<option value="maybe" >Maybe</option>
+												<option value="yes">Yes</option>
+												<option value="no">No</option>
+											</select>
+										</div>
+									))}
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }
