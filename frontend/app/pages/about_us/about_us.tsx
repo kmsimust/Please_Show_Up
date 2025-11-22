@@ -29,8 +29,8 @@ export function AboutUsPage() {
                         <h1 className="hero-title">About Us</h1>
                         <p className="hero-sub">
                             “Please Show Up!” helps groups and teams find the
-                            best time to meet, track attendance, and build trust
-                            with social credit and attendance history.
+                            best time to meet, track attendance, and building trust.
+                            
                         </p>
                         <a
                             className="hero-cta"
@@ -59,11 +59,10 @@ export function AboutUsPage() {
                             How is ‘Please Show Up!’ going to help you?
                         </h3>
                         <p className="muted">
-                            It helps with planning events and group projects —
+                            It helps with planning events and group meetings —
                             no more lost messages or missed attendances. Create
                             appointment tables, vote on availability, and let
-                            leaders track attendance and share a group diary
-                            when events finish.
+                            leaders track attendance and sharing good memories together.
                         </p>
 
                         <div className="small-media-grid">
@@ -86,13 +85,12 @@ export function AboutUsPage() {
                 <section className="two-col">
                     <div>
                         <h3 className="green-heading">
-                            Calendar &amp; Social credit
+                            Calendar like planning
                         </h3>
                         <p className="muted">
                             Keep an up-to-date calendar to manage your class
-                            group work or events. Track attendance history and
-                            encourage responsibility with our social credit
-                            point system.
+                            group work or events. members can yes, no, and maybe on each date to 
+                            find the best date to meeting.
                         </p>
                     </div>
 
@@ -101,7 +99,7 @@ export function AboutUsPage() {
                         <ul className="feature-list">
                             <li>
                                 Show your schedule and inform friends about
-                                event times.
+                                event topic and times.
                             </li>
                             <li>
                                 Share schedules with teammates so everyone knows
