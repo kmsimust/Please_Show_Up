@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
-import { get_event_info, update_event_date } from "~/services/event";
+import { get_event_info, update_event_date, delete_event } from "~/services/event";
 import { get_group_member } from "~/services/group_member";
 import { showPicture } from "~/utils/text-util";
 import type { Event } from "~/types/event";
@@ -28,6 +28,7 @@ export function EventPage() {
 	const [selectedEventDate, setSelectedEventDate] = useState<string>("");
 
 	const [searchParams] = useSearchParams();
+	const navigate = useNavigate();
 	const event_id = Number(searchParams.get("event_id"));
 
 	async function loadEventData() {
@@ -136,6 +137,27 @@ export function EventPage() {
 		setSelectedEventDate(""); // Clear the input after successful update
 	}
 
+	const handleDeleteEvent = async () => {
+		if (!event) return;
+
+		const confirmDelete = window.confirm(
+			`Are you sure you want to delete the event "${event.name}"? This action cannot be undone.`
+		);
+
+		if (!confirmDelete) return;
+
+		const { error } = await delete_event(event_id);
+
+		if (error) {
+			console.error("Failed to delete event:", error);
+			alert(typeof error === 'string' ? error : "Failed to delete event. Please try again.");
+			return;
+		}
+
+		alert("Event deleted successfully!");
+		navigate(`/group?group_id=${event.group.id}`);
+	}
+
 	useEffect(() => {
 		if (event_id) {
 			loadEventData();
@@ -189,6 +211,13 @@ export function EventPage() {
 								>
 									Set Event Date
 								</button>
+								<button
+									onClick={handleDeleteEvent}
+									className="btn btn-danger"
+									style={{ padding: '6px 12px', whiteSpace: 'nowrap', marginLeft: 'auto' }}
+								>
+									Delete Event
+								</button>
 							</div>
 						</div>
 
@@ -230,9 +259,9 @@ export function EventPage() {
 								</div>
 							))}
 						</div>
-					</div >
-				</div >
-			</div >
-		</div >
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 }
