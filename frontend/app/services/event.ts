@@ -96,3 +96,26 @@ export async function update_event_date(event_id: number, event_date: string) {
 
   return { result, error };
 }
+
+export async function delete_event(event_id: number) {
+  let result = null;
+  let error = undefined;
+
+  try {
+    let token = Cookies.get("accessToken");
+
+    const resp = await axios.delete(
+      "http://localhost:8000/api/delete_event/" + event_id,
+      {
+        headers: { Authorization: "Bearer " + token },
+      }
+    );
+
+    result = resp.data;
+  } catch (err: any) {
+    console.error("ERROR at delete_event:", err);
+    error = err.response?.data || "Failed to delete event.";
+  }
+
+  return { result, error };
+}
