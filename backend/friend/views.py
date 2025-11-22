@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,8 +8,11 @@ from user.models import User
 from django.db.models import Q
 from user.serializers import UserSerializer
 
+from rest_framework.throttling import UserRateThrottle
+
 # Create your views here.
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_friends(request):
     #print(request.GET.get('y'))
@@ -18,6 +21,7 @@ def get_friends(request):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_friend_by_user_id(request, user_id):
     try:
@@ -28,6 +32,7 @@ def get_friend_by_user_id(request, user_id):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_user_by_friend_id(request, friend_id):
     try:
@@ -38,6 +43,7 @@ def get_user_by_friend_id(request, friend_id):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_friends_from_user_id(request, user_id):
     try:
@@ -48,6 +54,7 @@ def get_friends_from_user_id(request, user_id):
     return Response(serializer.data)
 
 @api_view(["POST"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def create_friend(request):
     body = request.data
@@ -58,6 +65,7 @@ def create_friend(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PUT"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_friend(request, pk):
     body = request.data
@@ -73,6 +81,7 @@ def update_friend(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def delete_friend(request, pk):
     try:

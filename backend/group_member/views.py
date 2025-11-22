@@ -1,12 +1,15 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import GroupMemberSerializer, GroupMemberSerializerSave
 from .models import GroupMember
 
+from rest_framework.throttling import UserRateThrottle
+
 # Create your views here.
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_group_member(request):
     group_member = GroupMember.objects.all()
@@ -14,6 +17,7 @@ def get_group_member(request):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_all_member_by_group_id(request, group_id):
     group_member = GroupMember.objects.filter(group = group_id)
@@ -22,6 +26,7 @@ def get_all_member_by_group_id(request, group_id):
 
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_all_group_by_member_id(request, member_id):
     group_member = GroupMember.objects.filter(member = member_id)
@@ -29,6 +34,7 @@ def get_all_group_by_member_id(request, member_id):
     return Response(serializer.data)
 
 @api_view(["POST"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def create_group_member(request):
     body = request.data
@@ -39,6 +45,7 @@ def create_group_member(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PUT"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_group_member(request, pk):
     body = request.data
@@ -54,6 +61,7 @@ def update_group_member(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def delete_group_member(request, pk):
     try:

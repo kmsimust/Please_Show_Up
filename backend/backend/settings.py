@@ -52,25 +52,29 @@ INSTALLED_APPS = [
     'group_member',
     'event',
     'available_date',
-    'group_request'
+    'group_request',
 ]
 
 MIDDLEWARE = [
+    "django.middleware.common.CommonMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
 ]
 
 CORS_ALLOW_ORIGINS = [
     'http://localhost:5173/'
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWS_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'user.User'
@@ -105,7 +109,15 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',  # Limit unauthenticated users to 100 requests per hour
+        'user': '75/minute',  # Limit authenticated users to 1000 requests per hour
+    },
 }
 
 # Database
