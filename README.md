@@ -113,8 +113,8 @@ Create a file named `.env` inside the `backend` folder and add your database con
 MYSQL_NAME=your_db_name
 MYSQL_USER=your_db_user
 MYSQL_PASSWORD=your_db_password
-DB_HOST=localhost
-DB_PORT=3306
+DB_HOST=localhost or ipv4 which is get from running ipconfig in terminal and put it here
+DB_PORT=3305
 ```
 
 **Step 1.3: Install Dependencies & Run**
@@ -145,6 +145,7 @@ Open a **new terminal** in the project root:
 ```bash
 cd frontend
 npm install
+npm install bootstrap@5.3.2 if needed
 ```
 *(Note: `npm install` automatically installs all required packages including Bootstrap, React Router, etc.)*
 
@@ -156,5 +157,11 @@ npm run dev
 
 ### 3. Open the App
 Open your browser and go to `http://localhost:5173/`.
+
+### 4. Or use docker compose
+
+```bash
+docker-compose up -d
+```
 
 ---
