@@ -59,6 +59,7 @@ urlpatterns = [
     path('api/create_group', create_group),
     path('api/update_group_info/<int:pk>', update_group_info),
     path('api/delete_group/<int:pk>', delete_group),
+    path('api/update_group_banner/<int:pk>', update_group_banner), 
     path('api/get_group_info_by_pk/<int:pk>', get_group_info_by_pk),
 
     
