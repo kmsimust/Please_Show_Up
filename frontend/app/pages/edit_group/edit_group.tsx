@@ -43,7 +43,10 @@ export function EditGroup() {
         setLoading(true);
         const { result, error } = await get_group_info_by_pk(group_id);
         if (error) {
-            setError(error);
+            // Convert error object to string if needed
+            const errorMsg =
+                typeof error === "object" ? JSON.stringify(error) : error;
+            setError(errorMsg);
             setLoading(false);
             return;
         }
