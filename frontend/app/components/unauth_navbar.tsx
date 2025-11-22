@@ -24,7 +24,7 @@ export function UnAuthNavBar() {
     return (
       <div className="top-nav-bar">
         <div className="links-container">
-          <Link className="home-link active" to="/group">Home</Link>
+          <Link className="home-link active" to="/">Home</Link>
           <Link to="/">About Us</Link>
         </div>
       </div>
