@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
-import { get_event_info } from "~/services/event";
+import { get_event_info, update_event_date } from "~/services/event";
 import { get_group_member } from "~/services/group_member";
 import { showPicture } from "~/utils/text-util";
 import type { Event } from "~/types/event";
@@ -25,6 +25,7 @@ export function EventPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [availableDateEvent, setAvailableDateEvent] = useState<AvailableDate[]>([]);
+	const [selectedEventDate, setSelectedEventDate] = useState<string>("");
 
 	const [searchParams] = useSearchParams();
 	const event_id = Number(searchParams.get("event_id"));
@@ -104,6 +105,37 @@ export function EventPage() {
 		console.log("Status updated successfully:", status_result);
 	}
 
+	const handleUpdateEventDate = async () => {
+		if (!selectedEventDate || selectedEventDate.trim() === "") {
+			alert("Please select a date first.");
+			return;
+		}
+
+		console.log("Updating event date to:", selectedEventDate);
+
+		const { result, error } = await update_event_date(event_id, selectedEventDate);
+
+		if (error) {
+			console.error("Failed to update event date:", error);
+			const errorMessage = typeof error === 'object' && error.message
+				? error.message
+				: typeof error === 'string'
+					? error
+					: "Failed to update event date. Please try again.";
+			alert(errorMessage);
+			return;
+		}
+
+		// Update local state
+		if (event) {
+			setEvent({ ...event, event_date: new Date(selectedEventDate) });
+		}
+
+		console.log("Event date updated successfully:", result);
+		alert("Event date updated successfully!");
+		setSelectedEventDate(""); // Clear the input after successful update
+	}
+
 	useEffect(() => {
 		if (event_id) {
 			loadEventData();
@@ -137,11 +169,28 @@ export function EventPage() {
 							<p className="event-subtitle">
 								Description: {event.description || "No description"}
 							</p>
-							<p className="event-subtitle">
-								Event Date: {event.event_date?.toString() || "Not set"}
-							</p>
+							<div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+								<p className="event-subtitle" style={{ margin: 0 }}>
+									Event Date: {event.event_date ? new Date(event.event_date).toLocaleDateString() : "Not set"}
+								</p>
+								<input
+									type="date"
+									value={selectedEventDate}
+									onChange={(e) => setSelectedEventDate(e.target.value)}
+									min={event.start_date?.toString().split('T')[0]}
+									max={event.end_date?.toString().split('T')[0]}
+									className="form-control"
+									style={{ width: 'auto' }}
+								/>
+								<button
+									onClick={handleUpdateEventDate}
+									className="btn btn-primary"
+									style={{ padding: '6px 12px', whiteSpace: 'nowrap' }}
+								>
+									Set Event Date
+								</button>
+							</div>
 						</div>
-
 
 						{/* this will be use to loop from available date table */}
 						<div className="event-calendar">
@@ -181,9 +230,9 @@ export function EventPage() {
 								</div>
 							))}
 						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+					</div >
+				</div >
+			</div >
+		</div >
 	);
 }
