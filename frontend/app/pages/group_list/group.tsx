@@ -15,8 +15,6 @@ import type { GroupMember } from "~/types/group_member";
 import type { Group } from "~/types/group";
 
 
-
-
 export function GroupPage() {
 	const backend_public: string = "http://localhost:8000/public";
 

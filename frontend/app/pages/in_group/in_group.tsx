@@ -21,6 +21,8 @@ import type { GroupMember } from '~/types/group_member';
 import type { GroupRequestCreate } from '~/types/group_request';
 import { get_group_info_by_pk } from '~/services/group';
 import { get_group_member } from '~/services/group_member';
+import type { Event } from '~/types/event';
+import { get_event_by_group_id } from '~/services/event';
 import { api_instance } from '~/utils/axios';
 
 export function InGroup() {
@@ -38,6 +40,7 @@ export function InGroup() {
     const [error, setError] = useState<string | null>("");
     const [groupRequests, setGroupRequests] = useState([]);
 
+    const [eventList, setEventList] = useState<Event[] | null>([]);
 
     const group_id = Number(searchParams.get('group_id'));
 	const [isLoading, setIsLoading] = useState<boolean | null>(true); // Add loading state
@@ -56,10 +59,33 @@ export function InGroup() {
                 obj.members = members;
                 console.log(obj.members);
             };
-    
             setGroupMemberList(result);
+
+            const { result: events, error: error_e } = await get_event_by_group_id(group_id);
+            setEventList(events);
+            
             setError(error);
+            setError(error_e);
             setIsLoading(false);
+    }
+
+    function EventList({ eventList }) {
+        return (
+            <>
+            {eventList?.map((obj: any) => (
+                <Link
+                to={{ pathname: "/event", search: "?event_id=" + obj?.id }}
+                className="event-card"
+                key={obj.id}
+                >
+                <div className="event-info">
+                    <span className="event-name">{obj?.name}</span>
+                    <span className="event-date">{obj?.start_date}</span>
+                </div>
+                </Link>
+            ))}
+            </>
+        );
     }
 
     const openInviteModal = async () => {
@@ -179,7 +205,7 @@ export function InGroup() {
                 <div className="tw:grow">
                 <div className='ig-page'>
                     <div>
-                        Content here GROUP ID: {group_id}
+                        <EventList eventList={eventList} />
                     </div>
 
                     {/* Side content */}
