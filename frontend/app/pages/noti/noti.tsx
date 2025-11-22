@@ -28,12 +28,36 @@ interface AcceptedNotification {
     accepter_id: number;
 }
 
+interface GroupRequest {
+    id: number;
+    group: {
+        id: number;
+        owner:string,
+        group_name: string;
+        description?: string;
+    };
+    invited_user: UserObject;
+    status: string;
+    created_at?: string;
+}
+
+interface AcceptedGroupNotification {
+    group_id: number;
+    group_name: string;
+    inviter_name: string;
+    inviter_id: number;
+}
+
 export function Noti() {
     const domain_link = "http://localhost:8000/";
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [requests, setRequests] = useState<FriendRequest[]>([]);
     const [acceptedNotifications, setAcceptedNotifications] = useState<
         AcceptedNotification[]
+    >([]);
+    const [groupRequests, setGroupRequests] = useState<GroupRequest[]>([]);
+    const [acceptedGroupNotifications, setAcceptedGroupNotifications] = useState<
+        AcceptedGroupNotification[]
     >([]);
     const [myId, setMyId] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
@@ -46,6 +70,11 @@ export function Noti() {
         [],
     );
 
+    const DISMISSED_ACCEPTED_GROUP_KEY = "dismissedAcceptedGroupNotifications_v1";
+    const [dismissedAcceptedGroupIds, setDismissedAcceptedGroupIds] = useState<
+        number[]
+    >([]);
+
     // Load dismissed IDs from localStorage once
     useEffect(() => {
         try {
@@ -57,6 +86,19 @@ export function Noti() {
         } catch (err) {
             console.warn(
                 "Failed to parse dismissedAcceptedIds from localStorage",
+                err,
+            );
+        }
+
+        try {
+            const raw = localStorage.getItem(DISMISSED_ACCEPTED_GROUP_KEY);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) setDismissedAcceptedGroupIds(parsed);
+            }
+        } catch (err) {
+            console.warn(
+                "Failed to parse dismissedAcceptedGroupIds from localStorage",
                 err,
             );
         }
@@ -120,6 +162,41 @@ export function Noti() {
                     );
 
                 setAcceptedNotifications(accepted);
+
+                // === Group Requests ===
+                // Incoming pending group invitations
+                const groupInvitesRes = await axios.get(
+                    `${domain_link}api/get_invitation_by_user_id/${myId}`,
+                    { headers: { Authorization: "Bearer " + token } },
+                );
+                setGroupRequests(groupInvitesRes.data || []);
+
+                // My sent group invitations (to detect accepted ones)
+                const mySentGroupInvitesRes = await axios.get(
+                    `${domain_link}api/group_request/`,
+                    { headers: { Authorization: "Bearer " + token } },
+                );
+
+                const acceptedGroupInvites = (
+                    mySentGroupInvitesRes.data || []
+                ).filter(
+                    (gr: GroupRequest) =>
+                        gr.status === "approved",
+                );
+
+                const acceptedGroups = acceptedGroupInvites
+                    .map((gr: GroupRequest) => ({
+                        group_id: gr.group.id,
+                        group_name: gr.group.group_name,
+                        inviter_name: gr.invited_user.display_name,
+                        inviter_id: gr.invited_user.id,
+                    }))
+                    .filter(
+                        (ag: AcceptedGroupNotification) =>
+                            !dismissedAcceptedGroupIds.includes(ag.group_id),
+                    );
+
+                setAcceptedGroupNotifications(acceptedGroups);
             } catch (error) {
                 console.error("Failed to load notifications:", error);
             } finally {
@@ -128,7 +205,7 @@ export function Noti() {
         }
 
         loadNotifications();
-    }, [myId, token, dismissedAcceptedIds]);
+    }, [myId, token, dismissedAcceptedIds, dismissedAcceptedGroupIds]);
 
     // Accept request
     const acceptRequest = async (id: number) => {
@@ -239,6 +316,114 @@ export function Noti() {
         }
     };
 
+    // Accept group request
+    const acceptGroupRequest = async (id: number) => {
+        if (!token) {
+            alert("Not authenticated");
+            return;
+        }
+
+        const prevRequests = [...groupRequests];
+        setGroupRequests((prev) => prev.filter((r) => r.id !== id));
+
+        try {
+            const response = await axios.patch(
+                `${domain_link}api/update_status_group_request/${id}/approved`,
+                { status: "approved" },
+                { headers: { Authorization: "Bearer " + token } },
+            );
+
+            console.log("Accept group request response:", response.data);
+        } catch (err: any) {
+            console.error("Failed to accept group request:", {
+                message: err.message,
+                status: err.response?.status,
+                data: err.response?.data,
+            });
+
+            setGroupRequests((prev) => {
+                const already = prev.some((r) => r.id === id);
+                return already ? prev : prevRequests;
+            });
+
+            alert("Failed to accept group request. See console for details.");
+        }
+    };
+
+    // Decline group request
+    const declineGroupRequest = async (id: number) => {
+        if (!token) {
+            console.error("No token available for declineGroupRequest");
+            alert("Not authenticated");
+            return;
+        }
+
+        const prevRequests = [...groupRequests];
+        setGroupRequests((prev) => prev.filter((r) => r.id !== id));
+
+        try {
+            const response = await axios.patch(
+                `${domain_link}api/update_status_group_request/${id}/reject`,
+                { status: "reject" },
+                { headers: { Authorization: "Bearer " + token } },
+            );
+
+            console.log("Decline group request response:", response.data);
+        } catch (err: any) {
+            console.error("Failed to decline group request:", {
+                message: err.message,
+                status: err.response?.status,
+                data: err.response?.data,
+            });
+
+            setGroupRequests((prev) => {
+                const already = prev.some((r) => r.id === id);
+                return already ? prev : prevRequests;
+            });
+
+            const serverError = err.response?.data;
+            let friendly = "Failed to decline group request.";
+            if (serverError) {
+                try {
+                    if (typeof serverError === "object") {
+                        const parts: string[] = [];
+                        for (const k of Object.keys(serverError)) {
+                            const val = serverError[k];
+                            if (Array.isArray(val))
+                                parts.push(`${k}: ${val.join(", ")}`);
+                            else parts.push(`${k}: ${String(val)}`);
+                        }
+                        friendly += ` Server: ${parts.join(" | ")}`;
+                    } else {
+                        friendly += ` Server: ${String(serverError)}`;
+                    }
+                } catch (e) {
+                    friendly += " (see console)";
+                }
+            }
+            alert(friendly);
+        }
+    };
+
+    // Dismiss accepted group notification
+    const dismissAcceptedGroup = (groupId: number) => {
+        try {
+            const next = Array.from(
+                new Set([...dismissedAcceptedGroupIds, groupId]),
+            );
+            setDismissedAcceptedGroupIds(next);
+            localStorage.setItem(
+                DISMISSED_ACCEPTED_GROUP_KEY,
+                JSON.stringify(next),
+            );
+            setAcceptedGroupNotifications((prev) =>
+                prev.filter((n) => n.group_id !== groupId),
+            );
+        } catch (err) {
+            console.error("Failed to persist dismissed accepted group id:", err);
+        }
+    };
+
     return (
         <div className="page-container noti-page">
             <AuthNavBar
@@ -260,7 +445,9 @@ export function Noti() {
 
                             {!loading &&
                                 requests.length === 0 &&
-                                acceptedNotifications.length === 0 && (
+                                acceptedNotifications.length === 0 &&
+                                groupRequests.length === 0 &&
+                                acceptedGroupNotifications.length === 0 && (
                                     <p>No notifications</p>
                                 )}
 
@@ -321,6 +508,77 @@ export function Noti() {
                                                 className="noti-btn noti-btn-accept"
                                                 onClick={() =>
                                                     acceptRequest(req.id)
+                                                }
+                                            >
+                                                ✓
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+
+                            {/* Accepted group notifications */}
+                            {!loading &&
+                                acceptedGroupNotifications.map((notif) => (
+                                    <div
+                                        key={notif.group_id}
+                                        className="noti-item noti-accepted"
+                                    >
+                                        <div className="noti-left">
+                                            <p className="noti-text">
+                                                <strong>
+                                                    {notif.inviter_name}
+                                                </strong>{" "}
+                                                accepted your group invitation to{" "}
+                                                <strong>
+                                                    {notif.group_name}
+                                                </strong>
+                                                ! 🎉
+                                            </p>
+                                        </div>
+                                        <div className="noti-actions">
+                                            <button
+                                                className="noti-btn noti-btn-accept"
+                                                onClick={() =>
+                                                    dismissAcceptedGroup(
+                                                        notif.group_id,
+                                                    )
+                                                }
+                                            >
+                                                ✓
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+
+                            {/* Pending group requests (incoming invitations) */}
+                            {!loading &&
+                                groupRequests.map((greq) => (
+                                    <div key={greq.id} className="noti-item">
+                                        <div className="noti-left">
+                                            <p className="noti-text">
+                                                <strong>
+                                                    {greq.group.group_name}
+                                                </strong>{" "}
+                                                wants you to join
+                                            </p>
+                                        </div>
+                                        <div className="noti-actions">
+                                            <button
+                                                className="noti-btn noti-btn-decline"
+                                                onClick={() =>
+                                                    declineGroupRequest(
+                                                        greq.id,
+                                                    )
+                                                }
+                                            >
+                                                ✕
+                                            </button>
+                                            <button
+                                                className="noti-btn noti-btn-accept"
+                                                onClick={() =>
+                                                    acceptGroupRequest(
+                                                        greq.id,
+                                                    )
                                                 }
                                             >
                                                 ✓
