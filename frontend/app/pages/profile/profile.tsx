@@ -126,7 +126,7 @@ export function ProfilePage() {
                             </div>
 
                             <div>
-                                <a href="/account/:tab?">
+                                <a href="/account/profile">
                                     <button className="tw:btn common-btn profile-edit-profile-button">
                                         Edit profile
                                     </button>

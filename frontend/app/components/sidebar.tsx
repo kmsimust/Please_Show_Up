@@ -79,7 +79,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         </Link>
 
         <Link 
-          to="#" 
+          to="/account/profile" 
           className={`sidebar-item ${isActive('/search') ? 'active' : ''}`}
           onClick={handleLinkClick}
         >
