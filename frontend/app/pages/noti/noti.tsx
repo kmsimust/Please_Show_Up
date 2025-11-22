@@ -559,7 +559,7 @@ export function Noti() {
                                                 <strong>
                                                     {greq.group.group_name}
                                                 </strong>{" "}
-                                                wants you to join
+                                                wants you to join them
                                             </p>
                                         </div>
                                         <div className="noti-actions">

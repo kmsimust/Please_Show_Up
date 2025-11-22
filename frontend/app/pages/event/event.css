@@ -1,1 +1,108 @@
-@import url(../../components/styles/layout.css);
+/* Wrapper inside the existing content-area */
+.event-wrapper {
+  width: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.event-header {
+  margin-bottom: 16px;
+}
+
+.event-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.event-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Calendar container */
+.event-calendar {
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* Header + rows use same grid layout */
+.ec-header-row,
+.ec-row {
+  display: grid;
+  grid-template-columns: 160px repeat(7, minmax(70px, 1fr));
+}
+
+/* Base cell style */
+.ec-cell {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Last column in each row (Sun) shouldn't have right border */
+.ec-header-row .ec-cell:last-child,
+.ec-row .ec-cell:last-child {
+  border-right: none;
+}
+
+/* Header cells */
+.ec-header-cell {
+  font-weight: 600;
+  background-color: #f7f9fc;
+}
+
+/* Name column */
+.ec-name-header,
+.ec-name-cell {
+  text-align: left;
+  font-weight: 500;
+}
+
+/* Person name cells */
+.ec-name-cell {
+  background-color: #fafafa;
+}
+
+/* Clickable slots */
+.ec-slot {
+  background: #f9fafb;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Keep button looking like a cell */
+.ec-slot:hover {
+  background-color: #e6f4ff;
+}
+
+.ec-slot:active {
+  transform: scale(0.97);
+}
+
+/* Responsive: allow horizontal scroll on very small screens */
+@media (max-width: 768px) {
+  .event-calendar {
+    overflow-x: auto;
+  }
+
+  .ec-header-row,
+  .ec-row {
+    min-width: 720px;
+  }
+
+  .event-wrapper {
+    padding: 16px;
+  }
+}
