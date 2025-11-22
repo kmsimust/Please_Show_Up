@@ -182,3 +182,9 @@ Start the development server with HMR:
 ```bash
 npm run dev
 ```
+
+*The frontend will start at `http://localhost:5173/`*
+
+Follow the generated link or open your browser and go to `http://localhost:5173/`.  
+
+Open your browser and go to `http://localhost:5173/`.
