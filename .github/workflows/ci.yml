@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop, feat/* ]
+    branches: [ main, develop, feat/*, fix/* ]
   pull_request:
     branches: [ main, develop ]
 
@@ -28,6 +28,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y default-libmysqlclient-dev pkg-config
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -58,6 +63,7 @@ jobs:
         cd backend
         python manage.py migrate
       env:
+        SECRET_KEY: 'django-insecure-test-key-for-ci-only'
         MYSQL_NAME: test_db
         MYSQL_USER: root
         MYSQL_PASSWORD: root
@@ -69,6 +75,7 @@ jobs:
         cd backend
         python manage.py test user.tests available_date.tests event.tests friend.tests friend_request.tests group.tests group_member.tests group_request.tests
       env:
+        SECRET_KEY: 'django-insecure-test-key-for-ci-only'
         MYSQL_NAME: test_db
         MYSQL_USER: root
         MYSQL_PASSWORD: root
@@ -79,9 +86,10 @@ jobs:
       run: |
         cd backend
         pip install coverage
-        coverage run --source='.' manage.py test user.tests available_date.tests event.tests friend.tests friend_request.tests group.tests group_member.tests group_request.tests
+        coverage run --source='.' manage.py test user.tests available_date.tests event.tests friend_request.tests group.tests group_member.tests group_request.tests
         coverage report
       env:
+        SECRET_KEY: 'django-insecure-test-key-for-ci-only'
         MYSQL_NAME: test_db
         MYSQL_USER: root
         MYSQL_PASSWORD: root
