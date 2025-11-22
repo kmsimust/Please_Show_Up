@@ -63,9 +63,14 @@ def create_group(request):
         if serializer.is_valid():
             serializer.save() # UPDATE
 
-            serializer_group_member = GroupMemberSerializerSave(data = {"group":new_group_id, "member": body["owner"]})
-            if serializer_group_member.is_valid():
-                serializer_group_member.save()
+            # Check if group member already exists before creating
+            from group_member.models import GroupMember
+            existing_member = GroupMember.objects.filter(group=new_group_id, member=body["owner"]).first()
+            
+            if not existing_member:
+                serializer_group_member = GroupMemberSerializerSave(data = {"group":new_group_id, "member": body["owner"]})
+                if serializer_group_member.is_valid():
+                    serializer_group_member.save()
         
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
