@@ -1,30 +1,49 @@
-import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { AuthNavBar } from "../../components/auth_navbar";
 import Sidebar from "../../components/sidebar";
-import { get_event_by_group_id } from "~/services/event"; // you'll implement this
-import "./event.css"; // 👈 add this
+import { get_event_info } from "~/services/event";
+import { get_group_member } from "~/services/group_member";
+import { showPicture } from "~/utils/text-util";
+import type { Event } from "~/types/event";
+import type { GroupMember } from "~/types/group_member";
+
+import "./event.css";
 
 export function EventPage() {
+  const BACKEND_PUBLIC_URL = "http://localhost:8000/public";
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [event, setEvent] = useState<any>(null);
+  const [event, setEvent] = useState<Event | null>(null);
+  const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const [searchParams] = useSearchParams();
-  const event_id = Number(searchParams.get("event_id")); // 👈 from query string
-  // fetch event by ID...
+  const event_id = Number(searchParams.get("event_id"));
 
   useEffect(() => {
-    async function loadEvent() {
+    async function loadEventData() {
       try {
-        const { result, error } = await get_event_by_group_id(Number(event_id));
-        if (error) {
-          setError(error);
-        } else {
-          setEvent(result);
+        setIsLoading(true);
+
+        // Fetch event info
+        const { result: eventData, error: eventError } = await get_event_info(event_id);
+        if (eventError) {
+          setError(eventError);
+          return;
+        }
+        setEvent(eventData);
+
+        // Fetch group members
+        if (eventData?.group?.id) {
+          const { result: members, error: membersError } = await get_group_member(eventData.group.id);
+          if (membersError) {
+            console.error("Failed to load group members:", membersError);
+          } else {
+            setGroupMembers(members || []);
+          }
         }
       } catch (err) {
         setError("Failed to load event.");
@@ -32,11 +51,15 @@ export function EventPage() {
         setIsLoading(false);
       }
     }
-    loadEvent();
+
+    if (event_id) {
+      loadEventData();
+    }
   }, [event_id]);
 
   if (isLoading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">{error}</div>;
+  if (!event) return <div className="error">Event not found</div>;
 
   return (
     <div className="page-container">
@@ -45,20 +68,20 @@ export function EventPage() {
       <div className="main-content">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-        <div className="content-area">
+        <div className="content-area event-content-area">
           <div className="event-wrapper">
+
             <div className="event-header">
-              <h1 className="event-title">
-                {/* You can replace this with event?.name later */}
-                Event Name
-              </h1>
+              <h1 className="event-title">{event.name || "Event Name"}</h1>
               <p className="event-subtitle">
-                Description: egjgbewujfioewnfioqewnfioeion
+                Description: {event.description || "No description"}
+              </p>
+              <p className="event-subtitle">
+                Date: {event.start_date?.toString()} to {event.end_date?.toString()}
               </p>
             </div>
 
             <div className="event-calendar">
-              {/* Header row */}
               <div className="ec-header-row">
                 <div className="ec-cell ec-header-cell ec-name-header">Member</div>
                 <div className="ec-cell ec-header-cell">Mon</div>
@@ -70,43 +93,55 @@ export function EventPage() {
                 <div className="ec-cell ec-header-cell">Sun</div>
               </div>
 
-              {/* Row 1 */}
-              <div className="ec-row">
-                <div className="ec-cell ec-name-cell">Alice</div>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-              </div>
+              {/* Group Owner Row */}
+              {event.group?.owner && (
+                <div className="ec-row">
+                  <div className="ec-cell ec-name-cell">
+                    <img
+                      src={BACKEND_PUBLIC_URL + showPicture(event.group.owner.profile_image, "default", "/default_user.png")}
+                      alt={event.group.owner.username}
+                      className="pic-fit"
+                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
+                    />
+                    {event.group.owner.username} (owner)
+                  </div>
 
-              {/* Row 2 */}
-              <div className="ec-row">
-                <div className="ec-cell ec-name-cell">Bob</div>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-              </div>
+                  {Array(7).fill(0).map((_, i) => (
+                    <button
+                      key={i}
+                      className="ec-cell ec-slot"
+                      data-state="none"
+                    >
+                      ?
+                    </button>
+                  ))}
+                </div>
+              )}
 
-              {/* Row 3 */}
-              <div className="ec-row">
-                <div className="ec-cell ec-name-cell">Charlie</div>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-                <button type="button" className="ec-cell ec-slot">-</button>
-              </div>
+              {/* Group Members Rows */}
+              {groupMembers.map((memberObj) => (
+                <div className="ec-row" key={memberObj.id}>
+                  <div className="ec-cell ec-name-cell">
+                    <img
+                      src={BACKEND_PUBLIC_URL + showPicture(memberObj.member?.profile_image, "default", "/default_user.png")}
+                      alt={memberObj.member?.username}
+                      className="pic-fit"
+                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
+                    />
+                    {memberObj.member?.username}
+                  </div>
 
-              {/* Add more rows later via TS if you want */}
+                  {Array(7).fill(0).map((_, i) => (
+                    <button
+                      key={i}
+                      className="ec-cell ec-slot"
+                      data-state="none"
+                    >
+                      ?
+                    </button>
+                  ))}
+                </div>
+              ))}
             </div>
           </div>
         </div>
