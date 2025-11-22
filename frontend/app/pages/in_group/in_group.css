@@ -90,20 +90,22 @@
     justify-content: center;
 }
 
-.event-list-case {
-  margin-left: 80px;
+.ig-event-list-case {
+    width: 90%;
+    margin-left: 80px;
+    margin-right: 40px;
 }
 
 @media (max-width: 768px) {
-  .event-list-case {
-    margin-left: 20px;
-  }
+  .ig-event-list-case {
+    width: 500px;
+}
 }
 
-.event-card {
+.ig-event-card {
   position: relative;
   display: flex;
-  height: 200px;
+  height: 150px;
   margin: 1rem 0rem;
   border-radius: 1rem;
   flex-grow: 1;
@@ -116,3 +118,25 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+
+.ig-event-info {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  padding: 1rem 2rem;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start; /* ensures children align left */
+  text-align: left;        /* ensures text inside aligns left */
+}
+
+.ig-event-name {
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+  color: var(--primary-text);
+
+  text-decoration: none;   
+  cursor: default;        
+}
+

@@ -75,12 +75,12 @@ export function InGroup() {
             {eventList?.map((obj: any) => (
                 <Link
                 to={{ pathname: "/event", search: "?event_id=" + obj?.id }}
-                className="event-card"
+                className="ig-event-card"
                 key={obj.id}
                 >
-                <div className="event-info">
-                    <span className="event-name">{obj?.name}</span>
-                    <span className="event-date">{obj?.start_date}</span>
+                <div className="ig-event-info">
+                    <span className="ig-event-name">{obj?.name}</span>
+                    <span className="ig-event-name">{obj?.start_date}</span>
                 </div>
                 </Link>
             ))}
@@ -204,7 +204,7 @@ export function InGroup() {
 
                 <div className="tw:grow">
                 <div className='ig-page'>
-                    <div>
+                    <div className='ig-event-list-case'>
                         <EventList eventList={eventList} />
                     </div>
 
