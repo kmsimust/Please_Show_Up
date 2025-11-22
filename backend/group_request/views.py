@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,8 +11,11 @@ from .serializers import GroupRequestSerializers, GroupRequestSerializersSave
 from .models import GroupRequest
 from django.db.models import Q
 
+from rest_framework.throttling import UserRateThrottle
+
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_group_request(request):
     group_request = GroupRequest.objects.all()
@@ -21,6 +24,7 @@ def get_group_request(request):
 
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_invitation_by_user_id(request, invited_id):
     group_request = GroupRequest.objects.filter(invited_user = invited_id, status = "pending")
@@ -28,6 +32,7 @@ def get_invitation_by_user_id(request, invited_id):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def get_invitation_by_group_id(request, group_id):
     group_request = GroupRequest.objects.filter(group = group_id)
@@ -35,6 +40,7 @@ def get_invitation_by_group_id(request, group_id):
     return Response(serializer.data)
 
 @api_view(["POST"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def create_group_request(request):
     body = request.data
@@ -68,6 +74,7 @@ def create_group_request(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_status_group_request(request, pk, g_status):
     try:
@@ -91,6 +98,7 @@ def update_status_group_request(request, pk, g_status):
 
 
 @api_view(["PUT"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_group_request(request, pk):
     body = request.data
@@ -106,6 +114,7 @@ def update_group_request(request, pk):
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(["DELETE"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def delete_group_request(request, pk):
     try:

@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,8 +7,11 @@ from .serializers import FriendRequestSerializer, FriendRequestSerializerSave
 from .models import FriendRequest
 from user.models import User
 
+from rest_framework.throttling import UserRateThrottle
+
 # Create your views here.
 @api_view(["GET"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([AllowAny])
 def get_friend_requests(request):
     #print(request.GET.get('y'))
@@ -25,6 +28,7 @@ def get_user_friend_request(request, friend_id):
 
 
 @api_view(["POST"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def create_friend_request(request):
     body = request.data
@@ -44,6 +48,7 @@ def create_friend_request(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PUT"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_friend_request(request, pk):
     body = request.data
@@ -59,6 +64,7 @@ def update_friend_request(request, pk):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["PATCH"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def update_status_friend_request(request, pk, f_status):
     try:
@@ -81,6 +87,7 @@ def update_status_friend_request(request, pk, f_status):
 
 
 @api_view(["DELETE"])
+@throttle_classes([UserRateThrottle])
 @permission_classes([IsAuthenticated])
 def delete_friend_request(request, pk):
     #id = request.GET.get('pk') # 4
