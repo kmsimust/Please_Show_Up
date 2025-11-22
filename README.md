@@ -36,39 +36,6 @@ Moreover, it will be more convenient in a project for bosses to keep track of th
 - **Backend**: Django REST Framework
 - **Database**: MySQL
 - **Project Management**: Jira  
-
-
-
-## 🍵 Background
-
-Most groups of people are struggling to make an appointment for a certain event because everyone does not have common freetime. This causes frustration, inefficient work and confusion. Currently the solutions are chat, calendar and call. 
-
-
-
-## 🎯 Objective
-
-‘Please show up’ is a website where groups create schedules to display as a table with dates, times and event name. Members will tick “Yes,” “No,” or “Maybe” for each appointment to let others in the group know if they are available or not. 
-
-Attendance will be recorded which you can come back and look at the previous schedule, and there will be a system called social credit point and this point will be deducted if a person is late and does not show up with no reason despite clicking yes. The point will go up if they click yes and be on time. This will encourage people to be more responsible for an appointment.
-
-Moreover, it will be more convenient in a project for bosses to keep track of their group and punish them according to their policies. A tier list will be displayed to make it easier to keep track of their reliability.
-
-
-
-## 📘 Documents
-
-- [📑 GoogleDoc](https://docs.google.com/document/d/1llBzp3PViO052-bYdj2gJExWpR_8H1eHP4JyIaei_Os/edit?usp=sharing) 
-- [🎨 MockUp UI](https://www.figma.com/design/ipQhiaDhrvJzCVRj48IRSp/Please_Show_Up-?node-id=617-2&t=ubJu8vFyddEIbaQ8-1)
-- [📆 Jira Board](https://ku-team-y210t4g2.atlassian.net/jira/software/projects/ISP/boards/36?atlOrigin=eyJpIjoiZDViMzI1ZmI5N2YwNDYxZTk3ZTlkMmQ4YTkxOWVmMWEiLCJwIjoiaiJ9)
-
-
-
-## 👥 Team Members
-
-1.  6710545474   Jirakorn Chaitanaporn
-2.  6710545636   Tat Tanprasert 
-3.  6710545814   Phubet Ueananta 
-4.  6710545971   Adithep Sukcharoen
  
 
 
@@ -89,100 +56,59 @@ Moreover, it will be more convenient in a project for bosses to keep track of th
 **Prerequisites:**
 *   **Node.js** (v18 or higher recommended)
 *   **Python** (v3.10 or higher recommended)
-*   **Git**
-*   **MySQL Database** (Ensure you have a MySQL server running)
+*   **Git**  
+*   **Docker Desktop**
 
-### You can choose to run by docker use frontend+backend Setup.
-
-### run by using docker
-
+## Method 1: Using Docker
+**Step 1:**  
+Navigate to your desired directory and run.
 ```bash
-docker-compose up -d
-```
-
-
-### run by using frontend+backend Setup
-
----
-### 1. Backend Setup (Django)
-
-**Step 1.1: Clone and Navigate**
-```bash
-git clone https://github.com/your-repo/Please_Show_Up.git
-```
+git clone https://github.com/kmsimust/Please_Show_Up.git
+```  
+  
+Navigate to the `backend` directory.
 ```bash
 cd Please_Show_Up/backend
 ```
 
-**Step 1.2: Create `.env` File**
-Create a file named `.env` inside the `backend` folder and add your database configuration:
+In this directory, create a `.env` file with the following configuration and replace [IPv4] with your IPv4 Address.  
+(Your IPv4 can be seen by running ```ipconfig```)
 ```env
-MYSQL_NAME=your_db_name
-MYSQL_USER=your_db_user
-MYSQL_PASSWORD=your_db_password
-DB_HOST=localhost or ipv4 which is get from running ipconfig in terminal and put it here
-DB_PORT=3305
+MYSQL_NAME="test"
+MYSQL_USER="root"
+MYSQL_PASSWORD="test"
+DB_HOST="[IPv4]"
+DB_PORT="3305"
 ```
 
-**Step 1.3: Install Dependencies & Run**
-
-*For Windows:*
+**Step 2:**  
+Open Docker Desktop.  
+Navigate to the root `Please_Show_Up` directory. 
 ```bash
-python -m venv venv
+cd ..
 ```
+And run
 ```bash
-.\venv\Scripts/activate
-```
-```bash
-pip install -r requirements.txt
-```
-```bash
-python manage.py migrate
-```
-```bash
-python manage.py runserver
+docker-compose up -d
 ```
 
-*For Mac/Linux:*
-```bash
-python3 -m venv venv
-```
-```bash
-source venv/bin/activate
-```
-```bash
-pip install -r requirements.txt
-```
-```bash
-python manage.py migrate
-```
-```bash
-python manage.py runserver
-```
-*The backend will start at `http://127.0.0.1:8000/`*
-
-### 2. Frontend Setup (React + Vite)
-
-**Step 2.1: Navigate and Install**
-Open a **new terminal** in the project root:
+**Step 3:**  
+Navigate to the `frontend` directory.
 ```bash
 cd frontend
 ```
+Install dependencies.
 ```bash
 npm install
 ```
-```bash
-npm install bootstrap@5.3.2 if needed
-```
-*(Note: `npm install` automatically installs all required packages including Bootstrap, React Router, etc.)*
-
-**Step 2.2: Run Development Server**
+Run the development server.
 ```bash
 npm run dev
 ```
-*The frontend will start at `http://localhost:5173/`*
+Follow the generated link or open your browser and go to `http://localhost:5173/`.  
 
-### 3. Open the App
-Open your browser and go to `http://localhost:5173/`.
+**To run again after this:**  
+Repeat step 2 and step 3.
+However you do not need to install dependecies again.  
 
 
