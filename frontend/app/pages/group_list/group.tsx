@@ -47,7 +47,7 @@ export function GroupPage() {
 			};
 			setGroupMemberTable(group_member_table);
 		}
-
+		//
 		if (result) {
 			// Filter out groups that are already in group_member_table to prevent duplicates
 			let filteredResult = result;
@@ -93,7 +93,9 @@ export function GroupPage() {
 							</label>
 						</div>
 						<div className="tw:flex tw:justify-end">
-							<img className="pic-fit ms-3" src={backend_public + showPicture(obj?.owner?.profile_image, "default", "/default_user.png")}></img>
+							{!obj.members?.some((m: any) => m.member.id === obj.owner.id) && (
+								<img className="pic-fit ms-3" src={backend_public + showPicture(obj?.owner?.profile_image, "default", "/default_user.png")}></img>
+							)}
 							{/* this below thing here will be loop */}
 							<MemberList members={obj.members} />
 						</div>
@@ -118,7 +120,9 @@ export function GroupPage() {
 							</label>
 						</div>
 						<div className="tw:flex tw:justify-end">
-							<img className="pic-fit ms-3" src={backend_public + showPicture(obj?.group?.owner?.profile_image, "default", "/default_user.png")}></img>
+							{!obj.group.members?.some((m: any) => m.member.id === obj.group.owner.id) && (
+								<img className="pic-fit ms-3" src={backend_public + showPicture(obj?.group?.owner?.profile_image, "default", "/default_user.png")}></img>
+							)}
 							{/* this below thing here will be loop */}
 							{/* Members in this group */}
 							<MemberList members={obj?.group.members} />
