@@ -112,3 +112,73 @@ Repeat step 2 and step 3.
 However you do not need to install dependecies again.  
 
 
+## Method 2: Using terminal.
+**Step 1:**  
+Navigate to your desired directory and run.
+```bash
+git clone https://github.com/kmsimust/Please_Show_Up.git
+```
+
+Navigate to the `backend` directory.
+```bash
+cd Please_Show_Up/backend
+```
+
+In this directory, create a `.env` file with the following configuration and replace [IPv4] with your IPv4 Address.  
+(Your IPv4 can be seen by running ```ipconfig```)
+```env
+MYSQL_NAME="test"
+MYSQL_USER="root"
+MYSQL_PASSWORD="test"
+DB_HOST="127.0.0.1" # The host is normally 127.0.0.1 or localhost
+DB_PORT="3306"
+```
+
+**Step 2:** 
+create python enviroment in backend directory.
+```python
+python -m venv .venv 
+```
+
+".venv" is environment directory name.
+
+
+activate environment in terminal.
+```python
+.\.venv\Scripts\activate
+```
+in command prompt  
+"(.venv) PS D:\directory>" should show up like this.
+
+
+install the requirements.
+```python
+pip install -r .\requirements.txt
+```
+
+if some still missing after try running server, use this.
+
+```python
+python -m pip install ...
+```
+
+run the testing server.
+make sure you're in the same directory as manage.py, in this case is backend.
+```bash
+python manage.py runserver 
+```
+
+**Step 3:** 
+go to directory frontend.
+
+Install the dependencies:
+
+```bash
+npm install
+```
+
+Start the development server with HMR:
+
+```bash
+npm run dev
+```
