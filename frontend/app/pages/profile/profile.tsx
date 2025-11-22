@@ -143,7 +143,7 @@ export function ProfilePage() {
 
                     <div className="profile-info-case">
                         <div className="profile-info-section">
-                            <div className="tw:flex tw:items-center tw:mb-3 tw:mt-1">
+                            <div className="tw:flex tw:items-center tw:mb-2">
                                 {userdata.gender ? (
                                     <span>{userdata.gender}</span>
                                 ) : (
