@@ -23,6 +23,28 @@ export async function create_event(body: EventCreate) {
   return { result, error };
 }
 
+export async function get_event_info(event_id: number) {
+  let result = null;
+  let error = undefined;
+
+  try {
+    let token = Cookies.get("accessToken");
+
+    const resp = await axios.get(
+      "http://localhost:8000/api/get_event_info/" + event_id,
+      {
+        headers: { Authorization: "Bearer " + token },
+      }
+    );
+
+    result = resp.data;
+  } catch (err: any) {
+    console.error("ERROR at get_event_info:", err);
+    error = err.response?.data || "Failed to load event.";
+  }
+
+  return { result, error };
+}
 
 export async function get_event_by_group_id(group_id: number) {
   let result = [];
