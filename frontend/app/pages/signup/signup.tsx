@@ -89,7 +89,7 @@ export function SignUpPage() {
                                 fontWeight: "bold",
                             }}
                         >
-                            Sign up
+                            Sign Up
                         </h2>
                         <form onSubmit={handleSubmit}>
                             <input
@@ -168,7 +168,7 @@ export function SignUpPage() {
                                     boxSizing: "border-box",
                                 }}
                             >
-                                Sign up
+                                Sign Up
                             </button>
                         </form>{" "}
                         {/*handle submit form endpoint*/}

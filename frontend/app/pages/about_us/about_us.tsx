@@ -35,7 +35,7 @@ export function AboutUsPage() {
                         <a
                             className="hero-cta"
                             href="/signup"
-                            aria-label="Sign up"
+                            aria-label="Sign Up"
                         >
                             Get started — it's free
                         </a>
