@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import "../../components/styles/common.css";
 import "./friend.css";
 import { get_user_by_username } from "~/services/user";
+import { showPicture } from '../../utils/text-util';
 
 interface Friend {
     id: number;
@@ -324,9 +325,8 @@ export function FriendPage() {
                                                 >
                                                     <img
                                                         className="common-pfp-lg bg-blue-500 mr-4"
-                                                        src={
-                                                            user.profile_image ||
-                                                            "/default-profile.png"
+                                                        src={domain_link + "public/" + 
+                                                            showPicture(user.profile_image, "default", "default_user.png") 
                                                         }
                                                     />
                                                     <div>
