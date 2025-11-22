@@ -31,13 +31,6 @@ services:
       - ./backend/.env
 
 
-  frontend:
-    build: ./frontend
-    image: frontend
-    container_name: frontend
-    ports:
-      - "5173:5173"
-
   # my_frontend:
   #  build:  ./frontend
   #  image: my_frontend:latest
