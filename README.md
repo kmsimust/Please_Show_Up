@@ -32,22 +32,17 @@ Moreover, it will be more convenient in a project for bosses to keep track of th
 
 ## 💾 Tech Stack
 
-- **Frontend**: React + Vite
+- **Frontend**: React + React-Router
 - **Backend**: Django REST Framework
 - **Database**: MySQL
 - **Project Management**: Jira  
 
 
-## ⚙️ Installation & Running Guide
-
-**Prerequisites:**
-*   **Node.js** (v18 or higher recommended)
-*   **Python** (v3.10 or higher recommended)
-# Please Show Up!
 
 ## 🍵 Background
 
 Most groups of people are struggling to make an appointment for a certain event because everyone does not have common freetime. This causes frustration, inefficient work and confusion. Currently the solutions are chat, calendar and call. 
+
 
 
 ## 🎯 Objective
@@ -59,11 +54,13 @@ Attendance will be recorded which you can come back and look at the previous sch
 Moreover, it will be more convenient in a project for bosses to keep track of their group and punish them according to their policies. A tier list will be displayed to make it easier to keep track of their reliability.
 
 
+
 ## 📘 Documents
 
 - [📑 GoogleDoc](https://docs.google.com/document/d/1llBzp3PViO052-bYdj2gJExWpR_8H1eHP4JyIaei_Os/edit?usp=sharing) 
 - [🎨 MockUp UI](https://www.figma.com/design/ipQhiaDhrvJzCVRj48IRSp/Please_Show_Up-?node-id=617-2&t=ubJu8vFyddEIbaQ8-1)
 - [📆 Jira Board](https://ku-team-y210t4g2.atlassian.net/jira/software/projects/ISP/boards/36?atlOrigin=eyJpIjoiZDViMzI1ZmI5N2YwNDYxZTk3ZTlkMmQ4YTkxOWVmMWEiLCJwIjoiaiJ9)
+
 
 
 ## 👥 Team Members
@@ -73,14 +70,6 @@ Moreover, it will be more convenient in a project for bosses to keep track of th
 3.  6710545814   Phubet Ueananta 
 4.  6710545971   Adithep Sukcharoen
  
-
-
-## 💾 Tech Stack
-
-- **Frontend**: React + Vite
-- **Backend**: Django REST Framework
-- **Database**: MySQL
-- **Project Management**: Jira  
 
 
 ## 📹 Video Presentation
@@ -94,6 +83,7 @@ Moreover, it will be more convenient in a project for bosses to keep track of th
 - [Youtube](https://youtu.be/rBmmBbH0_iY) — Sprint 6 (Software Development)
 
 
+
 ## ⚙️ Installation & Running Guide
 
 **Prerequisites:**
@@ -102,6 +92,18 @@ Moreover, it will be more convenient in a project for bosses to keep track of th
 *   **Git**
 *   **MySQL Database** (Ensure you have a MySQL server running)
 
+### You can choose to run by docker use frontend+backend Setup.
+
+### run by using docker
+
+```bash
+docker-compose up -d
+```
+
+
+### run by using frontend+backend Setup
+
+---
 ### 1. Backend Setup (Django)
 
 **Step 1.1: Clone and Navigate**
@@ -161,10 +163,4 @@ npm run dev
 ### 3. Open the App
 Open your browser and go to `http://localhost:5173/`.
 
-### 4. Or use docker compose
 
-```bash
-docker-compose up -d
-```
-
----
