@@ -128,6 +128,7 @@ export function InGroup() {
 
     const OpenGroupMember = () => {
         return groupMemberList?.map((obj: GroupMember) => {
+            const isOwner = obj?.member?.id === group_info?.owner?.id;
             return (
                 <div className="ig-side-member-case" key={obj.id}>
                     <img
@@ -143,6 +144,7 @@ export function InGroup() {
                     />
                     <p className="ig-side-member-name">
                         {obj?.member?.username}
+                        {isOwner && <span> (owner)</span>}
                     </p>
                 </div>
             );
@@ -282,21 +284,20 @@ export function InGroup() {
                                     <div>
                                         {" "}
                                         Group Members (
-                                        {(groupMemberList?.length || 0) + 1}
+                                        {(groupMemberList?.length || 0) + (groupMemberList?.some(m => m.member.id === group_info?.owner?.id) ? 0 : 1)}
                                         ){" "}
                                     </div>
                                 </div>
 
                                 <div className="ig-side-member-list">
-                                    {/* owner row */}
-                                    {user && (
+                                    {/* owner row - only show if not in member list */}
+                                    {group_info?.owner && !groupMemberList?.some(m => m.member.id === group_info.owner.id) && (
                                         <div className="ig-side-member-case">
                                             <img
                                                 src={
                                                     BACKEND_PUBLIC_URL +
                                                     showPicture(
-                                                        group_info?.owner
-                                                            ?.profile_image,
+                                                        group_info.owner.profile_image,
                                                         "default",
                                                         "/default_user.png",
                                                     )
@@ -304,7 +305,7 @@ export function InGroup() {
                                                 className="ig-side-member-avatar"
                                             />
                                             <p className="ig-side-member-name">
-                                                {group_info?.owner?.username}{" "}
+                                                {group_info.owner.username}{" "}
                                                 <span>(owner)</span>
                                             </p>
                                         </div>
