@@ -38,6 +38,13 @@ export function GroupPage() {
 		setIsLoading(true);
 		const { result, error } = await get_group();
 		const { result: group_member_table, error: member_error} = await get_all_group_by_member_id(user?.id);
+
+		for(const obj of group_member_table) {
+			const {result: members, error: members_error} = await get_group_member(obj.group.id);
+			obj.group.members = members;
+			console.log(obj.members);
+		};
+
 		setGroupMemberTable(group_member_table);
 
 		for(const obj of result) {
@@ -63,7 +70,7 @@ export function GroupPage() {
 		return groupData?.map((obj, index) => {
 			return (
 					<Link   to={{ pathname: "/in_group", search: "?group_id="+obj?.id }} 
-							className="group-card common-text-none" 
+							className="group-card common-text-none 1" 
 							style={{backgroundImage: 'url('+backend_public+showTextByKey(obj?.banner_image, "/default_user.png")+')'}}
 							key={index}
 					>
@@ -74,7 +81,7 @@ export function GroupPage() {
 								</label>
 							</div>
 							<div className="tw:flex tw:justify-end">
-								<img className = "pic-fit" src={backend_public+showTextByKey(obj?.owner?.profile_image,"/default_user.png")}></img>
+								<img className = "pic-fit ms-3" src={backend_public+showPicture(obj?.owner?.profile_image, "default","/default_user.png")}></img>
 								{/* this below thing here will be loop */}
 								<MemberList members={obj.members}/>
 							</div>
@@ -87,7 +94,7 @@ export function GroupPage() {
 		return groupMemberTable?.map((obj, index) => {
 			return (
 					<Link   to={{ pathname: "/in_group", search: "?group_id="+obj?.group?.id }} 
-							className="group-card " 
+							className="group-card common-text-none 2" 
 							style={{backgroundImage: 'url('+backend_public+showTextByKey(obj?.group?.banner_image, "/default_user.png")+')'}}
 							key={index}
 					>
@@ -98,10 +105,10 @@ export function GroupPage() {
 								</label>
 							</div>
 							<div className="tw:flex tw:justify-end">
-								<img className = "pic-fit" src={backend_public+showTextByKey(obj?.group?.owner?.profile_image,"/default_user.png")}></img>
+								<img className = "pic-fit ms-3" src={backend_public+showPicture(obj?.group?.owner?.profile_image, "default","/default_user.png")}></img>
 								{/* this below thing here will be loop */}
 								{/* Members in this group */}
-								<MemberList members={obj?.group?.members}/>
+								<MemberList members={obj?.group.members}/>
 							</div>
 						</div>
 					</Link>
