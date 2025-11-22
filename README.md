@@ -109,6 +109,8 @@ docker-compose up -d
 **Step 1.1: Clone and Navigate**
 ```bash
 git clone https://github.com/your-repo/Please_Show_Up.git
+```
+```bash
 cd Please_Show_Up/backend
 ```
 
@@ -127,18 +129,34 @@ DB_PORT=3305
 *For Windows:*
 ```bash
 python -m venv venv
+```
+```bash
 .\venv\Scripts/activate
+```
+```bash
 pip install -r requirements.txt
+```
+```bash
 python manage.py migrate
+```
+```bash
 python manage.py runserver
 ```
 
 *For Mac/Linux:*
 ```bash
 python3 -m venv venv
+```
+```bash
 source venv/bin/activate
+```
+```bash
 pip install -r requirements.txt
+```
+```bash
 python manage.py migrate
+```
+```bash
 python manage.py runserver
 ```
 *The backend will start at `http://127.0.0.1:8000/`*
@@ -149,7 +167,11 @@ python manage.py runserver
 Open a **new terminal** in the project root:
 ```bash
 cd frontend
+```
+```bash
 npm install
+```
+```bash
 npm install bootstrap@5.3.2 if needed
 ```
 *(Note: `npm install` automatically installs all required packages including Bootstrap, React Router, etc.)*
