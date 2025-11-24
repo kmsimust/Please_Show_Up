@@ -77,7 +77,11 @@ def update_status(request, pk):
          return Response(status=status.HTTP_404_NOT_FOUND)
     
     body = request.data
-    serializer = AvailableDateSerializerSave(available_date, data = {"status": body["status"]}, partial = True)
+    status_val = body.get("status")
+    if not status_val:
+        return Response({"message": "Status is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = AvailableDateSerializerSave(available_date, data = {"status": status_val}, partial = True)
 
     if serializer.is_valid():
         try:
@@ -85,12 +89,9 @@ def update_status(request, pk):
         except Event.DoesNotExist:
             return Response(status= status.HTTP_404_NOT_FOUND)
         
-        event_serializer = EventSerializer(event)
-        
-        date_str =  dict(event_serializer.data)["end_date"]
-        if datetime.now().date() > datetime.strptime(date_str, '%Y-%m-%d').date():
+        # Check end date directly using the model field
+        if event.end_date and datetime.now().date() > event.end_date:
             return Response({"message":"Cannot edit anything after the end_date"} ,status = status.HTTP_400_BAD_REQUEST)
-    
     
         serializer.save()
         return Response(serializer.data)

@@ -66,8 +66,9 @@ export function EventPage() {
 					const avDateList = available_date.filter((obj: AvailableDate) => {
 						return obj?.group_member?.id == m?.id
 					})
+					// Sort dates
+					avDateList.sort((a: AvailableDate, b: AvailableDate) => new Date(a.date).getTime() - new Date(b.date).getTime());
 					m.available_date = avDateList;
-
 				}
 
 				setGroupMembers(members || []);
@@ -241,6 +242,7 @@ export function EventPage() {
 											style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
 										/>
 										{memberObj.member?.username}
+										{event?.group?.owner?.id === memberObj.member?.id && <span style={{ marginLeft: '5px', fontSize: '0.8em', color: '#888' }}>(owner)</span>}
 									</div>
 
 									{memberObj?.available_date?.map((available_date_obj) => (
