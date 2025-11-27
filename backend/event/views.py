@@ -28,6 +28,23 @@ def get_event(request):
 @permission_classes([IsAuthenticated])
 def get_event_info(request, pk):
     event = Event.objects.get(pk = pk) # get all data from DB
+
+    # Ensure owner is a member and has available dates
+    try:
+        group_member, created = GroupMember.objects.get_or_create(group=event.group, member=event.group.owner)
+        
+        if event.start_date and not AvailableDate.objects.filter(event=event, group_member=group_member).exists():
+            for i in range(7):
+                date_val = event.start_date + timedelta(days=i)
+                AvailableDate.objects.create(
+                    event=event,
+                    group_member=group_member,
+                    date=date_val,
+                    status="maybe"
+                )
+    except Exception as e:
+        print(f"Error ensuring owner membership/dates: {e}")
+
     serializer = EventSerializer(event) # convert datas to serializer (JSON)
     return Response(serializer.data)
 
